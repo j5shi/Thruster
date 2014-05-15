@@ -1,9 +1,17 @@
 #-*- coding: utf-8 -*
 """
-@author: J.SHI
+@author: Jia Shi
 @email: j5shi@live.com
+@data: 2014-05-15 8:29:49 AM 
 @version: 0.1
 @license: GNU GPL v2
+=====================
+Usage:
+
+    1. clone the repository to your local machine.
+    2. put  ./pybookkeeper.py to ./Launchy/plugins/python 
+    3. put  ./icon/pybookkeeper.png to ./Launchy/plugins/icons 
+    4. start Launchy and rebuild the catalog.
 """
 import launchy
 import subprocess
@@ -78,7 +86,7 @@ class pybookkeeper(launchy.Plugin):
         
         It will be called when the primary catalog is rebuilt.
         """
-        bookmarkFile = r"c:\Users\j5shi\appData\Local\Google\Chrome\User Data\Default\Bookmarks"
+        bookmarkFile = os.path.join(os.environ["localappdata"], "Google/Chrome/User Data/Default/Bookmarks")
         bookmarkManager = eval(open(bookmarkFile, 'r').read())
         bookmarkBar = bookmarkManager.get("roots", None).get("bookmark_bar", None).get("children", None)
         if bookmarkBar:
