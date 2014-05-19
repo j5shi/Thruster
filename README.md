@@ -3,6 +3,8 @@ pybookkeeper
 
 A Launchy plugin for opening your google chrome bookmarks in Launchy!
 
+->![demo](sample.png)<-
+
 Install
 ============
 ###Install Pylaunchy###
