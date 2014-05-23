@@ -108,6 +108,6 @@ class pybookkeeper(launchy.Plugin):
         user, then it is up to the plugin to execute it when the 
         user presses “enter”. This is where you perform the action.
         """
-        subprocess.call('start chrome "%s"' % catItemOrig.fullPath, shell=True)
+        subprocess.Popen('start chrome "%s"' % catItemOrig.fullPath, shell=True)
 
 launchy.registerPlugin(pybookkeeper)
