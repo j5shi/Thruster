@@ -108,6 +108,8 @@ class pybookkeeper(launchy.Plugin):
         user, then it is up to the plugin to execute it when the 
         user presses “enter”. This is where you perform the action.
         """
+        # don't remove the surrounding of "%s", otherwise some URLs will
+        # cause unexpected parsing exceptions when & is included in the URL.
         subprocess.Popen('start chrome "%s"' % catItemOrig.fullPath, shell=True)
 
 launchy.registerPlugin(pybookkeeper)
