@@ -1,12 +1,10 @@
 ## pybookkeeper
----
 
 A Launchy plugin for opening your google chrome bookmarks in Launchy!
 
 ![demo](demo.png)
 
 ## Install
----
 
 ##### Install Pylaunchy###
 To use the pybookkeeper, you need to install Launchy plugin - [Pylaunchy](http://www.launchy.net/plugins.php) first. 
@@ -22,7 +20,6 @@ To use the pybookkeeper, you need to install Launchy plugin - [Pylaunchy](http:/
 Now you will be able to search and find your Chrome bookmarks in Launchy dropdown list.
 
 ## Note
----
 
 This plugin is tested under Windows 7 SP1 64-bit, Python 2.7.5 and Google Chrome Version 34.0.1847.131 m
 
