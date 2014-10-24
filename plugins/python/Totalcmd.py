@@ -1,4 +1,13 @@
+#-*- coding: utf-8 -*
+"""
+@author: Jia Shi
+@email: j5shi@live.com
+@data: 2014-10-23 23:10:25
+@version: 0.1
+@license: GNU GPL v2
+"""
 import launchy
+import subprocess
 
 class Totalcmd(launchy.Plugin):
     def __init__(self):
@@ -20,22 +29,22 @@ class Totalcmd(launchy.Plugin):
          return self.icon
         
     def getLabels(self, inputDataList):
-        pass    
+        if len(inputDataList) > -1:
+            return
+        else:
+            subprocess.Popen('start chrome "www.sina.com"', shell=True)
         
     def getResults(self, inputDataList, resultsList):
-        # Take the text from the first input item and add a new
-        # Catalog item with our plugin id
-        text = inputDataList[0].getText()   ### 4
-        resultsList.push_back( launchy.CatItem(text,
-            "Totalcmd: " + text,
-            self.getID(), self.getIcon()) )   ### 5
+        resultsList.push_back(launchy.CatItem(
+            "Open in Totalcmd",
+            "Open in Totalcmd",
+            self.getID(), 
+            self.getIcon()))
         
     def getCatalog(self, resultsList):
         pass
-
-    def launchItem(self, inputDataList, catItemOrig):
-        # The user chose our catalog item, print it      
-        catItem = inputDataList[-1].getTopResult()  ### 6
-        print "I was asked to launch: ", catItem.fullPath   ### 7
         
-launchy.registerPlugin(Totalcmd)   ### 8
+    def launchItem(self, inputDataList, catItemOrig):
+        pass
+        
+launchy.registerPlugin(Totalcmd)
