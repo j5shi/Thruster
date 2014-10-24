@@ -5,13 +5,6 @@
 @data: 2014-05-15 8:29:49 AM 
 @version: 0.1
 @license: GNU GPL v2
-=====================
-Usage:
-
-    1. clone the repository to your local machine.
-    2. put  ./pybookkeeper.py to ./Launchy/plugins/python 
-    3. put  ./icon/pybookkeeper.png to ./Launchy/plugins/icons 
-    4. start Launchy and rebuild the catalog.
 """
 import launchy
 import subprocess
@@ -26,12 +19,12 @@ if DEBUG:
     import time
 
 
-def BOOKKEEPPER_DEBUG(log=None):
+def Debugger(log=None):
     global DEBUG
     global FH
     if DEBUG:
         if FH is None:
-            logpath = os.path.join(os.environ["APPDATA"], "Launchy/pybookkeeper.log")
+            logpath = os.path.join(os.environ["APPDATA"], "Launchy/BookmarkMgr.log")
             FH = open(logpath, 'w', 1)
             atexit.register(FH.close)
         if log:
@@ -39,25 +32,25 @@ def BOOKKEEPPER_DEBUG(log=None):
 #================== DEBUG ENDS ==========================
 
 
-class pybookkeeper(launchy.Plugin):
-    global BOOKKEEPPER_DEBUG
+class BookmarkMgr(launchy.Plugin):
+    global Debugger
 
     def __init__(self):
         launchy.Plugin.__init__(self)
-        self.name = "pybookkeeper"
+        self.name = "BookmarkMgr"
         self.hash = launchy.hash(self.name)
-        self.icon = os.path.join(launchy.getIconsPath(), "pybookkeeper.png")
+        self.icon = os.path.join(launchy.getIconsPath(), "BookmarkMgr.png")
         self.bookmarks = {}
 
-        BOOKKEEPPER_DEBUG("instance created: %s" % self)
-        BOOKKEEPPER_DEBUG("name: %s" % self.name)
-        BOOKKEEPPER_DEBUG("hash: %s" % self.hash)
-        BOOKKEEPPER_DEBUG("icon: %s" % self.icon)
+        Debugger("instance created: %s" % self)
+        Debugger("name: %s" % self.name)
+        Debugger("hash: %s" % self.hash)
+        Debugger("icon: %s" % self.icon)
 
     def init(self):
         """Function to do initializations.
         """
-        BOOKKEEPPER_DEBUG("init() is executed successfully!")
+        Debugger("init() is executed successfully!")
 
     def getID(self):
         return self.hash
@@ -72,13 +65,13 @@ class pybookkeeper(launchy.Plugin):
         """Callback function to asks the plugin if it 
         would like to apply a label to the current search query.
         """
-        BOOKKEEPPER_DEBUG("getLabels() is executed successfully!")
+        Debugger("getLabels() is executed successfully!")
 
     def getResults(self, inputDataList, resultsList):
         """Callback function to ask the plugin for any results
         to a query.
         """
-        BOOKKEEPPER_DEBUG("getResults() is executed successfully!")
+        Debugger("getResults() is executed successfully!")
 
     def getCatalog(self, resultsList):
         """Callback function to ask the plugin for a static catalog 
@@ -96,8 +89,8 @@ class pybookkeeper(launchy.Plugin):
 
         for key in self.bookmarks.keys():
             resultsList.append(launchy.CatItem(self.bookmarks.get(key), key, self.getID(), self.getIcon()))
-            BOOKKEEPPER_DEBUG("%-20s: %s" % (key, self.bookmarks.get(key)))
-        BOOKKEEPPER_DEBUG("getCatalog() is executed successfully.\n")
+            Debugger("%-20s: %s" % (key, self.bookmarks.get(key)))
+        Debugger("getCatalog() is executed successfully.\n")
 
     def launchItem(self, inputDataList, catItemOrig):
         """Instructs the plugin that one of its own catalog items 
@@ -112,4 +105,4 @@ class pybookkeeper(launchy.Plugin):
         # cause unexpected parsing exceptions when & is included in the URL.
         subprocess.Popen('start chrome "%s"' % catItemOrig.fullPath, shell=True)
 
-launchy.registerPlugin(pybookkeeper)
+launchy.registerPlugin(BookmarkMgr)
