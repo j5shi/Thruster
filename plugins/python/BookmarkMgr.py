@@ -2,7 +2,7 @@
 """
 @author: Jia Shi
 @email: j5shi@live.com
-@data: 2014-05-15 8:29:49 AM 
+@last update: 2015-01-27 12:29:31
 @version: 0.1
 @license: GNU GPL v2
 """
@@ -11,7 +11,7 @@ import subprocess
 import os
 
 #================== DEBUG BEGIN ==========================
-DEBUG = False 
+DEBUG = False
 FH = None
 
 if DEBUG:
@@ -62,7 +62,7 @@ class BookmarkMgr(launchy.Plugin):
         return self.icon
 
     def getLabels(self, inputDataList):
-        """Callback function to asks the plugin if it 
+        """Callback function to asks the plugin if it
         would like to apply a label to the current search query.
         """
         Debugger("getLabels() is executed successfully!")
@@ -74,18 +74,25 @@ class BookmarkMgr(launchy.Plugin):
         Debugger("getResults() is executed successfully!")
 
     def getCatalog(self, resultsList):
-        """Callback function to ask the plugin for a static catalog 
-        to be added to the primary catalog. 
-        
+        """Callback function to ask the plugin for a static catalog
+        to be added to the primary catalog.
+
         It will be called when the primary catalog is rebuilt.
         """
         bookmarkFile = os.path.join(os.environ["localappdata"], "Google/Chrome/User Data/Default/Bookmarks")
         bookmarkManager = eval(open(bookmarkFile, 'r').read())
         bookmarkBar = bookmarkManager.get("roots", None).get("bookmark_bar", None).get("children", None)
+
         if bookmarkBar:
             for folder in bookmarkBar:
-                for bm in folder.get("children", None):
-                    self.bookmarks.update({bm.get("name", None): bm.get("url", None)})
+
+                children = folder.get("children", None)
+
+                if children is not None:
+                    for bm in children:
+                        self.bookmarks.update({bm.get("name", None): bm.get("url", None)})
+                else:
+                    self.bookmarks.update({folder.get("name", None): folder.get("url", None)})
 
         for key in self.bookmarks.keys():
             resultsList.append(launchy.CatItem(self.bookmarks.get(key), key, self.getID(), self.getIcon()))
@@ -93,12 +100,12 @@ class BookmarkMgr(launchy.Plugin):
         Debugger("getCatalog() is executed successfully.\n")
 
     def launchItem(self, inputDataList, catItemOrig):
-        """Instructs the plugin that one of its own catalog items 
+        """Instructs the plugin that one of its own catalog items
         was selected by the user and should now be executed.
 
-        If the plugin adds items to the catalog via getResults() 
-        or getCatalog() and one of those items is selected by the 
-        user, then it is up to the plugin to execute it when the 
+        If the plugin adds items to the catalog via getResults()
+        or getCatalog() and one of those items is selected by the
+        user, then it is up to the plugin to execute it when the
         user presses “enter”. This is where you perform the action.
         """
         # don't remove the surrounding of "%s", otherwise some URLs will

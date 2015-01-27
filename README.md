@@ -6,19 +6,10 @@ A plugin for opening Google Chrome bookmarks from Launchy!
 
 ## Installation
 
-**Install Pylaunchy**
+- Run `installer.bat`
+- Restart Launchy and rebuild the catalog.
 
-To use the BookmarkMgr, you need to install Launchy plugin - [Pylaunchy](http://www.launchy.net/plugins.php) first. 
-
-[Here](http://pylaunchy.sourceforge.net/docs/install.html) listed some ways to install Pylaunchy, and the recommended way to install Pylaunchy is using the installer (PyLaunchy-0.9.0.exe).
-
-**Install BookmarkMgr**
-
-   - put ``` ./BookmarkMgr.py ``` to ``` ./Launchy/plugins/python ```
-   - put ``` ./icon/BookmarkMgr.png ``` to ``` ./Launchy/plugins/icons ```
-   - start Launchy and rebuild the catalog.
-
-Now you will be able to search and find your Chrome bookmarks in Launchy dropdown list.
+Now you will be able to search your Chrome bookmarks in Launchy.
 
 ## Note
 
