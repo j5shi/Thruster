@@ -35,6 +35,7 @@ class PyVerby(launchy.Plugin):
         self.name = "PyVerby"
         self.hash = launchy.hash(self.name)
         self.icon = os.path.join(launchy.getIconsPath(), "%s.png" % self.name)
+        self.path = ""
         
         # Total Commander
         self.totalcmdLongname = "Open in Total Commander"
@@ -138,7 +139,18 @@ class PyVerby(launchy.Plugin):
                              a search query. Plugins that want to add new catalog items
                              for a search query should use this class.
         """
-        if len(inputDataList) == 2 and os.path.exists(inputDataList[0].getTopResult().fullPath):
+        if os.path.exists(inputDataList[0].getTopResult().fullPath):
+            self.path = inputDataList[0].getTopResult().fullPath
+        elif os.path.exists(inputDataList[0].getText()):
+            self.path = inputDataList[0].getText()
+        else:
+            self.path = ""
+
+        # print ""
+        # print "text ? %s" % inputDataList[0].getText()
+        # print "full path ? %s" % inputDataList[0].getTopResult().fullPath
+        # print "path ? %s" % self.path
+        if self.path:
             resultsList.push_back(self.totalcmdCatItem)
             resultsList.push_back(self.vimCatItem)
             inputDataList[0].getTopResult().id = self.getID()
@@ -156,11 +168,11 @@ class PyVerby(launchy.Plugin):
         @param inputDataList <List>: List of InputData, user’s search query.
         @param catItem <CatItem>: The user selected catalog item.
         """
-        if len(inputDataList) == 2:
-            if inputDataList[1].getTopResult().shortName == self.totalcmdShortname:
-                subprocess.Popen('start TOTALCMD64.exe /O /A /T "%s"' % catItem.fullPath, shell=True)
-            elif inputDataList[1].getTopResult().shortName == self.vimShortname:
-                subprocess.Popen('"c:/Program Files (x86)/vim/vim74/gvim.exe" --remote-tab-silent "%s"' % catItem.fullPath, shell=True)
+        # print inputDataList[-1].getTopResult().shortName
+        if inputDataList[-1].getTopResult().shortName == self.totalcmdShortname:
+            subprocess.Popen('start TOTALCMD64.exe /O /A /T "%s"' % self.path, shell=True)
+        elif inputDataList[-1].getTopResult().shortName == self.vimShortname:
+            subprocess.Popen('"c:/Program Files (x86)/vim/vim74/gvim.exe" --remote-tab-silent "%s"' % self.path, shell=True)
 
     def hasDialog(self):
         """
