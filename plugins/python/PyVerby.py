@@ -37,12 +37,25 @@ class PyVerby(launchy.Plugin):
         self.icon = os.path.join(launchy.getIconsPath(), "%s.png" % self.name)
         self.path = ""
         
-        # Total Commander
-        self.totalcmdLongname = "Open in Total Commander"
-        self.totalcmdShortname = "Totalcmd"
-        self.totalcmdID = self.getID()
-        self.totalcmdIcon = os.path.join(launchy.getIconsPath(), "Totalcmd.png")
-        self.totalcmdCatItem = launchy.CatItem(self.totalcmdLongname, self.totalcmdShortname, self.totalcmdID, self.totalcmdIcon)
+        # Total Commander - Left Panel
+        self.totalcmdLeftPanelLongname = "Open in Total Commander"
+        self.totalcmdLeftPanelShortname = "Totalcmd - Left Panel"
+        self.totalcmdLeftPanelID = self.getID()
+        self.totalcmdLeftPanelIcon = os.path.join(launchy.getIconsPath(), "Totalcmd.png")
+        self.totalcmdLeftPanelCatItem = launchy.CatItem(self.totalcmdLeftPanelLongname, 
+                                                        self.totalcmdLeftPanelShortname, 
+                                                        self.totalcmdLeftPanelID, 
+                                                        self.totalcmdLeftPanelIcon)
+        
+        # Total Commander - Right Panel
+        self.totalcmdRightPanelLongname = "Open in Total Commander"
+        self.totalcmdRightPanelShortname = "Totalcmd - Right Panel"
+        self.totalcmdRightPanelID = self.getID()
+        self.totalcmdRightPanelIcon = os.path.join(launchy.getIconsPath(), "Totalcmd.png")
+        self.totalcmdRightPanelCatItem = launchy.CatItem(self.totalcmdRightPanelLongname, 
+                                                         self.totalcmdRightPanelShortname, 
+                                                         self.totalcmdRightPanelID, 
+                                                         self.totalcmdRightPanelIcon)
         
         # VIM
         self.vimLongname = "Open in GVIM"
@@ -151,8 +164,9 @@ class PyVerby(launchy.Plugin):
         # print "full path ? %s" % inputDataList[0].getTopResult().fullPath
         # print "path ? %s" % self.path
         if self.path:
-            resultsList.push_back(self.totalcmdCatItem)
             resultsList.push_back(self.vimCatItem)
+            resultsList.push_back(self.totalcmdLeftPanelCatItem)
+            resultsList.push_back(self.totalcmdRightPanelCatItem)
             inputDataList[0].getTopResult().id = self.getID()
 
     def launchItem(self, inputDataList, catItem):
@@ -169,8 +183,10 @@ class PyVerby(launchy.Plugin):
         @param catItem <CatItem>: The user selected catalog item.
         """
         # print inputDataList[-1].getTopResult().shortName
-        if inputDataList[-1].getTopResult().shortName == self.totalcmdShortname:
-            subprocess.Popen('start TOTALCMD64.exe /O /A /T "%s"' % self.path, shell=True)
+        if inputDataList[-1].getTopResult().shortName == self.totalcmdLeftPanelShortname:
+            subprocess.Popen('start TOTALCMD64.exe /O /A /T /L="%s"' % self.path, shell=True)
+        elif inputDataList[-1].getTopResult().shortName == self.totalcmdRightPanelShortname:
+            subprocess.Popen('start TOTALCMD64.exe /O /A /T /R="%s"' % self.path, shell=True)
         elif inputDataList[-1].getTopResult().shortName == self.vimShortname:
             subprocess.Popen('"c:/Program Files (x86)/vim/vim74/gvim.exe" --remote-tab-silent "%s"' % self.path, shell=True)
 
