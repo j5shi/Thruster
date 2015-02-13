@@ -2,13 +2,14 @@
 """
 @author: Jia Shi
 @email: j5shi@live.com
-@last update: 2015-02-11 10:19:20
-@version: 0.1
+@last update: 2015-02-13 22:12:46
+@version: 0.2
 @license: GNU GPL v2
 """
 import launchy
 import subprocess
 import os
+from PyQt4 import QtGui, QtCore
 
 
 class PyVerby(launchy.Plugin):
@@ -158,10 +159,6 @@ class PyVerby(launchy.Plugin):
         else:
             self.path = ""
 
-        # print ""
-        # print "text ? %s" % inputDataList[0].getText()
-        # print "full path ? %s" % inputDataList[0].getTopResult().fullPath
-        # print "path ? %s" % self.path
         if self.path:
             resultsList.push_back(self.totalcmdRightPanelCatItem)
             resultsList.push_back(self.totalcmdLeftPanelCatItem)
@@ -182,7 +179,6 @@ class PyVerby(launchy.Plugin):
         @param inputDataList <List>: List of InputData, user’s search query.
         @param catItem <CatItem>: The user selected catalog item.
         """
-        # print inputDataList[-1].getTopResult().shortName
         if inputDataList[-1].getTopResult().shortName == self.totalcmdLeftPanelShortname:
             subprocess.Popen('start TOTALCMD64.exe /O /A /T /L="%s"' % self.path, shell=True)
         elif inputDataList[-1].getTopResult().shortName == self.totalcmdRightPanelShortname:
@@ -190,12 +186,19 @@ class PyVerby(launchy.Plugin):
         elif inputDataList[-1].getTopResult().shortName == self.vimShortname:
             subprocess.Popen('"c:/Program Files (x86)/vim/vim74/gvim.exe" --remote-tab-silent "%s"' % self.path, shell=True)
         else:
-            # Command to open directory by defalt
-            if os.path.isdir(catItem.fullPath):
-                subprocess.Popen('start TOTALCMD64.exe /O /A /T /R="%s"' % catItem.fullPath, shell=True)
-            # Handled by the OS
-            else:
-                subprocess.Popen('"%s"' % catItem.fullPath, shell=True)
+            self.path = catItem.fullPath
+            modifier = QtGui.QApplication.keyboardModifiers()
+
+            if os.path.exists(self.path):
+                if modifier == QtCore.Qt.ShiftModifier:
+                    subprocess.Popen('start TOTALCMD64.exe /O /A /T /R="%s"' % self.path, shell=True)
+                elif modifier == QtCore.Qt.ControlModifier:
+                    subprocess.Popen('start TOTALCMD64.exe /O /A /T /L="%s"' % self.path, shell=True)
+                else:
+                    if os.path.isfile(self.path):
+                        subprocess.Popen('"%s"' % self.path, shell=True)
+                    if os.path.isdir(self.path):
+                        subprocess.Popen('start %s' % self.path, shell=True)
 
     def hasDialog(self):
         """
