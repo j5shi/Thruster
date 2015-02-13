@@ -192,7 +192,10 @@ class PyVerby(launchy.Plugin):
         else:
             # Command to open directory by defalt
             if os.path.isdir(catItem.fullPath):
-                subprocess.Popen('start TOTALCMD64.exe /O /A /T /R="%s"' % self.path, shell=True)
+                subprocess.Popen('start TOTALCMD64.exe /O /A /T /R="%s"' % catItem.fullPath, shell=True)
+            # Handled by the OS
+            else:
+                subprocess.Popen('"%s"' % catItem.fullPath, shell=True)
 
     def hasDialog(self):
         """
