@@ -10,6 +10,7 @@ import launchy
 import subprocess
 import os
 
+
 class PyVerby(launchy.Plugin):
 
     """
@@ -25,7 +26,6 @@ class PyVerby(launchy.Plugin):
     Every plugin needs to be registered using the launchy.registerPlugin() function.
     """
 
-
     def __init__(self):
         """
         Every plugin should have the following __init__ function.
@@ -36,34 +36,33 @@ class PyVerby(launchy.Plugin):
         self.hash = launchy.hash(self.name)
         self.icon = os.path.join(launchy.getIconsPath(), "%s.png" % self.name)
         self.path = ""
-        
+
         # Total Commander - Left Panel
         self.totalcmdLeftPanelLongname = "Open in Total Commander"
         self.totalcmdLeftPanelShortname = "Totalcmd - Left Panel"
         self.totalcmdLeftPanelID = self.getID()
         self.totalcmdLeftPanelIcon = os.path.join(launchy.getIconsPath(), "Totalcmd.png")
-        self.totalcmdLeftPanelCatItem = launchy.CatItem(self.totalcmdLeftPanelLongname, 
-                                                        self.totalcmdLeftPanelShortname, 
-                                                        self.totalcmdLeftPanelID, 
+        self.totalcmdLeftPanelCatItem = launchy.CatItem(self.totalcmdLeftPanelLongname,
+                                                        self.totalcmdLeftPanelShortname,
+                                                        self.totalcmdLeftPanelID,
                                                         self.totalcmdLeftPanelIcon)
-        
+
         # Total Commander - Right Panel
         self.totalcmdRightPanelLongname = "Open in Total Commander"
         self.totalcmdRightPanelShortname = "Totalcmd - Right Panel"
         self.totalcmdRightPanelID = self.getID()
         self.totalcmdRightPanelIcon = os.path.join(launchy.getIconsPath(), "Totalcmd.png")
-        self.totalcmdRightPanelCatItem = launchy.CatItem(self.totalcmdRightPanelLongname, 
-                                                         self.totalcmdRightPanelShortname, 
-                                                         self.totalcmdRightPanelID, 
+        self.totalcmdRightPanelCatItem = launchy.CatItem(self.totalcmdRightPanelLongname,
+                                                         self.totalcmdRightPanelShortname,
+                                                         self.totalcmdRightPanelID,
                                                          self.totalcmdRightPanelIcon)
-        
+
         # VIM
         self.vimLongname = "Open in GVIM"
         self.vimShortname = "Vim"
         self.vimID = self.getID()
         self.vimIcon = os.path.join(launchy.getIconsPath(), "VIM.png")
         self.vimCatItem = launchy.CatItem(self.vimLongname, self.vimShortname, self.vimID, self.vimIcon)
-
 
     def init(self):
         """
@@ -164,9 +163,10 @@ class PyVerby(launchy.Plugin):
         # print "full path ? %s" % inputDataList[0].getTopResult().fullPath
         # print "path ? %s" % self.path
         if self.path:
-            resultsList.push_back(self.vimCatItem)
-            resultsList.push_back(self.totalcmdLeftPanelCatItem)
             resultsList.push_back(self.totalcmdRightPanelCatItem)
+            resultsList.push_back(self.totalcmdLeftPanelCatItem)
+            resultsList.push_back(self.vimCatItem)
+            inputDataList[0].setID(self.getID())
             inputDataList[0].getTopResult().id = self.getID()
 
     def launchItem(self, inputDataList, catItem):
@@ -189,6 +189,10 @@ class PyVerby(launchy.Plugin):
             subprocess.Popen('start TOTALCMD64.exe /O /A /T /R="%s"' % self.path, shell=True)
         elif inputDataList[-1].getTopResult().shortName == self.vimShortname:
             subprocess.Popen('"c:/Program Files (x86)/vim/vim74/gvim.exe" --remote-tab-silent "%s"' % self.path, shell=True)
+        else:
+            # Command to open directory by defalt
+            if os.path.isdir(catItem.fullPath):
+                subprocess.Popen('start TOTALCMD64.exe /O /A /T /R="%s"' % self.path, shell=True)
 
     def hasDialog(self):
         """
