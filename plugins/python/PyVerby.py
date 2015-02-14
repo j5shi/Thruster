@@ -60,7 +60,7 @@ class PyVerby(launchy.Plugin):
 
         # VIM
         self.vimLongname = "Open in GVIM"
-        self.vimShortname = "Vim"
+        self.vimShortname = "Open in GVIM"
         self.vimID = self.getID()
         self.vimIcon = os.path.join(launchy.getIconsPath(), "VIM.png")
         self.vimCatItem = launchy.CatItem(self.vimLongname, self.vimShortname, self.vimID, self.vimIcon)
