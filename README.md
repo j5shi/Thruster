@@ -2,31 +2,38 @@
 
 [Launchy](http://www.launchy.net/) is a free utility designed to help you forget about your start menu, your desktop icons, and your file manager. Launchy indexes and launches your applications, documents, project files, folders, and bookmarks with just a few keystrokes!
 
-You can find some launchy plugins written in Python here, and you can even write your own launchy plugins with your imagination.
+Here you can find some launchy plugins written in Python, and you can even write your own launchy plugins with your imagination.
 
 ## Installation
 
-Run **installer.bat**
+```cmd
+# Run installer.bat
+~> installer.bat
+```
+
+You must quit Launchy before installation if a Launchy instance is currently running on your system.
 
 ## BookmarkMgr
 
-BookmarkMgr is designed for opening browser bookmarks from Launchy, currently it only supports Chrome, but this can be extended easily! 
-
-After installation, restart Launchy and rebuild the catalog, now you will be able to search your Chrome bookmarks in Launchy.
-
 ![demo](BookmarkMgr_Demo.png)
+
+Index your browser bookmarks and launch them in Launchy.
+
+After installation, restart Launchy and rebuild catalog, now you will be able to find and launch your bookmarks in Launchy.
+
+**Note: Google Chrome is currently the only browser that is supported, but it's quite easy to extend to other browsers.**
 
 ## PyVerby
 
-PyVerby is very useful, it allows you to customize operations for a certain type of file, for example, you can define operations for a text file like: "open container folder", "open in Vim (notepad++, whatever)", etc. PyVerby is written in Python, very simple and easy to extend features.
-
 ![demo](PyVerby_Demo.png)
 
-**Note**
+PyVerby is very useful, it allows you to customize operations for a certain type of file, for example, you can define operations for a text file like: "open container folder (Total Commander..)", "open in Vim (notepad++, whatever)", etc. 
 
-This plugin is tested under Windows 7 SP1 64-bit, Python 2.7.5 and Google Chrome Version 34.0.1847.131 m
+PyVerby is very simple and flexible to add new features.
 
-Pull requests and feedbacks are welcome.
+**Features**
 
+- Open file/directory in Total Commander left or right panel, and shortcut supported (`<C-Enter>` / `<S-Enter>`).
+- Open file in Vim
 
 

@@ -160,11 +160,13 @@ class PyVerby(launchy.Plugin):
             self.path = ""
 
         if self.path:
-            resultsList.push_back(self.totalcmdRightPanelCatItem)
-            resultsList.push_back(self.totalcmdLeftPanelCatItem)
-            resultsList.push_back(self.vimCatItem)
             inputDataList[0].setID(self.getID())
             inputDataList[0].getTopResult().id = self.getID()
+
+            if os.path.isfile(self.path):
+                resultsList.push_back(self.totalcmdRightPanelCatItem)
+                resultsList.push_back(self.totalcmdLeftPanelCatItem)
+                resultsList.push_back(self.vimCatItem)
 
     def launchItem(self, inputDataList, catItem):
         """
@@ -195,10 +197,7 @@ class PyVerby(launchy.Plugin):
                 elif modifier == QtCore.Qt.ControlModifier:
                     subprocess.Popen('start TOTALCMD64.exe /O /A /T /L="%s"' % self.path, shell=True)
                 else:
-                    if os.path.isfile(self.path):
-                        subprocess.Popen('"%s"' % self.path, shell=True)
-                    if os.path.isdir(self.path):
-                        subprocess.Popen('start %s' % self.path, shell=True)
+                    launchy.runProgram("%s" % self.path, "")
 
     def hasDialog(self):
         """
