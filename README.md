@@ -1,8 +1,8 @@
-# Launchy Plugin Collection
+# PyUltima
 
 [Launchy](http://www.launchy.net/) is a free utility designed to help you forget about your start menu, your desktop icons, and your file manager. Launchy indexes and launches your applications, documents, project files, folders, and bookmarks with just a few keystrokes!
 
-Here you can find some launchy plugins written in Python, and you can even write your own launchy plugins with your imagination.
+PyUltima is an all in one plugin for Launchy, you don't need any other launchy plugins anymore, I say this because it is true: PyUltima is written in Python and Python is simple and flexible, when some ideas come to your mind but not available in Launchy, just extend PyUltima by yourself.
 
 ## Installation
 
@@ -11,9 +11,11 @@ Here you can find some launchy plugins written in Python, and you can even write
 ~> installer.bat
 ```
 
-You must quit Launchy before installation if a Launchy instance is currently running on your system.
+**Note: You must quit Launchy before installation if a Launchy instance is currently running on your system.**
 
-## BookmarkMgr
+## Features
+
+### Index Chrome Bookmarks
 
 ![demo](BookmarkMgr_Demo.png)
 
@@ -23,17 +25,14 @@ After installation, restart Launchy and rebuild catalog, now you will be able to
 
 **Note: Google Chrome is currently the only browser that is supported, but it's quite easy to extend to other browsers.**
 
-## PyVerby
+### Open in Customized Program
 
 ![demo](PyVerby_Demo.png)
 
-PyVerby is very useful, it allows you to customize operations for a certain type of file, for example, you can define operations for a text file like: "open container folder (Total Commander..)", "open in Vim (notepad++, whatever)", etc. 
+PyUltima allows you to customize operations for a certain type of file, for example, you can define operations for a text file like: "open in Total Commander", "open in Vim", "open in ... whatever".
 
-PyVerby is very simple and flexible to add new features.
+And shortcut is supported, for instance: `<C-Enter>` and `<S-Enter>` for open files in Total Commander left and right panel.
 
-**Features**
+### Web Search
 
-- Open file/directory in Total Commander left or right panel, and shortcut supported (`<C-Enter>` / `<S-Enter>`).
-- Open file in Vim
-
-
+Do the web search in Launchy, this features is quite the same as the Launchy build-in plugin `weby`, but it's integrated in PyUltima.
