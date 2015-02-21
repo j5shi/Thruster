@@ -42,7 +42,9 @@ class PyUltima(launchy.Plugin):
 
         # Search Engine
         self.searchEngine = {"bb": {"url": "http://www.bing.com/search?q=%s"},
-                             "bd": {"url": "https://www.baidu.com/s?wd=%s"}, }
+                             "bd": {"url": "https://www.baidu.com/s?wd=%s"},
+                             "tao":{"url": "http://s.taobao.com/search?q=%s"},}
+
 
         self.searchEngineFullPath = "web search"
         self.searchEngineShortName = ""
