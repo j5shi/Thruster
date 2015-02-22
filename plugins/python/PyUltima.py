@@ -41,7 +41,9 @@ class PyUltima(launchy.Plugin):
         self.operation = ""
 
         # Search Engine
-        self.searchEngine = {"bb": {"url": "http://www.bing.com/search?q=%s"},
+        self.searchEngine = {"url":{"url": "%s"},
+                             "bb": {"url": "http://www.bing.com/search?q=%s"},
+                             "bk": {"url": "http://baike.baidu.com/search?word=%s"},
                              "bd": {"url": "https://www.baidu.com/s?wd=%s"},
                              "tao":{"url": "http://s.taobao.com/search?q=%s"},}
 
