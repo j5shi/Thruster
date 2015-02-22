@@ -42,6 +42,7 @@ class PyUltima(launchy.Plugin):
 
         # Search Engine
         self.searchEngine = {"url":{"url": "%s"},
+                             "gg": {"url": "https://www.google.com/?gws_rd=ssl#q=%s"},
                              "bb": {"url": "http://www.bing.com/search?q=%s"},
                              "bk": {"url": "http://baike.baidu.com/search?word=%s"},
                              "bd": {"url": "https://www.baidu.com/s?wd=%s"},
