@@ -37,20 +37,22 @@ class PyUltima(launchy.Plugin):
         self.name = "PyUltima"
         self.pluginId = launchy.hash(self.name)
         self.icon = os.path.join(launchy.getIconsPath(), "%s.png" % self.name)
-        self.target = ""
-        self.operation = ""
+        self.defaultHandlerShortName = "Open in Default Program"
 
         # Search Engine
-        self.searchEngine = {"url":{"url": "%s"},
-                             "gg": {"url": "https://www.google.com/?gws_rd=ssl#q=%s"},
-                             "bb": {"url": "http://www.bing.com/search?q=%s"},
-                             "bk": {"url": "http://baike.baidu.com/search?word=%s"},
-                             "bd": {"url": "https://www.baidu.com/s?wd=%s"},
-                             "tao":{"url": "http://s.taobao.com/search?q=%s"},}
+        self.searchEngine = {"gg": {"url": "https://www.google.com/?gws_rd=ssl#q=%s",
+                                    "name": "Google"},
+                             "bb": {"url": "http://www.bing.com/search?q=%s",
+                                    "name": "Bing"},
+                             "bk": {"url": "http://baike.baidu.com/search?word=%s",
+                                    "name": "Baidu Baike"},
+                             "bd": {"url": "https://www.baidu.com/s?wd=%s",
+                                    "name": "Baidu"},
+                             "tao": {"url": "http://s.taobao.com/search?q=%s",
+                                     "name": "Taobao"}, }
 
-
-        self.searchEngineFullPath = "web search"
-        self.searchEngineShortName = ""
+        self.searchEngineFullPath = ""
+        self.searchEngineShortName = "%s: search" % self.name
         self.searchEngineId = self.getID()
         self.searchEngineIcon = os.path.join(launchy.getIconsPath(), "WebSearch.png")
         self.searchEngineCatItem = launchy.CatItem(self.searchEngineFullPath,
@@ -59,31 +61,28 @@ class PyUltima(launchy.Plugin):
                                                    self.searchEngineIcon)
 
         # Open in Total Commander Left Panel
-        self.totalcmdIcon = os.path.join(launchy.getIconsPath(), "Totalcmd.png")
-        self.totalcmdFullPath = "Open in Total Commander"
-
-        self.totalcmdLeftPanelFullPath = self.totalcmdFullPath
-        self.totalcmdLeftPanelShortName = "Totalcmd: Open in left panel"
+        self.totalcmdLeftPanelFullPath = ""
+        self.totalcmdLeftPanelShortName = "%s: open in Totalcmd left panel" % self.name
         self.totalcmdLeftPanelId = self.getID()
-        self.totalcmdLeftPanelIcon = self.totalcmdIcon
+        self.totalcmdLeftPanelIcon = os.path.join(launchy.getIconsPath(), "Totalcmd.png")
         self.totalcmdLeftPanelCatItem = launchy.CatItem(self.totalcmdLeftPanelFullPath,
                                                         self.totalcmdLeftPanelShortName,
                                                         self.totalcmdLeftPanelId,
                                                         self.totalcmdLeftPanelIcon)
 
         # Open in Total Commander Right Panel
-        self.totalcmdRightPanelFullPath = self.totalcmdFullPath
-        self.totalcmdRightPanelShortName = "Totalcmd: Open in right panel"
+        self.totalcmdRightPanelFullPath = ""
+        self.totalcmdRightPanelShortName = "%s: open in Totalcmd right panel" % self.name
         self.totalcmdRightPanelId = self.getID()
-        self.totalcmdRightPanelIcon = self.totalcmdIcon
+        self.totalcmdRightPanelIcon = os.path.join(launchy.getIconsPath(), "Totalcmd.png")
         self.totalcmdRightPanelCatItem = launchy.CatItem(self.totalcmdRightPanelFullPath,
                                                          self.totalcmdRightPanelShortName,
                                                          self.totalcmdRightPanelId,
                                                          self.totalcmdRightPanelIcon)
 
         # Open in GVIM
-        self.vimFullPath = "Open in GVIM"
-        self.vimShortName = "Vim: Open in GVIM"
+        self.vimFullPath = ""
+        self.vimShortName = "%s: open in Vim" % self.name
         self.vimId = self.getID()
         self.vimIcon = os.path.join(launchy.getIconsPath(), "VIM.png")
         self.vimCatItem = launchy.CatItem(self.vimFullPath,
@@ -92,19 +91,19 @@ class PyUltima(launchy.Plugin):
                                           self.vimIcon)
 
         # Open in Browser
-        self.browserFullPath = "Open in Chrome"
-        self.browserShortName = "Chrome: open in chrome"
+        self.browserBookmarks = {}
+        self.browserFullPath = ""
+        self.browserShortName = "%s: open in Google Chrome" % self.name
         self.browserId = self.getID()
         self.browserIcon = os.path.join(launchy.getIconsPath(), "Chrome.png")
         self.browserCatItem = launchy.CatItem(self.browserFullPath,
                                               self.browserShortName,
                                               self.browserId,
                                               self.browserIcon)
-        self.browserBookmarks = {}
 
         # Default Handler
-        self.defaultFullPath = "Open in Default Program"
-        self.defaultShortName = ""
+        self.defaultFullPath = ""
+        self.defaultShortName = "%s: open in default program" % self.name
         self.defaultId = self.getID()
         self.defaultIcon = ""
         self.defaultCatItem = launchy.CatItem(self.defaultFullPath,
@@ -215,18 +214,17 @@ class PyUltima(launchy.Plugin):
         """
         inputDataList[0].setID(self.getID())
 
-        # search engine comes first
         if inputDataList[0].getText() in self.searchEngine.keys():
             key = inputDataList[0].getText()
             self.searchEngineCatItem.shortName = key
+            self.searchEngineCatItem.fullPath = "%s %s" % (self.searchEngineShortName, self.searchEngine.get(key).get("name"))
             resultsList.push_front(self.searchEngineCatItem)
-        else:
-            if len(inputDataList) > 1:
-                resultsList.push_back(self.totalcmdRightPanelCatItem)
-                resultsList.push_back(self.totalcmdLeftPanelCatItem)
-                resultsList.push_back(self.vimCatItem)
-                resultsList.push_back(self.browserCatItem)
-                resultsList.push_back(self.defaultCatItem)
+        elif len(inputDataList) > 1:
+            resultsList.push_back(self.totalcmdRightPanelCatItem)
+            resultsList.push_back(self.totalcmdLeftPanelCatItem)
+            resultsList.push_back(self.vimCatItem)
+            resultsList.push_back(self.browserCatItem)
+            resultsList.push_back(self.defaultCatItem)
 
     def launchItem(self, inputDataList, catItem):
         """
@@ -249,11 +247,19 @@ class PyUltima(launchy.Plugin):
                 inputDataList[-1].setText(self.totalcmdRightPanelShortName)
             elif modifier == QtCore.Qt.ControlModifier:
                 inputDataList[-1].setText(self.totalcmdLeftPanelShortName)
-            else:
-                launchy.runProgram('"%s"' % catItem.fullPath, "")
-                return
+        else:
+            # use the top result if last query is empty
+            if len(inputDataList[-1].getText().strip()) == 0:
+                inputDataList[-1].setText(inputDataList[-1].getTopResult().shortName)
 
-        # not using shortcuts
+        ############################################################################
+        # Using shortNames or icon path (in case shortNames have special meanings, #
+        # like bookmark name) to decide which handler to handle                    #
+        #                                                                          #
+        # catItem always refers to the selected item in the result list of the     #
+        # first member in inputDataList                                            #
+        ############################################################################
+
         # launch chrome bookmarks
         if catItem.icon == self.browserIcon or inputDataList[-1].getText() == self.browserShortName:
             subprocess.Popen('start chrome "%s"' % catItem.fullPath, shell=True)
