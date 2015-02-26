@@ -2,7 +2,7 @@
 """
 @author: Jia Shi
 @email: j5shi@live.com
-@last update: 2015-02-18 20:58:00
+@last update: 2015-02-26 17:32:35
 @version: 0.5
 @license: GNU GPL v2
 """
@@ -40,7 +40,9 @@ class PyUltima(launchy.Plugin):
         self.defaultHandlerShortName = "Open in Default Program"
 
         # Search Engine
-        self.searchEngine = {"gg": {"url": "https://www.google.com/?gws_rd=ssl#q=%s",
+        self.searchEngine = {"url": {"url": "%s",
+                                     "name": "Web"},
+                             "gg": {"url": "https://www.google.com/?gws_rd=ssl#q=%s",
                                     "name": "Google"},
                              "bb": {"url": "http://www.bing.com/search?q=%s",
                                     "name": "Bing"},
@@ -49,7 +51,9 @@ class PyUltima(launchy.Plugin):
                              "bd": {"url": "https://www.baidu.com/s?wd=%s",
                                     "name": "Baidu"},
                              "tao": {"url": "http://s.taobao.com/search?q=%s",
-                                     "name": "Taobao"}, }
+                                     "name": "Taobao"},
+                             "pr": {"url": "http://prontoa02.int.net.nokia.com/nokia/pronto/pronto.nsf/PRID/%s?OpenDocument",
+                                    "name": "Pronto"}, }
 
         self.searchEngineFullPath = ""
         self.searchEngineShortName = "%s: search" % self.name
@@ -267,8 +271,11 @@ class PyUltima(launchy.Plugin):
         # web search
         elif inputDataList[0].getText() in self.searchEngine.keys():
             key = inputDataList[0].getText()
-            query = urllib.quote(inputDataList[-1].getText().encode("utf8"))
-            url = eval('"%s" %% "%s"' % (self.searchEngine.get(key).get('url'), query))
+            if key != "url":
+                query = urllib.quote(inputDataList[-1].getText().encode("utf8"))
+                url = eval('"%s" %% "%s"' % (self.searchEngine.get(key).get('url'), query))
+            else:
+                url = inputDataList[-1].getText()
             subprocess.Popen('start chrome "%s"' % url, shell=True)
 
         # open in total commander left panel
