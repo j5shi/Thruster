@@ -64,6 +64,17 @@ class PyUltima(launchy.Plugin):
                                                    self.searchEngineId,
                                                    self.searchEngineIcon)
 
+        # Run Commands
+        self.runCommandsCmdAlias = {"cmd": "conemu64"}
+        self.runCommandsFullPath = "%s: run commands" % self.name
+        self.runCommandsShortName = "Run"
+        self.runCommandsId = self.getID()
+        self.runCommandsIcon = os.path.join(launchy.getIconsPath(), "RunCommands.png")
+        self.runCommandsCatItem = launchy.CatItem(self.runCommandsFullPath,
+                                                  self.runCommandsShortName,
+                                                  self.runCommandsId,
+                                                  self.runCommandsIcon)
+
         # Open in Total Commander Left Panel
         self.totalcmdLeftPanelFullPath = ""
         self.totalcmdLeftPanelShortName = "%s: open in Totalcmd left panel" % self.name
@@ -223,6 +234,8 @@ class PyUltima(launchy.Plugin):
             self.searchEngineCatItem.shortName = key
             self.searchEngineCatItem.fullPath = "%s %s" % (self.searchEngineShortName, self.searchEngine.get(key).get("name"))
             resultsList.push_front(self.searchEngineCatItem)
+        elif inputDataList[0].getText().strip().lower() == self.runCommandsShortName.lower():
+            resultsList.push_front(self.runCommandsCatItem)
         elif len(inputDataList) > 1:
             resultsList.push_back(self.totalcmdRightPanelCatItem)
             resultsList.push_back(self.totalcmdLeftPanelCatItem)
@@ -267,6 +280,15 @@ class PyUltima(launchy.Plugin):
         # launch chrome bookmarks
         if catItem.icon == self.browserIcon or inputDataList[-1].getText() == self.browserShortName:
             subprocess.Popen('start chrome "%s"' % catItem.fullPath, shell=True)
+
+        # run commands
+        elif catItem.icon == self.runCommandsIcon:
+            cmd = self.runCommandsCmdAlias.get(inputDataList[-1].getText(), None)
+
+            if cmd is None:
+                cmd = "conemu64 /cmd %s" % inputDataList[-1].getText()
+
+            subprocess.Popen(cmd)
 
         # web search
         elif inputDataList[0].getText() in self.searchEngine.keys():
