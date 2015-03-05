@@ -13,6 +13,161 @@ import urllib
 from PyQt4 import QtGui, QtCore
 
 
+PLUGIN_NAME = "PyUltima"
+PLUGIN_ID = launchy.hash(PLUGIN_NAME)
+
+
+class Base(object):
+
+    def getPluginId(self):
+        return PLUGIN_ID
+
+    def getPluginName(self):
+        return PLUGIN_NAME
+
+    def getIconsPath(self, filename):
+        return os.path.join(launchy.getIconsPath(), filename)
+
+    def getCatItem(self, fullPath, shortName, id, icon):
+        return launchy.CatItem(fullPath, shortName, id, icon)
+
+    def getResults(self, inputDataList, resultsList):
+        pass
+
+    def getCatalog(self, resultsList):
+        pass
+
+    def getLabels(self, inputDataList):
+        pass
+
+
+
+class WebSearch(Base):
+
+    searchEngine = {"url": {"url": "%s", "name": "Web"},
+                    "gg": {"url": "https://www.google.com/?gws_rd=ssl#q=%s", "name": "Google"},
+                    "bb": {"url": "http://www.bing.com/search?q=%s", "name": "Bing"},
+                    "bk": {"url": "http://baike.baidu.com/search?word=%s", "name": "Baidu Baike"},
+                    "bd": {"url": "https://www.baidu.com/s?wd=%s", "name": "Baidu"},
+                    "tao": {"url": "http://s.taobao.com/search?q=%s", "name": "Taobao"},
+                    "pr": {"url": "http://prontoa02.int.net.nokia.com/nokia/pronto/pronto.nsf/PRID/%s?OpenDocument", "name": "Pronto"}, }
+
+    def __init__(self):
+        self.id = self.getPluginId()
+        self.icon = self.getIconsPath("WebSearch.png")
+
+    def getResults(self, inputDataList, resultsList):
+        key = inputDataList[0].getText()
+        if key in self.searchEngine.keys():
+            resultsList.push_front(self.getCatItem("%s: %s search" % (self.getPluginName(), self.searchEngine.get(key).get("name")),
+                                                   "%s" % key,
+                                                   self.id,
+                                                   self.icon))
+
+    def launchItem(self, inputDataList, catItem):
+        if catItem.icon == self.icon:
+            key = inputDataList[0].getText()
+            if key != "url":
+                query = urllib.quote(inputDataList[-1].getText().encode("utf8"))
+                url = eval('"%s" %% "%s"' % (self.searchEngine.get(key).get('url'), query))
+            else:
+                url = inputDataList[-1].getText()
+            subprocess.Popen('start chrome "%s"' % url, shell=True)
+            return True
+
+
+class RunCommands(Base):
+
+    CmdAlias = {"putty": "putty.exe",
+                "linsee40": 'putty -load "hzling40.china.nsn-net.net"',
+                "linsee42": 'putty -load "hzling42.china.nsn-net.net"',
+                "vm134": 'putty -load "10.68.203.134"',
+                "switch": 'putty -load "Cisco_3560"',
+                "cmd": "conemu64", }
+
+    def __init__(self):
+        self.id = self.getPluginId()
+        self.icon = self.getIconsPath("RunCommands.png")
+
+        self.triggerStr = "Run"
+
+
+    def getResults(self, inputDataList, resultsList):
+        for alias in self.CmdAlias.keys():
+            resultsList.push_front(self.getCatItem("%s: Run commands" % (self.getPluginName()),
+                                                    alias,
+                                                    self.id,
+                                                    self.icon))
+
+        if inputDataList[0].getText().strip().lower() == self.triggerStr.lower():
+            resultsList.push_front(self.getCatItem("%s: Run commands" % (self.getPluginName()),
+                                                    self.triggerStr,
+                                                    self.id,
+                                                    self.icon))
+
+    def launchItem(self, inputDataList, catItem):
+        if catItem.icon == self.icon:
+            if len(inputDataList) == 1:
+                cmd = self.CmdAlias.get(catItem.shortName)
+            else:
+                if len(inputDataList[-1].getText().strip()) == 0:
+                    cmd = self.CmdAlias.get(inputDataList[-1].getTopResult().shortName, None)
+                elif self.CmdAlias.get(inputDataList[-1].getText(), None):
+                    cmd = self.CmdAlias.get(inputDataList[-1].getText(), None)
+                else:
+                    cmd = "conemu64 /cmd %s" % inputDataList[-1].getText()
+
+            print cmd
+            if cmd is not None:
+                subprocess.Popen(cmd)
+            return True
+
+class Browser(Base):
+
+    def __init__(self):
+        self.id = self.getPluginId()
+        self.icon = self.getIconsPath("Chrome.png")
+
+    def launchItem(self, inputDataList, catItem):
+        if catItem.icon == self.icon:
+            subprocess.Popen('start chrome "%s"' % catItem.fullPath, shell=True)
+            return True
+
+    def getCatalog(self, resultsList):
+        """
+        Callback function to asks the plugin for a static catalog to be
+        added to the primary catalog. Some plugins will add permanent
+        entries to Launchy primary catalog (until the catalog is rebuilt).
+
+        It will be called when the primary catalog is rebuilt.
+
+        @resultsList <list>: result list to append new entries (CatItem)
+                             to, these will be copied over to the primary
+                             catalog.
+        """
+        browserBookmarks = {}
+        bookmarkFile = os.path.join(os.environ["localappdata"], "Google/Chrome/User Data/Default/Bookmarks")
+        bookmarkManager = eval(open(bookmarkFile, 'r').read())
+        bookmarkBar = bookmarkManager.get("roots", None).get("bookmark_bar", None).get("children", None)
+        if bookmarkBar:
+            for folder in bookmarkBar:
+                for bm in folder.get("children", None):
+                    browserBookmarks.update({bm.get("name", None): bm.get("url", None)})
+
+        for key in browserBookmarks.keys():
+            resultsList.append(self.getCatItem(browserBookmarks.get(key), key, self.id, self.icon))
+
+class DefaultHandler(Base):
+
+    def __init__(self):
+        self.id = self.getPluginId()
+        self.icon = self.getIconsPath("DefaultHandler.png")
+
+    def launchItem(self, inputDataList, catItem):
+        launchy.runProgram('"%s"' % catItem.fullPath, "")
+        return True
+
+
 class PyUltima(launchy.Plugin):
 
     """
@@ -34,97 +189,9 @@ class PyUltima(launchy.Plugin):
         """
         launchy.Plugin.__init__(self)
 
-        self.name = "PyUltima"
-        self.pluginId = launchy.hash(self.name)
+        self.name = PLUGIN_NAME
+        self.id = PLUGIN_ID
         self.icon = os.path.join(launchy.getIconsPath(), "%s.png" % self.name)
-        self.defaultHandlerShortName = "Open in Default Program"
-
-        # Search Engine
-        self.searchEngine = {"url": {"url": "%s",
-                                     "name": "Web"},
-                             "gg": {"url": "https://www.google.com/?gws_rd=ssl#q=%s",
-                                    "name": "Google"},
-                             "bb": {"url": "http://www.bing.com/search?q=%s",
-                                    "name": "Bing"},
-                             "bk": {"url": "http://baike.baidu.com/search?word=%s",
-                                    "name": "Baidu Baike"},
-                             "bd": {"url": "https://www.baidu.com/s?wd=%s",
-                                    "name": "Baidu"},
-                             "tao": {"url": "http://s.taobao.com/search?q=%s",
-                                     "name": "Taobao"},
-                             "pr": {"url": "http://prontoa02.int.net.nokia.com/nokia/pronto/pronto.nsf/PRID/%s?OpenDocument",
-                                    "name": "Pronto"}, }
-
-        self.searchEngineFullPath = ""
-        self.searchEngineShortName = "%s: search" % self.name
-        self.searchEngineId = self.getID()
-        self.searchEngineIcon = os.path.join(launchy.getIconsPath(), "WebSearch.png")
-        self.searchEngineCatItem = launchy.CatItem(self.searchEngineFullPath,
-                                                   self.searchEngineShortName,
-                                                   self.searchEngineId,
-                                                   self.searchEngineIcon)
-
-        # Run Commands
-        self.runCommandsCmdAlias = {"cmd": "conemu64"}
-        self.runCommandsFullPath = "%s: run commands" % self.name
-        self.runCommandsShortName = "Run"
-        self.runCommandsId = self.getID()
-        self.runCommandsIcon = os.path.join(launchy.getIconsPath(), "RunCommands.png")
-        self.runCommandsCatItem = launchy.CatItem(self.runCommandsFullPath,
-                                                  self.runCommandsShortName,
-                                                  self.runCommandsId,
-                                                  self.runCommandsIcon)
-
-        # Open in Total Commander Left Panel
-        self.totalcmdLeftPanelFullPath = ""
-        self.totalcmdLeftPanelShortName = "%s: open in Totalcmd left panel" % self.name
-        self.totalcmdLeftPanelId = self.getID()
-        self.totalcmdLeftPanelIcon = os.path.join(launchy.getIconsPath(), "Totalcmd.png")
-        self.totalcmdLeftPanelCatItem = launchy.CatItem(self.totalcmdLeftPanelFullPath,
-                                                        self.totalcmdLeftPanelShortName,
-                                                        self.totalcmdLeftPanelId,
-                                                        self.totalcmdLeftPanelIcon)
-
-        # Open in Total Commander Right Panel
-        self.totalcmdRightPanelFullPath = ""
-        self.totalcmdRightPanelShortName = "%s: open in Totalcmd right panel" % self.name
-        self.totalcmdRightPanelId = self.getID()
-        self.totalcmdRightPanelIcon = os.path.join(launchy.getIconsPath(), "Totalcmd.png")
-        self.totalcmdRightPanelCatItem = launchy.CatItem(self.totalcmdRightPanelFullPath,
-                                                         self.totalcmdRightPanelShortName,
-                                                         self.totalcmdRightPanelId,
-                                                         self.totalcmdRightPanelIcon)
-
-        # Open in GVIM
-        self.vimFullPath = ""
-        self.vimShortName = "%s: open in Vim" % self.name
-        self.vimId = self.getID()
-        self.vimIcon = os.path.join(launchy.getIconsPath(), "VIM.png")
-        self.vimCatItem = launchy.CatItem(self.vimFullPath,
-                                          self.vimShortName,
-                                          self.vimId,
-                                          self.vimIcon)
-
-        # Open in Browser
-        self.browserBookmarks = {}
-        self.browserFullPath = ""
-        self.browserShortName = "%s: open in Google Chrome" % self.name
-        self.browserId = self.getID()
-        self.browserIcon = os.path.join(launchy.getIconsPath(), "Chrome.png")
-        self.browserCatItem = launchy.CatItem(self.browserFullPath,
-                                              self.browserShortName,
-                                              self.browserId,
-                                              self.browserIcon)
-
-        # Default Handler
-        self.defaultFullPath = ""
-        self.defaultShortName = "%s: open in default program" % self.name
-        self.defaultId = self.getID()
-        self.defaultIcon = ""
-        self.defaultCatItem = launchy.CatItem(self.defaultFullPath,
-                                              self.defaultShortName,
-                                              self.defaultId,
-                                              self.defaultIcon)
 
     def init(self):
         """
@@ -137,8 +204,26 @@ class PyUltima(launchy.Plugin):
         print "hash: %s" % self.getID()
         print "name: %s" % self.getName()
         print "icon: %s" % self.getIcon()
-        print "init() executed successfully!"
+        print "loading addons:"
+        self.addons = []
+        self.registerAddon(Browser)
+        self.registerAddon(WebSearch)
+        self.registerAddon(RunCommands)
+        self.registerAddon(DefaultHandler)
+        print "finished loading addons."
         print "=============================="
+
+    def registerAddon(self, addon):
+        a = addon()
+
+        if type(a).__name__ != "DefaultHandler":
+            self.addons.insert(0, a)
+        else:
+            # the DefaultHandler should always be the
+            # last addon to process queries
+            self.addons.append(a)
+
+        print "  - %s loaded" % type(a).__name__
 
     def getID(self):
         """
@@ -150,7 +235,7 @@ class PyUltima(launchy.Plugin):
 
         @return <int>: plugin ID.
         """
-        return self.pluginId
+        return self.id
 
     def getName(self):
         """
@@ -178,19 +263,8 @@ class PyUltima(launchy.Plugin):
                              to, these will be copied over to the primary
                              catalog.
         """
-        bookmarkFile = os.path.join(os.environ["localappdata"], "Google/Chrome/User Data/Default/Bookmarks")
-        bookmarkManager = eval(open(bookmarkFile, 'r').read())
-        bookmarkBar = bookmarkManager.get("roots", None).get("bookmark_bar", None).get("children", None)
-        if bookmarkBar:
-            for folder in bookmarkBar:
-                for bm in folder.get("children", None):
-                    self.browserBookmarks.update({bm.get("name", None): bm.get("url", None)})
-
-        for key in self.browserBookmarks.keys():
-            resultsList.append(launchy.CatItem(self.browserBookmarks.get(key),
-                                               key,
-                                               self.browserId,
-                                               self.browserIcon))
+        for addon in self.addons:
+            addon.getCatalog(resultsList)
 
     def getLabels(self, inputDataList):
         """
@@ -211,7 +285,8 @@ class PyUltima(launchy.Plugin):
         @Warning: This is called each time the user changes a character in his or
                   her query, so make sure it's fast.
         """
-        pass
+        for addon in self.addons:
+            addon.getLabels(inputDataList)
 
     def getResults(self, inputDataList, resultsList):
         """
@@ -227,21 +302,11 @@ class PyUltima(launchy.Plugin):
                              a search query. Plugins that want to add new catalog items
                              for a search query should use this class.
         """
+        # handle everything by us
         inputDataList[0].setID(self.getID())
 
-        if inputDataList[0].getText() in self.searchEngine.keys():
-            key = inputDataList[0].getText()
-            self.searchEngineCatItem.shortName = key
-            self.searchEngineCatItem.fullPath = "%s %s" % (self.searchEngineShortName, self.searchEngine.get(key).get("name"))
-            resultsList.push_front(self.searchEngineCatItem)
-        elif inputDataList[0].getText().strip().lower() == self.runCommandsShortName.lower():
-            resultsList.push_front(self.runCommandsCatItem)
-        elif len(inputDataList) > 1:
-            resultsList.push_back(self.totalcmdRightPanelCatItem)
-            resultsList.push_back(self.totalcmdLeftPanelCatItem)
-            resultsList.push_back(self.vimCatItem)
-            resultsList.push_back(self.browserCatItem)
-            resultsList.push_back(self.defaultCatItem)
+        for addon in self.addons:
+            addon.getResults(inputDataList, resultsList)
 
     def launchItem(self, inputDataList, catItem):
         """
@@ -256,65 +321,10 @@ class PyUltima(launchy.Plugin):
         @param inputDataList <List>: List of InputData, user's search query.
         @param catItem <CatItem>: The user selected catalog item.
         """
-        # using shortcuts
-        if len(inputDataList) == 1:
-            modifier = QtGui.QApplication.keyboardModifiers()
-
-            if modifier == QtCore.Qt.ShiftModifier:
-                inputDataList[-1].setText(self.totalcmdRightPanelShortName)
-            elif modifier == QtCore.Qt.ControlModifier:
-                inputDataList[-1].setText(self.totalcmdLeftPanelShortName)
-        else:
-            # use the top result if last query is empty
-            if len(inputDataList[-1].getText().strip()) == 0:
-                inputDataList[-1].setText(inputDataList[-1].getTopResult().shortName)
-
-        ############################################################################
-        # Using shortNames or icon path (in case shortNames have special meanings, #
-        # like bookmark name) to decide which handler to handle                    #
-        #                                                                          #
-        # catItem always refers to the selected item in the result list of the     #
-        # first member in inputDataList                                            #
-        ############################################################################
-
-        # launch chrome bookmarks
-        if catItem.icon == self.browserIcon or inputDataList[-1].getText() == self.browserShortName:
-            subprocess.Popen('start chrome "%s"' % catItem.fullPath, shell=True)
-
-        # run commands
-        elif catItem.icon == self.runCommandsIcon:
-            cmd = self.runCommandsCmdAlias.get(inputDataList[-1].getText(), None)
-
-            if cmd is None:
-                cmd = "conemu64 /cmd %s" % inputDataList[-1].getText()
-
-            subprocess.Popen(cmd)
-
-        # web search
-        elif inputDataList[0].getText() in self.searchEngine.keys():
-            key = inputDataList[0].getText()
-            if key != "url":
-                query = urllib.quote(inputDataList[-1].getText().encode("utf8"))
-                url = eval('"%s" %% "%s"' % (self.searchEngine.get(key).get('url'), query))
-            else:
-                url = inputDataList[-1].getText()
-            subprocess.Popen('start chrome "%s"' % url, shell=True)
-
-        # open in total commander left panel
-        elif inputDataList[-1].getText() == self.totalcmdLeftPanelShortName:
-            subprocess.Popen('start TOTALCMD64.exe /O /A /T /L="%s"' % catItem.fullPath, shell=True)
-
-        # open in total commander right panel
-        elif inputDataList[-1].getText() == self.totalcmdRightPanelShortName:
-            subprocess.Popen('start TOTALCMD64.exe /O /A /T /R="%s"' % catItem.fullPath, shell=True)
-
-        # open in gvim
-        elif inputDataList[-1].getText() == self.vimShortName:
-            subprocess.Popen('start gvim.exe --remote-tab-silent "%s"' % catItem.fullPath, shell=True)
-
-        # open in default software
-        else:
-            launchy.runProgram('"%s"' % catItem.fullPath, "")
+        for addon in self.addons:
+            if addon.launchItem(inputDataList, catItem):
+                print type(addon).__name__
+                break
 
     def hasDialog(self):
         """
