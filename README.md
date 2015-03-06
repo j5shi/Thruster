@@ -2,7 +2,7 @@
 
 [Launchy](http://www.launchy.net/) is a free utility designed to help you forget about your start menu, your desktop icons, and your file manager. Launchy indexes and launches your applications, documents, project files, folders, and bookmarks with just a few keystrokes!
 
-PyUltima is an all in one plugin for Launchy, you don't need any other launchy plugins anymore, I say this because it is true: PyUltima is written in Python and Python is simple and flexible, when some ideas come to your mind but not available in Launchy, just extend PyUltima by yourself.
+PyUltima is an all in one plugin for Launchy, you don't need any other launchy plugins anymore, I say this because it is true: PyUltima is written in Python and Python is simple and flexible, when some ideas come to your mind but not available in Launchy, just extend PyUltima by yourself or send me an request.
 
 ## Installation
 
@@ -11,7 +11,7 @@ PyUltima is an all in one plugin for Launchy, you don't need any other launchy p
 ~> installer.bat
 ```
 
-**Note: You must quit Launchy before installation if a Launchy instance is currently running on your system.**
+**Note: You may need to quit Launchy before installation if a Launchy instance is currently running on your system.**
 
 ## Features
 
@@ -36,3 +36,7 @@ And shortcut is supported, for instance: `<C-Enter>` and `<S-Enter>` for open fi
 ### Web Search
 
 Do the web search in Launchy, this features is quite the same as the Launchy build-in plugin `weby`, but it's integrated in PyUltima.
+
+### Customized Commands
+
+Define aliases for commands (DOS, BASH, ...) or define a command for a python function, very usful.

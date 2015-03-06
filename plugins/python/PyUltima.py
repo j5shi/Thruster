@@ -2,8 +2,8 @@
 """
 @author: Jia Shi
 @email: j5shi@live.com
-@last update: 2015-02-26 17:32:35
-@version: 0.5
+@last update: 2015-03-06 12:00:38
+@version: 0.8
 @license: GNU GPL v2
 """
 import launchy
@@ -83,41 +83,36 @@ class RunCommands(Base):
                 "linsee42": 'putty -load "hzling42.china.nsn-net.net"',
                 "vm134": 'putty -load "10.68.203.134"',
                 "switch": 'putty -load "Cisco_3560"',
-                "cmd": "conemu64", }
+                "con": "conemu64", }
 
     def __init__(self):
         self.id = self.getPluginId()
         self.icon = self.getIconsPath("RunCommands.png")
-
         self.triggerStr = "Run"
 
 
     def getResults(self, inputDataList, resultsList):
-        for alias in self.CmdAlias.keys():
-            resultsList.push_front(self.getCatItem("%s: Run commands" % (self.getPluginName()),
-                                                    alias,
-                                                    self.id,
-                                                    self.icon))
-
         if inputDataList[0].getText().strip().lower() == self.triggerStr.lower():
             resultsList.push_front(self.getCatItem("%s: Run commands" % (self.getPluginName()),
                                                     self.triggerStr,
                                                     self.id,
                                                     self.icon))
 
+            if len(inputDataList) > 1:
+                for alias in self.CmdAlias.keys():
+                    resultsList.push_front(self.getCatItem("%s: Run commands" % (self.getPluginName()),
+                                                            alias,
+                                                            self.id,
+                                                            self.icon))
+
+
     def launchItem(self, inputDataList, catItem):
         if catItem.icon == self.icon:
-            if len(inputDataList) == 1:
-                cmd = self.CmdAlias.get(catItem.shortName)
-            else:
-                if len(inputDataList[-1].getText().strip()) == 0:
-                    cmd = self.CmdAlias.get(inputDataList[-1].getTopResult().shortName, None)
-                elif self.CmdAlias.get(inputDataList[-1].getText(), None):
-                    cmd = self.CmdAlias.get(inputDataList[-1].getText(), None)
-                else:
-                    cmd = "conemu64 /cmd %s" % inputDataList[-1].getText()
+            cmd = self.CmdAlias.get(inputDataList[-1].getTopResult().shortName, None)
 
-            print cmd
+            if cmd is None:
+                cmd = "conemu64 /cmd %s" % inputDataList[-1].getText()
+
             if cmd is not None:
                 subprocess.Popen(cmd)
             return True
@@ -157,15 +152,38 @@ class Browser(Base):
         for key in browserBookmarks.keys():
             resultsList.append(self.getCatItem(browserBookmarks.get(key), key, self.id, self.icon))
 
+
 class DefaultHandler(Base):
 
     def __init__(self):
         self.id = self.getPluginId()
         self.icon = self.getIconsPath("DefaultHandler.png")
 
+    def shiftEnter(self, inputDataList, catItem):
+        subprocess.Popen('start TOTALCMD64.exe /O /A /T /R="%s"' % catItem.fullPath, shell=True)
+
+    def ctrlEnter(self, inputDataList, catItem):
+        subprocess.Popen('start TOTALCMD64.exe /O /A /T /L="%s"' % catItem.fullPath, shell=True)
+
+    def altEnter(self, inputDataList, catItem):
+        subprocess.Popen('start gvim.exe --remote-tab-silent "%s"' % catItem.fullPath, shell=True)
+
     def launchItem(self, inputDataList, catItem):
-        launchy.runProgram('"%s"' % catItem.fullPath, "")
-        return True
+        if len(inputDataList) == 1:
+            modifier = QtGui.QApplication.keyboardModifiers()
+
+            if modifier == QtCore.Qt.ShiftModifier:
+                self.shiftEnter(inputDataList, catItem)
+            elif modifier == QtCore.Qt.ControlModifier:
+                self.ctrlEnter(inputDataList, catItem)
+            elif modifier == QtCore.Qt.AltModifier:
+                self.altEnter(inputDataList, catItem)
+            elif modifier == QtCore.Qt.NoModifier:
+                launchy.runProgram('"%s"' % catItem.fullPath, "")
+            else:
+                pass
+
+            return True
 
 
 class PyUltima(launchy.Plugin):
@@ -306,7 +324,7 @@ class PyUltima(launchy.Plugin):
         inputDataList[0].setID(self.getID())
 
         for addon in self.addons:
-            addon.getResults(inputDataList, resultsList)
+             addon.getResults(inputDataList, resultsList)
 
     def launchItem(self, inputDataList, catItem):
         """
@@ -323,7 +341,7 @@ class PyUltima(launchy.Plugin):
         """
         for addon in self.addons:
             if addon.launchItem(inputDataList, catItem):
-                print type(addon).__name__
+                print "Addon %s executed query: %s." % (type(addon).__name__, inputDataList[-1].getText())
                 break
 
     def hasDialog(self):
@@ -349,6 +367,8 @@ class PyUltima(launchy.Plugin):
         @return       <void*>: The result of unwrapinstance( myPluginWidget )
         """
         pass
+
+
 
     def endDialog(self, accept):
         """
