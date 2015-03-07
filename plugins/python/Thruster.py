@@ -13,7 +13,7 @@ import urllib
 from PyQt4 import QtGui, QtCore
 
 
-PLUGIN_NAME = "PyUltima"
+PLUGIN_NAME = "Thruster"
 PLUGIN_ID = launchy.hash(PLUGIN_NAME)
 
 
@@ -186,7 +186,7 @@ class DefaultHandler(Base):
             return True
 
 
-class PyUltima(launchy.Plugin):
+class Thruster(launchy.Plugin):
 
     """
     http://pylaunchy.sourceforge.net/docs/launchy.html#launchy.Plugin.launchyShow
@@ -397,4 +397,4 @@ class PyUltima(launchy.Plugin):
         """
         pass
 
-launchy.registerPlugin(PyUltima)
+launchy.registerPlugin(Thruster)
