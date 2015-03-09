@@ -50,7 +50,10 @@ class WebSearch(Base):
                     "bk": {"url": "http://baike.baidu.com/search?word=%s", "name": "Baidu Baike"},
                     "bd": {"url": "https://www.baidu.com/s?wd=%s", "name": "Baidu"},
                     "tao": {"url": "http://s.taobao.com/search?q=%s", "name": "Taobao"},
-                    "pr": {"url": "http://prontoa02.int.net.nokia.com/nokia/pronto/pronto.nsf/PRID/%s?OpenDocument", "name": "Pronto"}, }
+                    "pr": {"url": "http://prontoa02.int.net.nokia.com/nokia/pronto/pronto.nsf/PRID/%s?OpenDocument", "name": "Pronto"},
+                    "cpp": {"url": "http://www.cplusplus.com/search.do?q=%s", "name": "C++"},
+                    }
+
 
     def __init__(self):
         self.id = self.getPluginId()
