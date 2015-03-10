@@ -40,6 +40,41 @@ class Base(object):
     def getLabels(self, inputDataList):
         pass
 
+    def launchItem(self, inputDataList, catItem):
+        return False
+
+
+class Calculator(Base):
+
+    def __init__(self):
+        self.id = self.getPluginId()
+        self.icon = self.getIconsPath("Calculator.png")
+        self.triggerTxt = "cal"
+
+    def getResults(self, inputDataList, resultsList):
+        query = inputDataList[0].getText().lower()
+
+        if query.startswith("cal"):
+            resultsList.push_front(self.getCatItem("%s: Calculator" % (self.getPluginName()),
+                                                   "Cal",
+                                                   self.id,
+                                                   self.icon))
+
+            if len(inputDataList) > 1:
+                try:
+                    ret = eval(inputDataList[1].getText().strip())
+                except:
+                    ret = ""
+                else:
+                    resultsList.push_front(self.getCatItem("",
+                                                           "Result: %s" % (ret),
+                                                           self.id,
+                                                           self.icon))
+
+                    resultsList.push_front(self.getCatItem("",
+                                                           "Result: 0x%x" % (ret),
+                                                           self.id,
+                                                           self.icon))
 
 
 class WebSearch(Base):
@@ -53,7 +88,6 @@ class WebSearch(Base):
                     "pr": {"url": "http://prontoa02.int.net.nokia.com/nokia/pronto/pronto.nsf/PRID/%s?OpenDocument", "name": "Pronto"},
                     "cpp": {"url": "http://www.cplusplus.com/search.do?q=%s", "name": "C++"},
                     }
-
 
     def __init__(self):
         self.id = self.getPluginId()
@@ -93,21 +127,19 @@ class RunCommands(Base):
         self.icon = self.getIconsPath("RunCommands.png")
         self.triggerStr = "Run"
 
-
     def getResults(self, inputDataList, resultsList):
         if inputDataList[0].getText().strip().lower() == self.triggerStr.lower():
             resultsList.push_front(self.getCatItem("%s: Run commands" % (self.getPluginName()),
-                                                    self.triggerStr,
-                                                    self.id,
-                                                    self.icon))
+                                                   self.triggerStr,
+                                                   self.id,
+                                                   self.icon))
 
             if len(inputDataList) > 1:
                 for alias in self.CmdAlias.keys():
                     resultsList.push_front(self.getCatItem("%s: Run commands" % (self.getPluginName()),
-                                                            alias,
-                                                            self.id,
-                                                            self.icon))
-
+                                                           alias,
+                                                           self.id,
+                                                           self.icon))
 
     def launchItem(self, inputDataList, catItem):
         if catItem.icon == self.icon:
@@ -119,6 +151,7 @@ class RunCommands(Base):
             if cmd is not None:
                 subprocess.Popen(cmd)
             return True
+
 
 class Browser(Base):
 
@@ -230,6 +263,7 @@ class Thruster(launchy.Plugin):
         self.registerAddon(Browser)
         self.registerAddon(WebSearch)
         self.registerAddon(RunCommands)
+        self.registerAddon(Calculator)
         self.registerAddon(DefaultHandler)
         print "finished loading addons."
         print "=============================="
@@ -327,7 +361,7 @@ class Thruster(launchy.Plugin):
         inputDataList[0].setID(self.getID())
 
         for addon in self.addons:
-             addon.getResults(inputDataList, resultsList)
+            addon.getResults(inputDataList, resultsList)
 
     def launchItem(self, inputDataList, catItem):
         """
@@ -370,8 +404,6 @@ class Thruster(launchy.Plugin):
         @return       <void*>: The result of unwrapinstance( myPluginWidget )
         """
         pass
-
-
 
     def endDialog(self, accept):
         """
