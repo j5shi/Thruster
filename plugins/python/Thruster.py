@@ -79,8 +79,7 @@ class Calculator(Base):
 
 class WebSearch(Base):
 
-    searchEngine = {"url": {"url": "%s", "name": "Web"},
-                    "gg": {"url": "https://www.google.com/?gws_rd=ssl#q=%s", "name": "Google"},
+    searchEngine = {"gg": {"url": "https://www.google.com/?gws_rd=ssl#q=%s", "name": "Google"},
                     "bb": {"url": "http://www.bing.com/search?q=%s", "name": "Bing"},
                     "bk": {"url": "http://baike.baidu.com/search?word=%s", "name": "Baidu Baike"},
                     "bd": {"url": "https://www.baidu.com/s?wd=%s", "name": "Baidu"},
@@ -92,6 +91,8 @@ class WebSearch(Base):
     def __init__(self):
         self.id = self.getPluginId()
         self.icon = self.getIconsPath("WebSearch.png")
+        self.urlTriggerTxt = "go"
+        self.searchEngine.update({self.urlTriggerTxt: {"url": "%s", "name": "Web"}})
 
     def getResults(self, inputDataList, resultsList):
         key = inputDataList[0].getText()
@@ -104,7 +105,7 @@ class WebSearch(Base):
     def launchItem(self, inputDataList, catItem):
         if catItem.icon == self.icon:
             key = inputDataList[0].getText()
-            if key != "url":
+            if key != self.urlTriggerTxt:
                 query = urllib.quote(inputDataList[-1].getText().encode("utf8"))
                 url = eval('"%s" %% "%s"' % (self.searchEngine.get(key).get('url'), query))
             else:
