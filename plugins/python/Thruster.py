@@ -63,6 +63,10 @@ class Calculator(Base):
             if len(inputDataList) > 1:
                 try:
                     ret = eval(inputDataList[1].getText().strip())
+                    retb = "{0:032b}".format(ret)
+                    retInBin = ""
+                    for i in range(len(retb)):
+                        retInBin += retb[i] if (i % 4 or i == 0) else ("," + retb[i])
                 except:
                     ret = ""
                 else:
@@ -76,6 +80,10 @@ class Calculator(Base):
                                                            self.id,
                                                            self.icon))
 
+                    resultsList.push_front(self.getCatItem("",
+                                                           "Result: %s" % (retInBin),
+                                                           self.id,
+                                                           self.icon))
 
 class WebSearch(Base):
 
@@ -86,6 +94,7 @@ class WebSearch(Base):
                     "tao": {"url": "http://s.taobao.com/search?q=%s", "name": "Taobao"},
                     "pr": {"url": "http://prontoa02.int.net.nokia.com/nokia/pronto/pronto.nsf/PRID/%s?OpenDocument", "name": "Pronto"},
                     "cpp": {"url": "http://www.cplusplus.com/search.do?q=%s", "name": "C++"},
+                    "ieee": {"url": "http://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&queryText=%s", "name": "IEEE"},
                     }
 
     def __init__(self):
