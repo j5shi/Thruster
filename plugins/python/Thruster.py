@@ -117,6 +117,7 @@ class WebSearch(Base):
 class RunCommands(Base):
 
     CmdAlias = {"putty": "putty.exe",
+                "py": "ConEmu.exe /cmd ipython",
                 "linsee40": 'putty -load "hzling40.china.nsn-net.net"',
                 "linsee42": 'putty -load "hzling42.china.nsn-net.net"',
                 "vm134": 'putty -load "10.68.203.134"',
