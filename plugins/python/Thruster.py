@@ -2,14 +2,15 @@
 """
 @author: Jia Shi
 @email: j5shi@live.com
-@last update: 2015-03-06 12:00:38
-@version: 0.8
+@last update: 2015-03-13 10:44:40
+@version: 0.81
 @license: GNU GPL v2
 """
 import launchy
 import subprocess
 import os
 import urllib
+import shutil
 from PyQt4 import QtGui, QtCore
 
 
@@ -28,8 +29,8 @@ class Base(object):
     def getIconsPath(self, filename):
         return os.path.join(launchy.getIconsPath(), filename)
 
-    def getCatItem(self, fullPath, shortName, id, icon):
-        return launchy.CatItem(fullPath, shortName, id, icon)
+    def getCatItem(self, fullPath, shortName, pluginId, icon):
+        return launchy.CatItem(fullPath, shortName, pluginId, icon)
 
     def getResults(self, inputDataList, resultsList):
         pass
@@ -85,6 +86,7 @@ class Calculator(Base):
                                                            self.id,
                                                            self.icon))
 
+
 class WebSearch(Base):
 
     searchEngine = {"gg": {"url": "https://www.google.com/?gws_rd=ssl#q=%s", "name": "Google"},
@@ -94,8 +96,7 @@ class WebSearch(Base):
                     "tao": {"url": "http://s.taobao.com/search?q=%s", "name": "Taobao"},
                     "pr": {"url": "http://prontoa02.int.net.nokia.com/nokia/pronto/pronto.nsf/PRID/%s?OpenDocument", "name": "Pronto"},
                     "cpp": {"url": "http://www.cplusplus.com/search.do?q=%s", "name": "C++"},
-                    "ieee": {"url": "http://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&queryText=%s", "name": "IEEE"},
-                    }
+                    "ieee": {"url": "http://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&queryText=%s", "name": "IEEE"}, }
 
     def __init__(self):
         self.id = self.getPluginId()
@@ -125,18 +126,36 @@ class WebSearch(Base):
 
 class RunCommands(Base):
 
-    CmdAlias = {"putty": "putty.exe",
-                "pp": "ConEmu.exe /cmd ipython",
-                "linsee40": 'putty -load "hzling40.china.nsn-net.net"',
-                "linsee42": 'putty -load "hzling42.china.nsn-net.net"',
-                "vm134": 'putty -load "10.68.203.134"',
-                "switch": 'putty -load "Cisco_3560"',
-                "con": "conemu64", }
+    PROG_OS = 1        # call by OS, usually call an external program
+    PROG_THRUSTER = 2  # call by Thruster, usually call a method
+
+    CmdAlias = {"putty": {"prog": PROG_OS, "cmd": "conemu64 /cmd putty.exe"},
+                "python": {"prog": PROG_OS, "cmd": "conemu64 /cmd ipython"},
+                "linsee40": {"prog": PROG_OS, "cmd": 'putty -load "hzling40.china.nsn-net.net"'},
+                "linsee42": {"prog": PROG_OS, "cmd": 'putty -load "hzling42.china.nsn-net.net"'},
+                "vm134": {"prog": PROG_OS, "cmd": 'putty -load "10.68.203.134"'},
+                "switch": {"prog": PROG_OS, "cmd": 'putty -load "Cisco_3560"'},
+                "sync": {"prog": PROG_THRUSTER, "cmd": "self.syncFiles()"},
+                "cmd": {"prog": PROG_OS, "cmd": "conemu64"}, }
 
     def __init__(self):
         self.id = self.getPluginId()
         self.icon = self.getIconsPath("RunCommands.png")
         self.triggerStr = "Run"
+
+    def syncFiles(self):
+        syncTable = [("d:/userdata/j5shi/My Documents/Source Insight/Settings/GLOBAL.CF3",
+                      "d:/userdata/j5shi/BDY/Private/SourceInsight Official Packet/Settings/GLOBAL.CF3"),
+                     ("c:/Program Files (x86)/vim/_vimrc",
+                      "d:/userdata/j5shi/BDY/Private/Vim/_vimrc"), ]
+
+        for syncEntry in syncTable:
+            frm, to = syncEntry
+            if not os.path.exists(frm):
+                print "%s not exists." % frm
+            else:
+                if (not os.path.exists(to)) or (os.path.getmtime(frm) > os.path.getmtime(to)):
+                    shutil.copy2(frm, to)
 
     def getResults(self, inputDataList, resultsList):
         if inputDataList[0].getText().strip().lower() == self.triggerStr.lower():
@@ -154,13 +173,16 @@ class RunCommands(Base):
 
     def launchItem(self, inputDataList, catItem):
         if catItem.icon == self.icon:
-            cmd = self.CmdAlias.get(inputDataList[-1].getTopResult().shortName, None)
+            alias = self.CmdAlias.get(inputDataList[-1].getTopResult().shortName, {})
 
-            if cmd is None:
-                cmd = "conemu64 /cmd %s" % inputDataList[-1].getText()
-
-            if cmd is not None:
+            if alias.get("prog", None) == self.PROG_OS:
+                cmd = "%s" % (alias.get("cmd"))
                 subprocess.Popen(cmd)
+            elif alias.get("prog", None) == self.PROG_THRUSTER:
+                eval("%s" % alias.get("cmd"))
+            else:
+                pass
+
             return True
 
 
@@ -254,6 +276,7 @@ class Thruster(launchy.Plugin):
         """
         launchy.Plugin.__init__(self)
 
+        self.addons = []
         self.name = PLUGIN_NAME
         self.id = PLUGIN_ID
         self.icon = os.path.join(launchy.getIconsPath(), "%s.png" % self.name)
