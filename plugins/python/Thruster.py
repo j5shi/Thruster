@@ -135,7 +135,8 @@ class RunCommands(Base):
                 "linsee42": {"prog": PROG_OS, "cmd": 'putty -load "hzling42.china.nsn-net.net"'},
                 "vm134": {"prog": PROG_OS, "cmd": 'putty -load "10.68.203.134"'},
                 "switch": {"prog": PROG_OS, "cmd": 'putty -load "Cisco_3560"'},
-                "sync": {"prog": PROG_THRUSTER, "cmd": "self.syncFiles()"},
+                "sync@Company": {"prog": PROG_THRUSTER, "cmd": "self.syncCompany()"},
+                "sync@Home": {"prog": PROG_THRUSTER, "cmd": "self.syncHome()"},
                 "cmd": {"prog": PROG_OS, "cmd": "conemu64"}, }
 
     def __init__(self):
@@ -143,19 +144,42 @@ class RunCommands(Base):
         self.icon = self.getIconsPath("RunCommands.png")
         self.triggerStr = "Run"
 
-    def syncFiles(self):
+    def syncFiles(self, syncTable):
+        '''
+        @syncTable [(local, remote), ...]: file syncing table.
+        '''
+
+        for syncEntry in syncTable:
+            local, remote = syncEntry
+
+            if (not os.path.exists(local)) and (not os.path.exists(remote)):
+                print "both local and remote files not exist:\n  %s  %s." % (local, remote)
+            elif os.path.exists(local) and not os.path.exists(remote):
+                shutil.copy2(local, remote)
+            elif os.path.exists(remote) and not os.path.exists(local):
+                shutil.copy2(remote, local)
+            elif os.path.getmtime(remote) > os.path.getmtime(local):
+                shutil.copy2(remote, local)
+            elif os.path.getmtime(remote) < os.path.getmtime(local):
+                shutil.copy2(local, remote)
+
+    def syncCompany(self):
+
         syncTable = [("d:/userdata/j5shi/My Documents/Source Insight/Settings/GLOBAL.CF3",
                       "d:/userdata/j5shi/BDY/Private/SourceInsight Official Packet/Settings/GLOBAL.CF3"),
                      ("c:/Program Files (x86)/vim/_vimrc",
                       "d:/userdata/j5shi/BDY/Private/Vim/_vimrc"), ]
 
-        for syncEntry in syncTable:
-            frm, to = syncEntry
-            if not os.path.exists(frm):
-                print "%s not exists." % frm
-            else:
-                if (not os.path.exists(to)) or (os.path.getmtime(frm) > os.path.getmtime(to)):
-                    shutil.copy2(frm, to)
+        self.syncFiles(syncTable)
+
+    def syncHome(self):
+
+        syncTable = [("c:/Users/j5shi/Documents/Source Insight/Settings/GLOBAL.CF3",
+                      "d:/Baidu/Private/SourceInsight Official Packet/Settings/GLOBAL.CF3"),
+                     ("c:/Program Files (x86)/vim/_vimrc",
+                      "d:/Baidu/Private/Vim/_vimrc"), ]
+
+        self.syncFiles(syncTable)
 
     def getResults(self, inputDataList, resultsList):
         if inputDataList[0].getText().strip().lower() == self.triggerStr.lower():
@@ -173,6 +197,7 @@ class RunCommands(Base):
 
     def launchItem(self, inputDataList, catItem):
         if catItem.icon == self.icon:
+            print "entered"
             alias = self.CmdAlias.get(inputDataList[-1].getTopResult().shortName, {})
 
             if alias.get("prog", None) == self.PROG_OS:
