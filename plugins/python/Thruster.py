@@ -150,25 +150,33 @@ class RunCommands(Base):
         '''
 
         for syncEntry in syncTable:
-            local, remote = syncEntry
+            src, dst = syncEntry
 
-            if (not os.path.exists(local)) and (not os.path.exists(remote)):
-                print "both local and remote files not exist:\n  %s  %s." % (local, remote)
-            elif os.path.exists(local) and not os.path.exists(remote):
-                shutil.copy2(local, remote)
-            elif os.path.exists(remote) and not os.path.exists(local):
-                shutil.copy2(remote, local)
-            elif os.path.getmtime(remote) > os.path.getmtime(local):
-                shutil.copy2(remote, local)
-            elif os.path.getmtime(remote) < os.path.getmtime(local):
-                shutil.copy2(local, remote)
+            if (not os.path.exists(src)) and (not os.path.exists(dst)):
+                print "both src and dst files not exist:\n  %s  %s." % (src, dst)
+            elif os.path.exists(src) and not os.path.exists(dst):
+                self.doCopy(src, dst)
+            elif os.path.exists(dst) and not os.path.exists(src):
+                self.doCopy(dst, src)
+            elif os.path.getmtime(dst) > os.path.getmtime(src):
+                self.doCopy(dst, src)
+            elif os.path.getmtime(dst) < os.path.getmtime(src):
+                self.doCopy(src, dst)
+
+    def doCopy(self, src, dst):
+        if os.path.isdir(src):
+            shutil.copytree(src, dst)
+        elif os.path.isfile(src):
+            shutil.copy2(src, dst)
 
     def syncCompany(self):
 
         syncTable = [("d:/userdata/j5shi/My Documents/Source Insight/Settings/GLOBAL.CF3",
                       "d:/userdata/j5shi/BDY/Private/SourceInsight Official Packet/Settings/GLOBAL.CF3"),
                      ("c:/Program Files (x86)/vim/_vimrc",
-                      "d:/userdata/j5shi/BDY/Private/Vim/_vimrc"), ]
+                      "d:/userdata/j5shi/BDY/Private/Vim/_vimrc"),
+                     ("d:/userdata/j5shi/Application Data/Launchy/launchy.ini",
+                      "d:/userdata/j5shi/BDY/Private/Launchy/config/company/Launchy/launchy.ini"), ]
 
         self.syncFiles(syncTable)
 
