@@ -129,15 +129,15 @@ class RunCommands(Base):
     PROG_OS = 1        # call by OS, usually call an external program
     PROG_THRUSTER = 2  # call by Thruster, usually call a method
 
-    CmdAlias = {"putty": {"prog": PROG_OS, "cmd": "conemu64 /cmd putty.exe"},
-                "python": {"prog": PROG_OS, "cmd": "conemu64 /cmd ipython"},
+    CmdAlias = {"putty": {"prog": PROG_OS, "cmd": "putty.exe"},
+                "python": {"prog": PROG_OS, "cmd": "cmd.exe /K ipython"},
                 "linsee40": {"prog": PROG_OS, "cmd": 'putty -load "hzling40.china.nsn-net.net"'},
                 "linsee42": {"prog": PROG_OS, "cmd": 'putty -load "hzling42.china.nsn-net.net"'},
                 "vm134": {"prog": PROG_OS, "cmd": 'putty -load "10.68.203.134"'},
                 "switch": {"prog": PROG_OS, "cmd": 'putty -load "Cisco_3560"'},
                 "sync@Company": {"prog": PROG_THRUSTER, "cmd": "self.syncCompany()"},
                 "sync@Home": {"prog": PROG_THRUSTER, "cmd": "self.syncHome()"},
-                "cmd": {"prog": PROG_OS, "cmd": "conemu64"}, }
+                "cmd": {"prog": PROG_OS, "cmd": "cmd.exe"}, }
 
     def __init__(self):
         self.id = self.getPluginId()
@@ -175,6 +175,10 @@ class RunCommands(Base):
                       "d:/userdata/j5shi/BDY/Private/SourceInsight Official Packet/Settings/GLOBAL.CF3"),
                      ("c:/Program Files (x86)/vim/_vimrc",
                       "d:/userdata/j5shi/BDY/Private/Vim/_vimrc"),
+                     ("d:/userdata/j5shi/Application Data/GHISLER/wcx_ftp.ini",
+                      "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/wcx_ftp.ini"),
+                     ("d:/userdata/j5shi/Application Data/GHISLER/wincmd.ini",
+                      "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/wincmd.ini"),
                      ("d:/userdata/j5shi/Application Data/Launchy/launchy.ini",
                       "d:/userdata/j5shi/BDY/Private/Launchy/config/company/Launchy/launchy.ini"), ]
 
