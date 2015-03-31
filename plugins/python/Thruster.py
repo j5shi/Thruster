@@ -91,7 +91,7 @@ class WebSearch(Base):
 
     searchEngine = {"gg": {"url": "https://www.google.com/?gws_rd=ssl#q=%s", "name": "Google"},
                     "bb": {"url": "http://www.bing.com/search?q=%s", "name": "Bing"},
-                    "bk": {"url": "http://baike.baidu.com/search?word=%s", "name": "Baidu Baike"},
+                    "map": {"url": "http://map.baidu.com/?newmap=1&ie=utf-8&s=s%%26wd%%3D%s", "name": "Baidu Maps"},
                     "bd": {"url": "https://www.baidu.com/s?wd=%s", "name": "Baidu"},
                     "tao": {"url": "http://s.taobao.com/search?q=%s", "name": "Taobao"},
                     "pr": {"url": "http://prontoa02.int.net.nokia.com/nokia/pronto/pronto.nsf/PRID/%s?OpenDocument", "name": "Pronto"},
