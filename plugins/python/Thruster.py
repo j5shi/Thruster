@@ -94,7 +94,7 @@ class WebSearch(Base):
                     "map": {"url": "http://map.baidu.com/?newmap=1&ie=utf-8&s=s%%26wd%%3D%s", "name": "Baidu Maps"},
                     "bd": {"url": "https://www.baidu.com/s?wd=%s", "name": "Baidu"},
                     "tao": {"url": "http://s.taobao.com/search?q=%s", "name": "Taobao"},
-                    "pr": {"url": "http://prontoa02.int.net.nokia.com/nokia/pronto/pronto.nsf/PRID/%s?OpenDocument", "name": "Pronto"},
+                    "pr": {"url": "https://pronto.inside.nsn.com/pronto/problemReportSearch.html?freeTextdropDownID=prId&searchTopText=%s+", "name": "Pronto"},
                     "cpp": {"url": "http://www.cplusplus.com/search.do?q=%s", "name": "C++"},
                     "ieee": {"url": "http://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&queryText=%s", "name": "IEEE"}, }
 
