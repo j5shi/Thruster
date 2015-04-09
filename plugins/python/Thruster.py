@@ -133,6 +133,7 @@ class RunCommands(Base):
                 "python": {"prog": PROG_OS, "cmd": "cmd.exe /K ipython"},
                 "linsee40": {"prog": PROG_OS, "cmd": 'putty -load "hzling40.china.nsn-net.net"'},
                 "linsee42": {"prog": PROG_OS, "cmd": 'putty -load "hzling42.china.nsn-net.net"'},
+                "linsee21": {"prog": PROG_OS, "cmd": 'putty -load "ouling21.emea.nsn-net.net"'},
                 "vm134": {"prog": PROG_OS, "cmd": 'putty -load "10.68.203.134"'},
                 "switch": {"prog": PROG_OS, "cmd": 'putty -load "Cisco_3560"'},
                 "sync@Company": {"prog": PROG_THRUSTER, "cmd": "self.syncCompany()"},
