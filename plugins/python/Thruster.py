@@ -210,7 +210,6 @@ class RunCommands(Base):
 
     def launchItem(self, inputDataList, catItem):
         if catItem.icon == self.icon:
-            print "entered"
             alias = self.CmdAlias.get(inputDataList[-1].getTopResult().shortName, {})
 
             if alias.get("prog", None) == self.PROG_OS:
@@ -292,6 +291,24 @@ class DefaultHandler(Base):
 
             return True
 
+
+class Alias(Base):
+
+    '''
+    This addon will add doskey macros, a.k.a alias in linux .bashrc,
+    to your system when this plugin is loaded.
+
+    for more about doskey:
+
+    https://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/doskey.mspx?mfr=true
+    '''
+    
+    def __init__(self):
+        aliases = ["doskey diff=svn diff $G knife.patch",]
+
+        for alias in aliases:
+            os.system(alias)
+            print "added doskey: %s" % alias
 
 class Thruster(launchy.Plugin):
 
