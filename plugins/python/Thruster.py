@@ -96,12 +96,13 @@ class WebSearch(Base):
                     "tao": {"url": "http://s.taobao.com/search?q=%s", "name": "Taobao"},
                     "pr": {"url": "https://pronto.inside.nsn.com/pronto/problemReportSearch.html?freeTextdropDownID=prId&searchTopText=%s+", "name": "Pronto"},
                     "cpp": {"url": "http://www.cplusplus.com/search.do?q=%s", "name": "C++"},
+                    "ss": {"url": "https://www.google.com/search?q=%s&sitesearch=ss64.com&gws_rd=ssl", "name": "SS64"},
                     "ieee": {"url": "http://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&queryText=%s", "name": "IEEE"}, }
 
     def __init__(self):
         self.id = self.getPluginId()
         self.icon = self.getIconsPath("WebSearch.png")
-        self.urlTriggerTxt = "go"
+        self.urlTriggerTxt = "www"
         self.searchEngine.update({self.urlTriggerTxt: {"url": "%s", "name": "Web"}})
 
     def getResults(self, inputDataList, resultsList):
