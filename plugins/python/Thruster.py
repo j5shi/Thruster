@@ -101,7 +101,7 @@ class WebSearch(Base):
                     "map": {"url": "http://map.baidu.com/?newmap=1&ie=utf-8&s=s%%26wd%%3D%s", "name": "Baidu Maps"},
                     "bd": {"url": "https://www.baidu.com/s?wd=%s", "name": "Baidu"},
                     "tao": {"url": "http://s.taobao.com/search?q=%s", "name": "Taobao"},
-                    "pr": {"url": "https://pronto.inside.nsn.com/pronto/problemReportSearch.html?freeTextdropDownID=prId&searchTopText=%s+", "name": "Pronto"},
+                    "pr": {"url": "https://pronto.inside.nsn.com/pronto/problemReportSearch.html?freeTextdropDownID=prId&searchTopText=%s", "name": "Pronto"},
                     "cpp": {"url": "http://www.cplusplus.com/search.do?q=%s", "name": "C++"},
                     "ss": {"url": "https://www.google.com/search?q=%s&sitesearch=ss64.com&gws_rd=ssl", "name": "SS64"},
                     "ieee": {"url": "http://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&queryText=%s", "name": "IEEE"}, }
@@ -144,6 +144,7 @@ class RunCommands(Base):
                 "linsee21": {"prog": PROG_OS, "cmd": 'putty -load "ouling21.emea.nsn-net.net"'},
                 "vm134": {"prog": PROG_OS, "cmd": 'putty -load "10.68.203.134"'},
                 "switch": {"prog": PROG_OS, "cmd": 'putty -load "Cisco_3560"'},
+                "fct": {"prog": PROG_OS, "cmd": 'putty -load "FCT"'},
                 "sync@Company": {"prog": PROG_THRUSTER, "cmd": "self.syncCompany()"},
                 "sync@Home": {"prog": PROG_THRUSTER, "cmd": "self.syncHome()"},
                 "cmd": {"prog": PROG_OS, "cmd": "cmd.exe"}, }
