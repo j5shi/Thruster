@@ -2,8 +2,8 @@
 """
 @author: Jia Shi
 @email: j5shi@live.com
-@last update: 2015-03-13 10:44:40
-@version: 0.81
+@last update: 2015-05-05 10:09:24
+@version: 0.83
 @license: GNU GPL v2
 """
 import launchy
@@ -17,6 +17,13 @@ from PyQt4 import QtGui, QtCore
 PLUGIN_NAME = "Thruster"
 PLUGIN_ID = launchy.hash(PLUGIN_NAME)
 
+LOG_LEVEL_DBG, LOG_LEVEL_INF, LOG_LEVEL_WARN, LOG_LEVEL_ERR = range(4)
+LOG_LEVEL = LOG_LEVEL_WARN
+
+def logger(level, log):
+
+    if level >= LOG_LEVEL:
+        print log
 
 class Base(object):
 
@@ -155,7 +162,7 @@ class RunCommands(Base):
             src, dst = syncEntry
 
             if (not os.path.exists(src)) and (not os.path.exists(dst)):
-                print "both src and dst files not exist:\n  %s  %s." % (src, dst)
+                logger(LOG_LEVEL_ERR, "both src and dst files not exist:\n  %s  %s." % (src, dst))
             elif os.path.exists(src) and not os.path.exists(dst):
                 self.doCopy(src, dst)
             elif os.path.exists(dst) and not os.path.exists(src):
@@ -260,20 +267,20 @@ class Browser(Base):
             resultsList.append(self.getCatItem(browserBookmarks.get(key), key, self.id, self.icon))
 
 
-class DefaultHandler(Base):
+class Shortcuts(Base):
 
     def __init__(self):
         self.id = self.getPluginId()
         self.icon = self.getIconsPath("DefaultHandler.png")
 
     def shiftEnter(self, inputDataList, catItem):
-        subprocess.Popen('start TOTALCMD64.exe /O /A /T /R="%s"' % catItem.fullPath, shell=True)
+        os.popen('start TOTALCMD64.exe /O /A /T /R="%s"' % catItem.fullPath)
 
     def ctrlEnter(self, inputDataList, catItem):
-        subprocess.Popen('start TOTALCMD64.exe /O /A /T /L="%s"' % catItem.fullPath, shell=True)
+        os.popen('start TOTALCMD64.exe /O /A /T /L="%s"' % catItem.fullPath)
 
     def altEnter(self, inputDataList, catItem):
-        subprocess.Popen('start gvim.exe --remote-tab-silent "%s"' % catItem.fullPath, shell=True)
+        os.popen('start gvim.exe --remote-tab-silent "%s"' % catItem.fullPath)
 
     def launchItem(self, inputDataList, catItem):
         if len(inputDataList) == 1:
@@ -285,31 +292,19 @@ class DefaultHandler(Base):
                 self.ctrlEnter(inputDataList, catItem)
             elif modifier == QtCore.Qt.AltModifier:
                 self.altEnter(inputDataList, catItem)
-            elif modifier == QtCore.Qt.NoModifier:
-                launchy.runProgram('"%s"' % catItem.fullPath, "")
             else:
-                pass
-
+                return False
             return True
 
+class DefaultHandler(Base):
 
-class Alias(Base):
-
-    '''
-    This addon will add doskey macros, a.k.a alias in linux .bashrc,
-    to your system when this plugin is loaded.
-
-    for more about doskey:
-
-    https://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/doskey.mspx?mfr=true
-    '''
-    
     def __init__(self):
-        aliases = ["doskey diff=svn diff $G knife.patch",]
-
-        for alias in aliases:
-            os.system(alias)
-            print "added doskey: %s" % alias
+        self.id = self.getPluginId()
+        self.icon = self.getIconsPath("DefaultHandler.png")
+    
+    def launchItem(self, inputDataList, catItem):
+        launchy.runProgram('"%s"' % catItem.fullPath, "")
+        return True
 
 class Thruster(launchy.Plugin):
 
@@ -343,20 +338,21 @@ class Thruster(launchy.Plugin):
 
         This is a good time to do any initialization work.
         """
-        print "=============================="
-        print "instance created: %s" % self
-        print "hash: %s" % self.getID()
-        print "name: %s" % self.getName()
-        print "icon: %s" % self.getIcon()
-        print "loading addons:"
+        logger(LOG_LEVEL_INF, "==============================")
+        logger(LOG_LEVEL_INF, "instance created: %s" % self)
+        logger(LOG_LEVEL_INF, "hash: %s" % self.getID())
+        logger(LOG_LEVEL_INF, "name: %s" % self.getName())
+        logger(LOG_LEVEL_INF, "icon: %s" % self.getIcon())
+        logger(LOG_LEVEL_INF, "loading addons:")
         self.addons = []
         self.registerAddon(Browser)
         self.registerAddon(WebSearch)
         self.registerAddon(RunCommands)
         self.registerAddon(Calculator)
+        self.registerAddon(Shortcuts)
         self.registerAddon(DefaultHandler)
-        print "finished loading addons."
-        print "=============================="
+        logger(LOG_LEVEL_INF, "finished loading addons.")
+        logger(LOG_LEVEL_INF, "==============================")
 
     def registerAddon(self, addon):
         a = addon()
@@ -368,7 +364,7 @@ class Thruster(launchy.Plugin):
             # last addon to process queries
             self.addons.append(a)
 
-        print "  - %s loaded" % type(a).__name__
+        logger(LOG_LEVEL_INF, "  - %s loaded" % type(a).__name__)
 
     def getID(self):
         """
@@ -468,7 +464,7 @@ class Thruster(launchy.Plugin):
         """
         for addon in self.addons:
             if addon.launchItem(inputDataList, catItem):
-                print "Addon %s executed query: %s." % (type(addon).__name__, inputDataList[-1].getText())
+                logger(LOG_LEVEL_DBG, "Addon %s executed query: %s." % (type(addon).__name__, inputDataList[-1].getText()))
                 break
 
     def hasDialog(self):
