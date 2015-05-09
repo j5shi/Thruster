@@ -2,7 +2,7 @@
 """
 @author: Jia Shi
 @email: j5shi@live.com
-@last update: 2015-05-05 10:09:24
+@last update: 2015-05-09 20:13:58
 @version: 0.83
 @license: GNU GPL v2
 """
@@ -275,13 +275,13 @@ class Shortcuts(Base):
         self.icon = self.getIconsPath("DefaultHandler.png")
 
     def shiftEnter(self, inputDataList, catItem):
-        os.popen('start TOTALCMD64.exe /O /A /T /R="%s"' % catItem.fullPath)
-
+        subprocess.Popen('start TOTALCMD64.exe /O /A /T /R="%s"' % catItem.fullPath, shell=True)
+        
     def ctrlEnter(self, inputDataList, catItem):
-        os.popen('start TOTALCMD64.exe /O /A /T /L="%s"' % catItem.fullPath)
+        subprocess.Popen('start TOTALCMD64.exe /O /A /T /L="%s"' % catItem.fullPath, shell=True)
 
     def altEnter(self, inputDataList, catItem):
-        os.popen('start gvim.exe --remote-tab-silent "%s"' % catItem.fullPath)
+        subprocess.Popen('start gvim.exe --remote-tab-silent "%s"' % catItem.fullPath, shell=True)
 
     def launchItem(self, inputDataList, catItem):
         if len(inputDataList) == 1:
