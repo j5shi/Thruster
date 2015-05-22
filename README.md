@@ -39,4 +39,4 @@ Do the web search in Launchy, this features is quite the same as the Launchy bui
 
 ### Customized Commands
 
-Define aliases for commands (DOS, BASH, ...) or define a command for a python function, very usful.
+Define aliases for commands (DOS, BASH, ...) or define a command for a python function, very useful.
