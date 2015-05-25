@@ -11,6 +11,7 @@ import subprocess
 import os
 import urllib
 import shutil
+import pprint
 from PyQt4 import QtGui, QtCore
 
 
@@ -52,6 +53,65 @@ class Base(object):
         return False
 
 
+class DspAnalyzer(Base):
+                   
+    def __init__(self):
+
+        self.id = self.getPluginId()
+        self.icon = self.getIconsPath("DspAnalyzer.png")
+        self.triggerTxtQueueDumpAnalyzer = "que"
+        self.triggerTxts = {self.triggerTxtQueueDumpAnalyzer: "QueueDumpAnalyzer",}
+
+    def getResults(self, inputDataList, resultsList):
+        query = inputDataList[0].getText().lower()
+
+        for triggerTxt in self.triggerTxts.keys():
+            if query.startswith(triggerTxt):
+                resultsList.push_front(self.getCatItem("%s: %s" % (self.getPluginName(), self.triggerTxts.get(triggerTxt)),
+                                                       self.triggerTxts.get(triggerTxt),
+                                                       self.id,
+                                                       self.icon))
+
+    def getQueueInfo(self, s):
+        if s.strip().startswith("queueNbr"):
+            return s.strip().split("=")[2]
+        return None
+
+    def getDescInfo(self, s):
+        if s.strip().startswith("descPtr"):
+            return s.strip().split("=")[2]
+        return None
+
+    def printToFile(self, filename, printObj):
+        with open(filename, 'w') as fh:
+            pprint.pprint(printObj, stream=fh)
+
+    def QueueDumpAnalyzer(self, inputDataList, catItem):
+        queueDb = {}
+        queueDumpPath = inputDataList[-1].getText()
+
+        with open(queueDumpPath) as queueDumpFh:
+            queueDumps = queueDumpFh.readlines()
+
+            for idx in range(len(queueDumps)):
+                line = queueDumps[idx]
+                queueInfo = self.getQueueInfo(line)
+
+                if queueInfo:
+                    queueDb.update({queueInfo: queueDb.get(queueInfo, 0)})
+
+                    if self.getDescInfo(queueDumps[idx + 1]):
+                        queueDb.update({queueInfo: queueDb.get(queueInfo) + 1})
+
+            self.printToFile(os.path.join(os.path.dirname(queueDumpPath), "QueueDumpAnalyzer.log"), queueDb)
+    
+    def launchItem(self, inputDataList, catItem):
+        if catItem.icon == self.icon:
+            if inputDataList[0].getText() == self.triggerTxts.get(self.triggerTxtQueueDumpAnalyzer):
+                self.QueueDumpAnalyzer(inputDataList, catItem)
+            return True
+
+
 class Calculator(Base):
 
     def __init__(self):
@@ -62,7 +122,7 @@ class Calculator(Base):
     def getResults(self, inputDataList, resultsList):
         query = inputDataList[0].getText().lower()
 
-        if query.startswith("cal"):
+        if query.startswith(self.triggerTxt):
             resultsList.push_front(self.getCatItem("%s: Calculator" % (self.getPluginName()),
                                                    "Cal",
                                                    self.id,
@@ -351,6 +411,7 @@ class Thruster(launchy.Plugin):
         self.registerAddon(RunCommands)
         self.registerAddon(Calculator)
         self.registerAddon(Shortcuts)
+        self.registerAddon(DspAnalyzer)
         self.registerAddon(DefaultHandler)
         logger(LOG_LEVEL_INF, "finished loading addons.")
         logger(LOG_LEVEL_INF, "==============================")
