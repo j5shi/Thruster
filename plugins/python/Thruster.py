@@ -169,7 +169,7 @@ class WebSearch(Base):
     def __init__(self):
         self.id = self.getPluginId()
         self.icon = self.getIconsPath("WebSearch.png")
-        self.urlTriggerTxt = "www"
+        self.urlTriggerTxt = "w"
         self.searchEngine.update({self.urlTriggerTxt: {"url": "%s", "name": "Web"}})
 
     def getResults(self, inputDataList, resultsList):
