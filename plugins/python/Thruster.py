@@ -235,6 +235,8 @@ class RunCommands(Base):
 
     def doCopy(self, src, dst):
         if os.path.isdir(src):
+            if os.path.exists(dst):
+                shutil.rmtree(dst)
             shutil.copytree(src, dst)
         elif os.path.isfile(src):
             shutil.copy2(src, dst)
@@ -259,7 +261,11 @@ class RunCommands(Base):
         syncTable = [("c:/Program Files (x86)/vim/_vimrc",
                       "d:/Baidu/Private/Vim/_vimrc"),
                      ("c:/Program Files (x86)/vim/vimfiles/bundle/snippets",
-                      "d:/Baidu/Private/Vim/bundle/snippets"),]
+                      "d:/Baidu/Private/Vim/bundle/snippets"),
+                     ("c:/totalcmd/wincmd.ini",
+                      "d:/Baidu/Private/TotalCommander/config/work/wincmd.ini"),
+                     ("c:/totalcmd/wcx_ftp.ini",
+                      "d:/Baidu/Private/TotalCommander/config/work/wincmd.ini"),]
 
 
         self.syncFiles(syncTable)
