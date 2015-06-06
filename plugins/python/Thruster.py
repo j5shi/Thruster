@@ -241,10 +241,10 @@ class RunCommands(Base):
 
     def syncCompany(self):
 
-        syncTable = [("d:/userdata/j5shi/My Documents/Source Insight/Settings/GLOBAL.CF3",
-                      "d:/userdata/j5shi/BDY/Private/SourceInsight Official Packet/Settings/GLOBAL.CF3"),
-                     ("c:/Program Files (x86)/vim/_vimrc",
+        syncTable = [("c:/Program Files (x86)/vim/_vimrc",
                       "d:/userdata/j5shi/BDY/Private/Vim/_vimrc"),
+                     ("c:/Program Files (x86)/vim/vimfiles/bundle/snippets",
+                      "d:/userdata/j5shi/BDY/Private/Vim/bundle/snippets"),
                      ("d:/userdata/j5shi/Application Data/GHISLER/wcx_ftp.ini",
                       "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/wcx_ftp.ini"),
                      ("d:/userdata/j5shi/Application Data/GHISLER/wincmd.ini",
@@ -256,10 +256,11 @@ class RunCommands(Base):
 
     def syncHome(self):
 
-        syncTable = [("c:/Users/j5shi/Documents/Source Insight/Settings/GLOBAL.CF3",
-                      "d:/Baidu/Private/SourceInsight Official Packet/Settings/GLOBAL.CF3"),
-                     ("c:/Program Files (x86)/vim/_vimrc",
-                      "d:/Baidu/Private/Vim/_vimrc"), ]
+        syncTable = [("c:/Program Files (x86)/vim/_vimrc",
+                      "d:/Baidu/Private/Vim/_vimrc"),
+                     ("c:/Program Files (x86)/vim/vimfiles/bundle/snippets",
+                      "d:/Baidu/Private/Vim/bundle/snippets"),]
+
 
         self.syncFiles(syncTable)
 
