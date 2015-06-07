@@ -21,10 +21,12 @@ PLUGIN_ID = launchy.hash(PLUGIN_NAME)
 LOG_LEVEL_DBG, LOG_LEVEL_INF, LOG_LEVEL_WARN, LOG_LEVEL_ERR = range(4)
 LOG_LEVEL = LOG_LEVEL_WARN
 
+
 def logger(level, log):
 
     if level >= LOG_LEVEL:
         print log
+
 
 class Base(object):
 
@@ -54,13 +56,13 @@ class Base(object):
 
 
 class DspAnalyzer(Base):
-                   
+
     def __init__(self):
 
         self.id = self.getPluginId()
         self.icon = self.getIconsPath("DspAnalyzer.png")
         self.triggerTxtQueueDumpAnalyzer = "que"
-        self.triggerTxts = {self.triggerTxtQueueDumpAnalyzer: "QueueDumpAnalyzer",}
+        self.triggerTxts = {self.triggerTxtQueueDumpAnalyzer: "QueueDumpAnalyzer", }
 
     def getResults(self, inputDataList, resultsList):
         query = inputDataList[0].getText().lower()
@@ -104,7 +106,7 @@ class DspAnalyzer(Base):
                         queueDb.update({queueInfo: queueDb.get(queueInfo) + 1})
 
             self.printToFile(os.path.join(os.path.dirname(queueDumpPath), "QueueDumpAnalyzer.log"), queueDb)
-    
+
     def launchItem(self, inputDataList, catItem):
         if catItem.icon == self.icon:
             if inputDataList[0].getText() == self.triggerTxts.get(self.triggerTxtQueueDumpAnalyzer):
@@ -123,35 +125,45 @@ class Calculator(Base):
         query = inputDataList[0].getText().lower()
 
         if query.startswith(self.triggerTxt):
-            resultsList.push_front(self.getCatItem("%s: Calculator" % (self.getPluginName()),
-                                                   "Cal",
-                                                   self.id,
-                                                   self.icon))
+            if len(inputDataList) == 1:
+                resultsList.push_front(self.getCatItem("%s: Calculator" % (self.getPluginName()),
+                                                       "Cal",
+                                                       self.id,
+                                                       self.icon))
 
             if len(inputDataList) > 1:
                 try:
                     ret = eval(inputDataList[1].getText().strip())
-                    retb = "{0:032b}".format(ret)
-                    retInBin = ""
-                    for i in range(len(retb)):
-                        retInBin += retb[i] if (i % 4 or i == 0) else ("," + retb[i])
+
+                    if isinstance(ret, int):
+                        retInHex = "0x%x" % ret
+
+                        retb = "{0:032b}".format(ret)
+                        retInBin = ""
+                        for i in range(len(retb)):
+                            retInBin += retb[i] if (i % 4 or i == 0) else ("," + retb[i])
+                    else:
+                        retInHex = None
+                        retInBin = None
                 except:
-                    ret = ""
+                    pass
                 else:
-                    resultsList.push_front(self.getCatItem("",
-                                                           "Result: %s" % (ret),
-                                                           self.id,
-                                                           self.icon))
+                    if ret is not None:
+                        resultsList.push_front(self.getCatItem("",
+                                                               "Result: %s" % (ret),
+                                                               self.id,
+                                                               self.icon))
 
-                    resultsList.push_front(self.getCatItem("",
-                                                           "Result: 0x%x" % (ret),
-                                                           self.id,
-                                                           self.icon))
-
-                    resultsList.push_front(self.getCatItem("",
-                                                           "Result: %s" % (retInBin),
-                                                           self.id,
-                                                           self.icon))
+                    if retInHex is not None:
+                        resultsList.push_front(self.getCatItem("",
+                                                               "Result: %s" % (retInHex),
+                                                               self.id,
+                                                               self.icon))
+                    if retInBin is not None:
+                        resultsList.push_front(self.getCatItem("",
+                                                               "Result: %s" % (retInBin),
+                                                               self.id,
+                                                               self.icon))
 
 
 class WebSearch(Base):
@@ -265,17 +277,17 @@ class RunCommands(Base):
                      ("c:/totalcmd/wincmd.ini",
                       "d:/Baidu/Private/TotalCommander/config/work/wincmd.ini"),
                      ("c:/totalcmd/wcx_ftp.ini",
-                      "d:/Baidu/Private/TotalCommander/config/work/wincmd.ini"),]
-
+                      "d:/Baidu/Private/TotalCommander/config/work/wincmd.ini"), ]
 
         self.syncFiles(syncTable)
 
     def getResults(self, inputDataList, resultsList):
         if inputDataList[0].getText().strip().lower() == self.triggerStr.lower():
-            resultsList.push_front(self.getCatItem("%s: Run commands" % (self.getPluginName()),
-                                                   self.triggerStr,
-                                                   self.id,
-                                                   self.icon))
+            if len(inputDataList) == 1:
+                resultsList.push_front(self.getCatItem("%s: Run commands" % (self.getPluginName()),
+                                                       self.triggerStr,
+                                                       self.id,
+                                                       self.icon))
 
             if len(inputDataList) > 1:
                 for alias in self.CmdAlias.keys():
@@ -343,7 +355,7 @@ class Shortcuts(Base):
 
     def shiftEnter(self, inputDataList, catItem):
         subprocess.Popen('start TOTALCMD64.exe /O /A /T /R="%s"' % catItem.fullPath, shell=True)
-        
+
     def ctrlEnter(self, inputDataList, catItem):
         subprocess.Popen('start TOTALCMD64.exe /O /A /T /L="%s"' % catItem.fullPath, shell=True)
 
@@ -364,15 +376,17 @@ class Shortcuts(Base):
                 return False
             return True
 
+
 class DefaultHandler(Base):
 
     def __init__(self):
         self.id = self.getPluginId()
         self.icon = self.getIconsPath("DefaultHandler.png")
-    
+
     def launchItem(self, inputDataList, catItem):
         launchy.runProgram('"%s"' % catItem.fullPath, "")
         return True
+
 
 class Thruster(launchy.Plugin):
 
