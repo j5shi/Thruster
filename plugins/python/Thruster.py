@@ -277,7 +277,7 @@ class RunCommands(Base):
                      ("c:/totalcmd/wincmd.ini",
                       "d:/Baidu/Private/TotalCommander/config/work/wincmd.ini"),
                      ("c:/totalcmd/wcx_ftp.ini",
-                      "d:/Baidu/Private/TotalCommander/config/work/wincmd.ini"), ]
+                      "d:/Baidu/Private/TotalCommander/config/work/wcx_ftp.ini"), ]
 
         self.syncFiles(syncTable)
 
