@@ -169,9 +169,9 @@ class Calculator(Base):
 class WebSearch(Base):
 
     searchEngine = {"gg": {"url": "https://www.google.com/?gws_rd=ssl#q=%s", "name": "Google"},
-                    "bb": {"url": "http://www.bing.com/search?q=%s", "name": "Bing"},
+                    "ii": {"url": "http://www.bing.com/search?q=%s", "name": "Bing"},
                     "map": {"url": "http://map.baidu.com/?newmap=1&ie=utf-8&s=s%%26wd%%3D%s", "name": "Baidu Maps"},
-                    "bd": {"url": "https://www.baidu.com/s?wd=%s", "name": "Baidu"},
+                    "bb": {"url": "https://www.baidu.com/s?wd=%s", "name": "Baidu"},
                     "tao": {"url": "http://s.taobao.com/search?q=%s", "name": "Taobao"},
                     "pr": {"url": "https://pronto.inside.nsn.com/pronto/problemReportSearch.html?freeTextdropDownID=prId&searchTopText=%s", "name": "Pronto"},
                     "cpp": {"url": "http://www.cplusplus.com/search.do?q=%s", "name": "C++"},
@@ -280,9 +280,9 @@ class RunCommands(Base):
                      ("c:/Program Files (x86)/vim/vimfiles/bundle/snippets",
                       "d:/Baidu/Private/Vim/bundle/snippets"),
                      ("c:/totalcmd/wincmd.ini",
-                      "d:/Baidu/Private/TotalCommander/config/work/wincmd.ini"),
+                      "d:/Baidu/Private/TotalCommander/config/home/wincmd.ini"),
                      ("c:/totalcmd/wcx_ftp.ini",
-                      "d:/Baidu/Private/TotalCommander/config/work/wcx_ftp.ini"), ]
+                      "d:/Baidu/Private/TotalCommander/config/home/wcx_ftp.ini"), ]
 
         self.syncFiles(syncTable)
 
