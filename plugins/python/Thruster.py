@@ -19,7 +19,7 @@ PLUGIN_NAME = "Thruster"
 PLUGIN_ID = launchy.hash(PLUGIN_NAME)
 
 LOG_LEVEL_DBG, LOG_LEVEL_INF, LOG_LEVEL_WARN, LOG_LEVEL_ERR = range(4)
-LOG_LEVEL = LOG_LEVEL_WARN
+LOG_LEVEL = LOG_LEVEL_INF
 
 
 def logger(level, log):
@@ -176,14 +176,12 @@ class WebSearch(Base):
                     "pr": {"url": "https://pronto.inside.nsn.com/pronto/problemReportSearch.html?freeTextdropDownID=prId&searchTopText=%s", "name": "Pronto"},
                     "cpp": {"url": "http://www.cplusplus.com/search.do?q=%s", "name": "C++"},
                     "ss": {"url": "https://www.google.com/search?q=%s&sitesearch=ss64.com&gws_rd=ssl", "name": "SS64"},
-                    "ieee": {"url": "http://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&queryText=%s", "name": "IEEE"}, 
+                    "ieee": {"url": "http://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&queryText=%s", "name": "IEEE"},
                     "cygwin": {"url": "https://cygwin.com/cgi-bin2/package-grep.cgi?grep=%s&arch=x86", "name": "cygwin package search"}}
 
     def __init__(self):
         self.id = self.getPluginId()
         self.icon = self.getIconsPath("WebSearch.png")
-        self.urlTriggerTxt = "w"
-        self.searchEngine.update({self.urlTriggerTxt: {"url": "%s", "name": "Web"}})
 
     def getResults(self, inputDataList, resultsList):
         key = inputDataList[0].getText()
@@ -196,11 +194,8 @@ class WebSearch(Base):
     def launchItem(self, inputDataList, catItem):
         if catItem.icon == self.icon:
             key = inputDataList[0].getText()
-            if key != self.urlTriggerTxt:
-                query = urllib.quote(inputDataList[-1].getText().encode("utf8"))
-                url = eval('"%s" %% "%s"' % (self.searchEngine.get(key).get('url'), query))
-            else:
-                url = inputDataList[-1].getText()
+            query = urllib.quote(inputDataList[-1].getText().encode("utf8"))
+            url = eval('"%s" %% "%s"' % (self.searchEngine.get(key).get('url'), query))
             subprocess.Popen('start chrome "%s"' % url, shell=True)
             return True
 
@@ -210,22 +205,22 @@ class RunCommands(Base):
     PROG_OS = 1        # call by OS, usually call an external program
     PROG_THRUSTER = 2  # call by Thruster, usually call a method
 
-    CmdAlias = {"putty"       : {"prog": PROG_OS,       "cmd": "putty.exe"},
-                "python"      : {"prog": PROG_OS,       "cmd": "cmd.exe /K ipython"},
-                "fct"         : {"prog": PROG_OS,       "cmd": 'putty -load "FCT"'},
+    CmdAlias = {"putty": {"prog": PROG_OS, "cmd": "putty.exe"},
+                "python": {"prog": PROG_OS, "cmd": "cmd.exe /K ipython"},
+                "fct": {"prog": PROG_OS, "cmd": 'putty -load "FCT"'},
                 "sync@Company": {"prog": PROG_THRUSTER, "cmd": "self.syncCompany()"},
-                "sync@Home"   : {"prog": PROG_THRUSTER, "cmd": "self.syncHome()"},
-                "cmd"         : {"prog": PROG_OS,       "cmd": "cmd.exe"},
-                "linsee40"    : {"prog": PROG_OS,       "cmd": 'putty -load "hzling40.china.nsn-net.net"'},
-                "linsee42"    : {"prog": PROG_OS,       "cmd": 'putty -load "hzling42.china.nsn-net.net"'},
-                "linsee21"    : {"prog": PROG_OS,       "cmd": 'putty -load "ouling21.emea.nsn-net.net"'},
-                "10.69.120.1" : {"prog": PROG_OS,       "cmd": 'putty -load "10.69.120.1"'},
-                "10.69.120.29": {"prog": PROG_OS,       "cmd": 'putty -load "10.69.120.29"'},
-                "10.69.120.30": {"prog": PROG_OS,       "cmd": 'putty -load "10.69.120.30"'},
-                "10.69.120.31": {"prog": PROG_OS,       "cmd": 'putty -load "10.69.120.31"'},
-                "10.69.120.32": {"prog": PROG_OS,       "cmd": 'putty -load "10.69.120.32"'},
-                "10.69.120.33": {"prog": PROG_OS,       "cmd": 'putty -load "10.69.120.33"'},
-                "10.69.120.34": {"prog": PROG_OS,       "cmd": 'putty -load "10.69.120.34"'},}
+                "sync@Home": {"prog": PROG_THRUSTER, "cmd": "self.syncHome()"},
+                "cmd": {"prog": PROG_OS, "cmd": "cmd.exe"},
+                "linsee40": {"prog": PROG_OS, "cmd": 'putty -load "hzling40.china.nsn-net.net"'},
+                "linsee42": {"prog": PROG_OS, "cmd": 'putty -load "hzling42.china.nsn-net.net"'},
+                "linsee21": {"prog": PROG_OS, "cmd": 'putty -load "ouling21.emea.nsn-net.net"'},
+                "10.69.120.1": {"prog": PROG_OS, "cmd": 'putty -load "10.69.120.1"'},
+                "10.69.120.29": {"prog": PROG_OS, "cmd": 'putty -load "10.69.120.29"'},
+                "10.69.120.30": {"prog": PROG_OS, "cmd": 'putty -load "10.69.120.30"'},
+                "10.69.120.31": {"prog": PROG_OS, "cmd": 'putty -load "10.69.120.31"'},
+                "10.69.120.32": {"prog": PROG_OS, "cmd": 'putty -load "10.69.120.32"'},
+                "10.69.120.33": {"prog": PROG_OS, "cmd": 'putty -load "10.69.120.33"'},
+                "10.69.120.34": {"prog": PROG_OS, "cmd": 'putty -load "10.69.120.34"'}, }
 
     def __init__(self):
         self.id = self.getPluginId()
@@ -389,8 +384,20 @@ class DefaultHandler(Base):
         self.id = self.getPluginId()
         self.icon = self.getIconsPath("DefaultHandler.png")
 
+    def getResults(self, inputDataList, resultsList):
+        resultsList.push_front(self.getCatItem("%s: default handler" % self.getPluginName(),
+                                               "",
+                                               self.id,
+                                               self.icon))
+
     def launchItem(self, inputDataList, catItem):
-        launchy.runProgram('"%s"' % catItem.fullPath, "")
+
+        logger(LOG_LEVEL_DBG, "Default handler query: %s" % inputDataList[0].getText().strip())
+
+        if catItem.icon == self.icon:
+            subprocess.Popen('start chrome "%s"' % inputDataList[0].getText().strip(), shell=True)
+        else:
+            launchy.runProgram('"%s"' % catItem.fullPath, "")
         return True
 
 
