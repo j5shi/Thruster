@@ -385,10 +385,11 @@ class DefaultHandler(Base):
         self.icon = self.getIconsPath("DefaultHandler.png")
 
     def getResults(self, inputDataList, resultsList):
-        resultsList.push_front(self.getCatItem("%s: default handler" % self.getPluginName(),
-                                               "",
-                                               self.id,
-                                               self.icon))
+        if len(inputDataList) == 1:
+            resultsList.push_front(self.getCatItem("%s: default handler" % self.getPluginName(),
+                                                "",
+                                                self.id,
+                                                self.icon))
 
     def launchItem(self, inputDataList, catItem):
 
