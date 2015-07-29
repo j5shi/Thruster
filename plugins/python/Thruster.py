@@ -184,7 +184,7 @@ class WebSearch(Base):
         self.icon = self.getIconsPath("WebSearch.png")
 
     def getResults(self, inputDataList, resultsList):
-        key = inputDataList[0].getText()
+        key = inputDataList[0].getText().lower()
         if key in self.searchEngine.keys():
             resultsList.push_front(self.getCatItem("%s: %s search" % (self.getPluginName(), self.searchEngine.get(key).get("name")),
                                                    "%s" % key,
