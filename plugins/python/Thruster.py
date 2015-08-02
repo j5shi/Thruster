@@ -177,6 +177,7 @@ class WebSearch(Base):
                     "cpp": {"url": "http://www.cplusplus.com/search.do?q=%s", "name": "C++"},
                     "ss": {"url": "https://www.google.com/search?q=%s&sitesearch=ss64.com&gws_rd=ssl", "name": "SS64"},
                     "ieee": {"url": "http://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&queryText=%s", "name": "IEEE"},
+                    "die": {"url": "http://www.die.net/search/?q=%s&sa=Search&ie=ISO-8859-1&cx=partner-pub-5823754184406795%%3A54htp1rtx5u&cof=FORID%%3A9", "name": "Die.net"},
                     "cygwin": {"url": "https://cygwin.com/cgi-bin2/package-grep.cgi?grep=%s&arch=x86", "name": "cygwin package search"}}
 
     def __init__(self):
