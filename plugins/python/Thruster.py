@@ -206,14 +206,16 @@ class RunCommands(Base):
     PROG_THRUSTER = 2  # call by Thruster, usually call a method
 
     CmdAlias = {"putty": {"prog": PROG_OS, "cmd": "putty.exe"},
-                "python": {"prog": PROG_OS, "cmd": "cmd.exe /K ipython"},
+                "ipython": {"prog": PROG_OS, "cmd": "cmd.exe /K ipython"},
                 "fct": {"prog": PROG_OS, "cmd": 'putty -load "FCT"'},
                 "sync@Company": {"prog": PROG_THRUSTER, "cmd": "self.syncCompany()"},
                 "sync@Home": {"prog": PROG_THRUSTER, "cmd": "self.syncHome()"},
-                "cmd": {"prog": PROG_OS, "cmd": "cmd.exe"},
-                "linsee40": {"prog": PROG_OS, "cmd": 'putty -load "hzling40.china.nsn-net.net"'},
-                "linsee42": {"prog": PROG_OS, "cmd": 'putty -load "hzling42.china.nsn-net.net"'},
-                "linsee21": {"prog": PROG_OS, "cmd": 'putty -load "ouling21.emea.nsn-net.net"'},
+                "hzling34": {"prog": PROG_OS, "cmd": 'putty -load "hzling34.china.nsn-net.net"'},
+                "hzling40": {"prog": PROG_OS, "cmd": 'putty -load "hzling40.china.nsn-net.net"'},
+                "hzling42": {"prog": PROG_OS, "cmd": 'putty -load "hzling42.china.nsn-net.net"'},
+                "ouling21": {"prog": PROG_OS, "cmd": 'putty -load "ouling21.emea.nsn-net.net"'},
+                "oulinb17": {"prog": PROG_OS, "cmd": 'putty -load "oulinb17.emea.nsn-net.net"'},
+                "oulinb18": {"prog": PROG_OS, "cmd": 'putty -load "oulinb18.emea.nsn-net.net"'},
                 "10.69.120.1": {"prog": PROG_OS, "cmd": 'putty -load "10.69.120.1"'},
                 "10.69.120.29": {"prog": PROG_OS, "cmd": 'putty -load "10.69.120.29"'},
                 "10.69.120.30": {"prog": PROG_OS, "cmd": 'putty -load "10.69.120.30"'},
@@ -387,9 +389,9 @@ class DefaultHandler(Base):
     def getResults(self, inputDataList, resultsList):
         if len(inputDataList) == 1:
             resultsList.push_front(self.getCatItem("%s: default handler" % self.getPluginName(),
-                                                "",
-                                                self.id,
-                                                self.icon))
+                                                   "",
+                                                   self.id,
+                                                   self.icon))
 
     def launchItem(self, inputDataList, catItem):
 
