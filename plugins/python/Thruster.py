@@ -209,25 +209,23 @@ class RunCommands(Base):
                 "ipython": {"prog": PROG_OS, "cmd": "cmd.exe /K ipython"},
                 "fct": {"prog": PROG_OS, "cmd": 'putty -load "FCT"'},
                 "sync@Company": {"prog": PROG_THRUSTER, "cmd": "self.syncCompany()"},
-                "sync@Home": {"prog": PROG_THRUSTER, "cmd": "self.syncHome()"},
-                "hzling34": {"prog": PROG_OS, "cmd": 'putty -load "hzling34.china.nsn-net.net"'},
-                "hzling40": {"prog": PROG_OS, "cmd": 'putty -load "hzling40.china.nsn-net.net"'},
-                "hzling42": {"prog": PROG_OS, "cmd": 'putty -load "hzling42.china.nsn-net.net"'},
-                "ouling21": {"prog": PROG_OS, "cmd": 'putty -load "ouling21.emea.nsn-net.net"'},
-                "oulinb17": {"prog": PROG_OS, "cmd": 'putty -load "oulinb17.emea.nsn-net.net"'},
-                "oulinb18": {"prog": PROG_OS, "cmd": 'putty -load "oulinb18.emea.nsn-net.net"'},
-                "10.69.120.1": {"prog": PROG_OS, "cmd": 'putty -load "10.69.120.1"'},
-                "10.69.120.29": {"prog": PROG_OS, "cmd": 'putty -load "10.69.120.29"'},
-                "10.69.120.30": {"prog": PROG_OS, "cmd": 'putty -load "10.69.120.30"'},
-                "10.69.120.31": {"prog": PROG_OS, "cmd": 'putty -load "10.69.120.31"'},
-                "10.69.120.32": {"prog": PROG_OS, "cmd": 'putty -load "10.69.120.32"'},
-                "10.69.120.33": {"prog": PROG_OS, "cmd": 'putty -load "10.69.120.33"'},
-                "10.69.120.34": {"prog": PROG_OS, "cmd": 'putty -load "10.69.120.34"'}, }
+                "sync@Home": {"prog": PROG_THRUSTER, "cmd": "self.syncHome()"}, }
 
     def __init__(self):
         self.id = self.getPluginId()
         self.icon = self.getIconsPath("RunCommands.png")
         self.triggerStr = "Run"
+
+        # Get putty session from register, the session entry looks like this:
+        # rsa2@22:hzling42.china.nsn-net.net    REG_SZ    0x23,0xc1ca944dc...
+        proc = subprocess.Popen("reg query HKEY_CURRENT_USER\Software\SimonTatham\PuTTY\SshHostKeys /s", stdout=subprocess.PIPE)
+
+        for line in proc.stdout.readlines():
+            lineSplited = line.split()
+            if len(lineSplited) >= 3:
+                sessionName = lineSplited[0].split(':')[1]
+                RunCommands.CmdAlias.update({sessionName: {"prog": RunCommands.PROG_OS,
+                                                           "cmd": 'putty -load "%s"' % sessionName}})
 
     def syncFiles(self, syncTable):
         '''
