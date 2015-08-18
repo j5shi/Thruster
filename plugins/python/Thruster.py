@@ -265,7 +265,9 @@ class RunCommands(Base):
                      ("d:/userdata/j5shi/Application Data/GHISLER/wincmd.ini",
                       "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/wincmd.ini"),
                      ("d:/userdata/j5shi/Application Data/Launchy/launchy.ini",
-                      "d:/userdata/j5shi/BDY/Private/Launchy/config/company/Launchy/launchy.ini"), ]
+                      "d:/userdata/j5shi/BDY/Private/Launchy/config/company/Launchy/launchy.ini"), 
+                     ("c:/apps/bin/alias.bat",
+                      "d:/userdata/j5shi/BDY/Private/Apps/bin/alias.bat"),]
 
         self.syncFiles(syncTable)
 
@@ -278,7 +280,9 @@ class RunCommands(Base):
                      ("c:/totalcmd/wincmd.ini",
                       "d:/Baidu/Private/TotalCommander/config/home/wincmd.ini"),
                      ("c:/totalcmd/wcx_ftp.ini",
-                      "d:/Baidu/Private/TotalCommander/config/home/wcx_ftp.ini"), ]
+                      "d:/Baidu/Private/TotalCommander/config/home/wcx_ftp.ini"), 
+                     ("c:/apps/bin/alias.bat", 
+                      "d:/Baidu/Private/Apps/bin/alias.bat"),]
 
         self.syncFiles(syncTable)
 
