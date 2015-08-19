@@ -177,7 +177,8 @@ class WebSearch(Base):
                     "cpp": {"url": "http://www.cplusplus.com/search.do?q=%s", "name": "C++"},
                     "ss": {"url": "https://www.google.com/search?q=%s&sitesearch=ss64.com&gws_rd=ssl", "name": "SS64"},
                     "ieee": {"url": "http://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&queryText=%s", "name": "IEEE"},
-                    "cygwin": {"url": "https://cygwin.com/cgi-bin2/package-grep.cgi?grep=%s&arch=x86", "name": "cygwin package search"}}
+                    "cygwin": {"url": "https://cygwin.com/cgi-bin2/package-grep.cgi?grep=%s&arch=x86", "name": "cygwin package search"},
+                    "og": {"url": "https://eslinw61.emea.nsn-net.net:8443/source/search?q=%s&defs=&refs=&path=&hist=&type=&project=BTS_D_CONFIG_PARAM-FZM-trunk&project=BTS_D_TRS_CI2015-trunk&project=BTS_I_COMMON_APPL-trunk&project=BTS_I_GLOBAL-trunk&project=BTS_I_ISAR_SRC-trunk&project=BTS_I_ISAR_XML-trunk&project=BTS_I_LN-trunk&project=BTS_I_PS-MAINBRANCH-trunk&project=BTS_SCM_LTE-ARCH-trunk&project=BTS_SC_BM_FZ-trunk&project=BTS_SC_BSTAT_LTE-trunk&project=BTS_SC_CCS-MAINBRANCH-trunk&project=BTS_SC_CELLP_LTE-trunk&project=BTS_SC_DSPHWAPI-MAINBRANCH-trunk&project=BTS_SC_FARECO_LTE-trunk&project=BTS_SC_L2-trunk&project=BTS_SC_LFS-trunk&project=BTS_SC_LOM-trunk&project=BTS_SC_MAC_PS_TDD-trunk&project=BTS_SC_MAC_PS_WMP-trunk&project=BTS_SC_MCUHWAPI-MAINBRANCH-trunk&project=BTS_SC_MOAM_LTE-trunk&project=BTS_SC_OAM_FZM-trunk&project=BTS_SC_PHY_TX-trunk&project=BTS_SC_PHY_TX_TDD-trunk&project=BTS_SC_SYSADAPT_LTE-trunk&project=BTS_SC_UL_PHY-fsm2-trunk&project=BTS_SC_UL_PHY-fsm3-trunk&project=BTS_SC_UL_PHY_TDD-trunk&project=BTS_T_LTETOOLS-Toolset-trunk&project=CPLANE_SC_CELLC-trunk&project=CPLANE_SC_ENBC-trunk&project=CPLANE_SC_MCEC-trunk&project=CPLANE_SC_RROM-trunk&project=CPLANE_SC_TUP-trunk&project=CPLANE_SC_UEC-trunk", "name": "OpenGrok"}}
 
     def __init__(self):
         self.id = self.getPluginId()
@@ -265,9 +266,9 @@ class RunCommands(Base):
                      ("d:/userdata/j5shi/Application Data/GHISLER/wincmd.ini",
                       "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/wincmd.ini"),
                      ("d:/userdata/j5shi/Application Data/Launchy/launchy.ini",
-                      "d:/userdata/j5shi/BDY/Private/Launchy/config/company/Launchy/launchy.ini"), 
+                      "d:/userdata/j5shi/BDY/Private/Launchy/config/company/Launchy/launchy.ini"),
                      ("c:/apps/bin/alias.bat",
-                      "d:/userdata/j5shi/BDY/Private/Apps/bin/alias.bat"),]
+                      "d:/userdata/j5shi/BDY/Private/Apps/bin/alias.bat"), ]
 
         self.syncFiles(syncTable)
 
@@ -280,9 +281,9 @@ class RunCommands(Base):
                      ("c:/totalcmd/wincmd.ini",
                       "d:/Baidu/Private/TotalCommander/config/home/wincmd.ini"),
                      ("c:/totalcmd/wcx_ftp.ini",
-                      "d:/Baidu/Private/TotalCommander/config/home/wcx_ftp.ini"), 
-                     ("c:/apps/bin/alias.bat", 
-                      "d:/Baidu/Private/Apps/bin/alias.bat"),]
+                      "d:/Baidu/Private/TotalCommander/config/home/wcx_ftp.ini"),
+                     ("c:/apps/bin/alias.bat",
+                      "d:/Baidu/Private/Apps/bin/alias.bat"), ]
 
         self.syncFiles(syncTable)
 
