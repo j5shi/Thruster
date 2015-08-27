@@ -170,7 +170,7 @@ class WebSearch(Base):
 
     searchEngine = {"gg": {"url": "https://www.google.com/?gws_rd=ssl#q=%s", "name": "Google"},
                     "ii": {"url": "http://www.bing.com/search?q=%s", "name": "Bing"},
-                    "map": {"url": "http://map.baidu.com/?newmap=1&ie=utf-8&s=s%%26wd%%3D%s", "name": "Baidu Maps"},
+                    "map": {"url": "http://api.map.baidu.com/geocoder?address=%s&output=html&src=FuckYourAssBaidu", "name": "Baidu Maps"},
                     "bb": {"url": "https://www.baidu.com/s?wd=%s", "name": "Baidu"},
                     "tao": {"url": "http://s.taobao.com/search?q=%s", "name": "Taobao"},
                     "pr": {"url": "https://pronto.inside.nsn.com/pronto/problemReportSearch.html?freeTextdropDownID=prId&searchTopText=%s", "name": "Pronto"},
