@@ -289,6 +289,10 @@ class RunCommands(Base):
                       "d:/Baidu/Private/TotalCommander/config/home/wincmd.ini"),
                      ("c:/totalcmd/wcx_ftp.ini",
                       "d:/Baidu/Private/TotalCommander/config/home/wcx_ftp.ini"),
+                     ("c:/Users/j5shi/AppData/Roaming/Launchy/launchy.ini",
+                      "d:/Baidu/Private/Launchy/config/home/Launchy/launchy.ini"),
+                     ("c:/Users/j5shi/Documents/NetSarang/Xshell/CustomKeyMap.ckm",
+                      "d:/Baidu/Private/Tools/xshell/CustomKeyMap.ckm"),
                      ("c:/apps/bin/alias.bat",
                       "d:/Baidu/Private/Apps/bin/alias.bat"), ]
 
