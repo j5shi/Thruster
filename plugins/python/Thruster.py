@@ -293,10 +293,10 @@ class RunCommands(Base):
                       "d:/Baidu/Private/Launchy/config/home/Launchy/launchy.ini"),
                      ("c:/Users/j5shi/Documents/NetSarang/SECSH",
                       "d:/Baidu/Private/Tools/xshell/SECSH"),
-                     ("c:/Users/j5shi/Documents/NetSarani/Xshell/CustomKeyMap.ckm",
+                     ("c:/Users/j5shi/Documents/NetSarang/Xshell/CustomKeyMap.ckm",
                       "d:/Baidu/Private/Tools/xshell/CustomKeyMap.ckm"),
-                     ("c:/apps/bin/alias.bat",
-                      "d:/Baidu/Private/Apps/bin/alias.bat"), ]
+                     ("c:/apps/bin/alias.bat", 
+                      "d:/Baidu/Private/apps/bin/alias.bat")]
 
         self.syncFiles(syncTable)
 
