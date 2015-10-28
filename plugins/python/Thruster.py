@@ -168,7 +168,7 @@ class Calculator(Base):
 
 class WebSearch(Base):
 
-    searchEngine = {"gg": {"url": "https://www.google.com/?gws_rd=ssl#q=%s", "name": "Google"},
+    searchEngine = {"gg": {"url": "https://www.google.com/search?q=%s", "name": "Google"},
                     "ii": {"url": "http://www.bing.com/search?q=%s", "name": "Bing"},
                     "map": {"url": "http://api.map.baidu.com/geocoder?address=%s&output=html&src=FuckYourAssBaidu", "name": "Baidu Maps"},
                     "bb": {"url": "https://www.baidu.com/s?wd=%s", "name": "Baidu"},
