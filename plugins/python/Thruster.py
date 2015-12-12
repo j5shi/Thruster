@@ -173,6 +173,8 @@ class WebSearch(Base):
                     "map": {"url": "http://api.map.baidu.com/geocoder?address=%s&output=html&src=FuckYourAssBaidu", "name": "Baidu Maps"},
                     "bb": {"url": "https://www.baidu.com/s?wd=%s", "name": "Baidu"},
                     "tao": {"url": "http://s.taobao.com/search?q=%s", "name": "Taobao"},
+                    "xy": {"url": "https://s.2.taobao.com/list/list.htm?q=%s&search_type=item&app=launchy", "name": "Xianyu"},
+                    "jd": {"url": "http://search.jd.com/Search?keyword=%s", "name": "Jingdong"},
                     "pr": {"url": "https://pronto.inside.nsn.com/pronto/problemReportSearch.html?freeTextdropDownID=prId&searchTopText=%s", "name": "Pronto"},
                     "cpp": {"url": "http://www.cplusplus.com/search.do?q=%s", "name": "C++"},
                     "ss": {"url": "https://www.google.com/search?q=%s&sitesearch=ss64.com&gws_rd=ssl", "name": "SS64"},
