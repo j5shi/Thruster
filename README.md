@@ -17,7 +17,7 @@ Thruster is an all in one plugin for Launchy, you don't need any other launchy p
 
 ### Index Chrome Bookmarks
 
-![demo](BookmarkMgr_Demo.png)
+![demo](demo/BookmarkMgr_Demo.png)
 
 Index your browser bookmarks and launch them in Launchy.
 
@@ -27,7 +27,7 @@ After installation, restart Launchy and rebuild catalog, now you will be able to
 
 ### Open in Customized Program
 
-![demo](PyVerby_Demo.png)
+![demo](demo/PyVerby_Demo.png)
 
 Thruster allows you to customize operations for a certain type of file, for example, you can define operations for a text file like: "open in Total Commander", "open in Vim", "open in ... whatever".
 

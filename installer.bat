@@ -3,6 +3,7 @@
 taskkill /IM Launchy.exe /F
 
 xcopy /Y boost_python-vc80-mt-1_41.dll "%programfiles(x86)%\Launchy"
+xcopy /Y python27.dll                  "%programfiles(x86)%\Launchy"
 
 xcopy /E /Y plugins "%programfiles(x86)%\Launchy\plugins"
 
