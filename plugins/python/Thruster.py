@@ -297,7 +297,7 @@ class RunCommands(Base):
                       "d:/Baidu/Private/Tools/xshell/SECSH"),
                      ("c:/Users/j5shi/Documents/NetSarang/Xshell/CustomKeyMap.ckm",
                       "d:/Baidu/Private/Tools/xshell/CustomKeyMap.ckm"),
-                     ("c:/apps/bin/alias.bat", 
+                     ("c:/apps/bin/alias.bat",
                       "d:/Baidu/Private/apps/bin/alias.bat")]
 
         self.syncFiles(syncTable)
@@ -343,6 +343,16 @@ class Browser(Base):
             subprocess.Popen('start chrome "%s"' % catItem.fullPath, shell=True)
             return True
 
+    def getBookMarks(self, bookmarks, bookmarkBarObj):
+        for obj in bookmarkBarObj:
+            logger(LOG_LEVEL_DBG, "%s" % (obj.get('name')))
+
+            if obj.get("type", '') is "folder":
+                bookmarks = self.getBookMarks(bookmarks, obj.get("children", []))
+            elif obj.get("type", '') is "url":
+                bookmarks.update({obj.get("name", ''): obj.get("url", '')})
+        return bookmarks
+
     def getCatalog(self, resultsList):
         """
         Callback function to asks the plugin for a static catalog to be
@@ -355,17 +365,14 @@ class Browser(Base):
                              to, these will be copied over to the primary
                              catalog.
         """
-        browserBookmarks = {}
+        bookmarks = {}
         bookmarkFile = os.path.join(os.environ["localappdata"], "Google/Chrome/User Data/Default/Bookmarks")
         bookmarkManager = eval(open(bookmarkFile, 'r').read())
-        bookmarkBar = bookmarkManager.get("roots", None).get("bookmark_bar", None).get("children", None)
-        if bookmarkBar:
-            for folder in bookmarkBar:
-                for bm in folder.get("children", None):
-                    browserBookmarks.update({bm.get("name", None): bm.get("url", None)})
+        bookmarkBar = bookmarkManager.get("roots", None).get("bookmark_bar", None).get("children", [])
+        bookmarks = self.getBookMarks(bookmarks, bookmarkBar)
 
-        for key in browserBookmarks.keys():
-            resultsList.append(self.getCatItem(browserBookmarks.get(key), key, self.id, self.icon))
+        for key in bookmarks.keys():
+            resultsList.append(self.getCatItem(bookmarks.get(key), key, self.id, self.icon))
 
 
 class Shortcuts(Base):
