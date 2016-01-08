@@ -381,25 +381,30 @@ class Shortcuts(Base):
         self.id = self.getPluginId()
         self.icon = self.getIconsPath("DefaultHandler.png")
 
-    def shiftEnter(self, inputDataList, catItem):
+    def cb_S_CR(self, inputDataList, catItem):
         subprocess.Popen('start TOTALCMD64.exe /O /A /T /R="%s"' % catItem.fullPath, shell=True)
 
-    def ctrlEnter(self, inputDataList, catItem):
+    def cb_C_CR(self, inputDataList, catItem):
         subprocess.Popen('start TOTALCMD64.exe /O /A /T /L="%s"' % catItem.fullPath, shell=True)
 
-    def altEnter(self, inputDataList, catItem):
+    def cb_M_CR(self, inputDataList, catItem):
         subprocess.Popen('start gvim.exe --remote-tab-silent "%s"' % catItem.fullPath, shell=True)
+    
+    def cb_C_S_CR(self, inputDataList, catItem):
+        subprocess.Popen('echo %s | clip' % catItem.fullPath.replace('\\', '/'), shell=True)
 
     def launchItem(self, inputDataList, catItem):
         if len(inputDataList) == 1:
             modifier = QtGui.QApplication.keyboardModifiers()
 
             if modifier == QtCore.Qt.ShiftModifier:
-                self.shiftEnter(inputDataList, catItem)
+                self.cb_S_CR(inputDataList, catItem)
             elif modifier == QtCore.Qt.ControlModifier:
-                self.ctrlEnter(inputDataList, catItem)
+                self.cb_C_CR(inputDataList, catItem)
             elif modifier == QtCore.Qt.AltModifier:
-                self.altEnter(inputDataList, catItem)
+                self.cb_M_CR(inputDataList, catItem)
+            elif modifier == (QtCore.Qt.ControlModifier | QtCore.Qt.ShiftModifier):
+                self.cb_C_S_CR(inputDataList, catItem)
             else:
                 return False
             return True
