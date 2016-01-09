@@ -212,10 +212,8 @@ class RunCommands(Base):
     PROG_THRUSTER = 2  # call by Thruster, usually call a method
 
     CmdAlias = {"putty": {"prog": PROG_OS, "cmd": "putty.exe"},
-                "ipython": {"prog": PROG_OS, "cmd": "cmd.exe /K ipython"},
-                "fct": {"prog": PROG_OS, "cmd": 'putty -load "FCT"'},
                 "sync@Company": {"prog": PROG_THRUSTER, "cmd": "self.syncCompany()"},
-                "sync@Home": {"prog": PROG_THRUSTER, "cmd": "self.syncHome()"}, }
+                "sync@Home": {"prog": PROG_THRUSTER, "cmd": "self.syncHome()"}}
 
     def __init__(self):
         self.id = self.getPluginId()
@@ -323,7 +321,7 @@ class RunCommands(Base):
 
             if alias.get("prog", None) == self.PROG_OS:
                 cmd = "%s" % (alias.get("cmd"))
-                subprocess.Popen(cmd)
+                subprocess.Popen(cmd, shell=True)
             elif alias.get("prog", None) == self.PROG_THRUSTER:
                 eval("%s" % alias.get("cmd"))
             else:
@@ -389,7 +387,7 @@ class Shortcuts(Base):
 
     def cb_M_CR(self, inputDataList, catItem):
         subprocess.Popen('start gvim.exe --remote-tab-silent "%s"' % catItem.fullPath, shell=True)
-    
+
     def cb_C_S_CR(self, inputDataList, catItem):
         subprocess.Popen('echo %s | clip' % catItem.fullPath.replace('\\', '/'), shell=True)
 
