@@ -268,6 +268,8 @@ class RunCommands(Base):
                       "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/wcx_ftp.ini"),
                      ("d:/userdata/j5shi/Application Data/GHISLER/wincmd.ini",
                       "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/wincmd.ini"),
+                     ("c:/totalcmd/plugins/wlx/AppLoader/AppLoader.ini",
+                      "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/AppLoader.ini"),
                      ("d:/userdata/j5shi/Application Data/Launchy/launchy.ini",
                       "d:/userdata/j5shi/BDY/Private/Launchy/config/company/Launchy/launchy.ini"),
                      ("d:/userdata/j5shi/My Documents/NetSarang/SECSH",
