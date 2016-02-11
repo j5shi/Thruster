@@ -291,6 +291,8 @@ class RunCommands(Base):
                       "d:/Baidu/Private/TotalCommander/config/home/wincmd.ini"),
                      ("c:/totalcmd/wcx_ftp.ini",
                       "d:/Baidu/Private/TotalCommander/config/home/wcx_ftp.ini"),
+                     ("c:/totalcmd/plugins/wlx/AppLoader/AppLoader.ini",
+                      "d:/Baidu/Private/TotalCommander/config/home/AppLoader.ini"),
                      ("c:/Users/j5shi/AppData/Roaming/Launchy/launchy.ini",
                       "d:/Baidu/Private/Launchy/config/home/Launchy/launchy.ini"),
                      ("c:/Users/j5shi/Documents/NetSarang/SECSH",
