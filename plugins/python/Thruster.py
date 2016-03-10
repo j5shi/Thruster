@@ -260,45 +260,53 @@ class RunCommands(Base):
 
     def syncCompany(self):
 
-        syncTable = [("c:/Program Files (x86)/vim/_vimrc",
-                      "d:/userdata/j5shi/BDY/Private/Vim/_vimrc"),
-                     ("c:/Program Files (x86)/vim/vimfiles/bundle/snippets",
-                      "d:/userdata/j5shi/BDY/Private/Vim/bundle/snippets"),
-                     ("d:/userdata/j5shi/Application Data/GHISLER/wcx_ftp.ini",
-                      "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/wcx_ftp.ini"),
-                     ("d:/userdata/j5shi/Application Data/GHISLER/wincmd.ini",
-                      "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/wincmd.ini"),
-                     ("c:/totalcmd/plugins/wlx/AppLoader/AppLoader.ini",
-                      "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/AppLoader.ini"),
-                     ("d:/userdata/j5shi/Application Data/Launchy/launchy.ini",
-                      "d:/userdata/j5shi/BDY/Private/Launchy/config/company/Launchy/launchy.ini"),
-                     ("d:/userdata/j5shi/My Documents/NetSarang/SECSH",
-                      "d:/userdata/j5shi/BDY/Private/Tools/xshell/SECSH"),
-                     ("d:/userdata/j5shi/My Documents/NetSarang/Xshell/CustomKeyMap.ckm",
-                      "d:/userdata/j5shi/BDY/Private/Tools/xshell/CustomKeyMap.ckm"),
-                     ("c:/apps/bin/alias.bat",
-                      "d:/userdata/j5shi/BDY/Private/Apps/bin/alias.bat"), ]
+        syncTable = [
+            ("c:/Program Files (x86)/vim/_vimrc",
+             "d:/userdata/j5shi/BDY/Private/Vim/_vimrc"),
+            ("c:/Program Files (x86)/vim/vimfiles/bundle/snippets",
+             "d:/userdata/j5shi/BDY/Private/Vim/bundle/snippets"),
+            ("d:/userdata/j5shi/Application Data/GHISLER/wcx_ftp.ini",
+             "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/wcx_ftp.ini"),
+            ("d:/userdata/j5shi/Application Data/GHISLER/wincmd.ini",
+             "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/wincmd.ini"),
+            ("c:/totalcmd/plugins/wlx/AppLoader/AppLoader.ini",
+             "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/AppLoader.ini"),
+            ("d:/userdata/j5shi/Application Data/Launchy/launchy.ini",
+             "d:/userdata/j5shi/BDY/Private/Launchy/config/company/Launchy/launchy.ini"),
+            ("d:/userdata/j5shi/My Documents/NetSarang/SECSH",
+             "d:/userdata/j5shi/BDY/Private/Tools/xshell/SECSH"),
+            ("d:/userdata/j5shi/My Documents/NetSarang/Xshell/CustomKeyMap.ckm",
+             "d:/userdata/j5shi/BDY/Private/Tools/xshell/CustomKeyMap.ckm"),
+            ("c:/apps/bin/alias.bat",
+             "d:/userdata/j5shi/BDY/Private/Apps/bin/alias.bat"),
+            ("c:/apps/bin/knife_machine.py",
+             "d:/userdata/j5shi/BDY/Private/Apps/bin/knife_machine.py"),
+            ("c:/apps/bin/BTSLog.py",
+             "d:/userdata/j5shi/BDY/Private/Apps/bin/BTSLog.py"),
+        ]
 
         self.syncFiles(syncTable)
 
     def syncHome(self):
 
-        syncTable = [("c:/Program Files (x86)/vim/_vimrc",
-                      "d:/Baidu/Private/Vim/_vimrc"),
-                     ("c:/Program Files (x86)/vim/vimfiles/bundle/snippets",
-                      "d:/Baidu/Private/Vim/bundle/snippets"),
-                     ("c:/totalcmd/wincmd.ini",
-                      "d:/Baidu/Private/TotalCommander/config/home/wincmd.ini"),
-                     ("c:/totalcmd/wcx_ftp.ini",
-                      "d:/Baidu/Private/TotalCommander/config/home/wcx_ftp.ini"),
-                     ("c:/Users/j5shi/AppData/Roaming/Launchy/launchy.ini",
-                      "d:/Baidu/Private/Launchy/config/home/Launchy/launchy.ini"),
-                     ("c:/Users/j5shi/Documents/NetSarang/SECSH",
-                      "d:/Baidu/Private/Tools/xshell/SECSH"),
-                     ("c:/Users/j5shi/Documents/NetSarang/Xshell/CustomKeyMap.ckm",
-                      "d:/Baidu/Private/Tools/xshell/CustomKeyMap.ckm"),
-                     ("c:/apps/bin/alias.bat",
-                      "d:/Baidu/Private/apps/bin/alias.bat")]
+        syncTable = [
+            ("c:/Program Files (x86)/vim/_vimrc",
+             "d:/Baidu/Private/Vim/_vimrc"),
+            ("c:/Program Files (x86)/vim/vimfiles/bundle/snippets",
+             "d:/Baidu/Private/Vim/bundle/snippets"),
+            ("c:/totalcmd/wincmd.ini",
+             "d:/Baidu/Private/TotalCommander/config/home/wincmd.ini"),
+            ("c:/totalcmd/wcx_ftp.ini",
+             "d:/Baidu/Private/TotalCommander/config/home/wcx_ftp.ini"),
+            ("c:/Users/j5shi/AppData/Roaming/Launchy/launchy.ini",
+             "d:/Baidu/Private/Launchy/config/home/Launchy/launchy.ini"),
+            ("c:/Users/j5shi/Documents/NetSarang/SECSH",
+             "d:/Baidu/Private/Tools/xshell/SECSH"),
+            ("c:/Users/j5shi/Documents/NetSarang/Xshell/CustomKeyMap.ckm",
+             "d:/Baidu/Private/Tools/xshell/CustomKeyMap.ckm"),
+            ("c:/apps/bin/alias.bat",
+             "d:/Baidu/Private/apps/bin/alias.bat")
+        ]
 
         self.syncFiles(syncTable)
 
