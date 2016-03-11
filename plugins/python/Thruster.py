@@ -335,33 +335,7 @@ class RunCommands(Base):
                 self.doCopy(src, dst)
 
     def doCopy(self, src, dst):
-        if os.path.isdir(src):
-
-            dst_backup = ""
-            if os.path.exists(dst):
-                dst_backup = "%s_bak" % dst
-                if os.path.exists(dst_backup):
-                    shutil.rmtree(dst_backup)
-                shutil.copytree(dst, dst_backup)
-
-            try:
-                if os.path.exists(dst):
-                    shutil.rmtree(dst)
-                shutil.copytree(src, dst)
-            except:
-                if os.path.exists(dst) and os.path.exists(dst_backup):
-                    shutil.rmtree(dst_backup)
-                if os.path.exists(dst_backup) and not os.path.exists(dst):
-                    shutil.move(dst_backup, dst)
-            else:
-                if os.path.exists(dst_backup):
-                    shutil.rmtree(dst_backup)
-
-        elif os.path.isfile(src):
-            dst_base = os.path.basename(dst)
-            if not os.path.exists(dst_base):
-                os.system("mkdir %s" % dst_base)
-            shutil.copy2(src, dst)
+        os.system('cp -rfuv --strip-trailing-slashes "%s" "%s"'% (src, dst))
 
     def syncCompany(self):
 
@@ -436,6 +410,14 @@ class RunCommands(Base):
             (
                 "c:/totalcmd/wcx_ftp.ini",
                 "d:/Baidu/Private/TotalCommander/config/home/wcx_ftp.ini"
+            ),
+            (
+                "c:/Users/j5shi/AppData/Roaming/Launchy/history.db",
+                "d:/Baidu/Private/Launchy/config/home/Launchy/history.db"
+            ),
+            (
+                "c:/Users/j5shi/AppData/Roaming/Launchy/launchy.db",
+                "d:/Baidu/Private/Launchy/config/home/Launchy/launchy.db"
             ),
             (
                 "c:/Users/j5shi/AppData/Roaming/Launchy/launchy.ini",
