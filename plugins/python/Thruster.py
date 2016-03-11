@@ -337,7 +337,6 @@ class RunCommands(Base):
     def doCopy(self, src, dst):
         if os.path.isdir(dst):
             os.system('rm -rf "%s"'% (dst))
-            #  os.system('cp -rfuv --strip-trailing-slashes "%s/*" "%s"'% (src, dst))
 
         os.system('cp -rfuv --strip-trailing-slashes "%s" "%s"'% (src, dst))
 
