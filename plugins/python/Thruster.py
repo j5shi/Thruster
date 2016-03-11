@@ -252,9 +252,19 @@ class RunCommands(Base):
 
     def doCopy(self, src, dst):
         if os.path.isdir(src):
-            if os.path.exists(dst):
-                shutil.rmtree(dst)
-            shutil.copytree(src, dst)
+            dst_backup = "%s.bak" % dst
+
+            shutil.copy2(dst, dst_backup)
+
+            try:
+                if os.path.exists(dst):
+                    shutil.rmtree(dst)
+                shutil.copytree(src, dst)
+            except:
+                shutil.move(dst_backup, dst)
+            else:
+                shutil.rmtree(dst_backup)
+
         elif os.path.isfile(src):
             shutil.copy2(src, dst)
 
@@ -277,12 +287,10 @@ class RunCommands(Base):
              "d:/userdata/j5shi/BDY/Private/Tools/xshell/SECSH"),
             ("d:/userdata/j5shi/My Documents/NetSarang/Xshell/CustomKeyMap.ckm",
              "d:/userdata/j5shi/BDY/Private/Tools/xshell/CustomKeyMap.ckm"),
-            ("c:/apps/bin/alias.bat",
-             "d:/userdata/j5shi/BDY/Private/Apps/bin/alias.bat"),
-            ("c:/apps/bin/knife_machine.py",
-             "d:/userdata/j5shi/BDY/Private/Apps/bin/knife_machine.py"),
-            ("c:/apps/bin/BTSLog.py",
-             "d:/userdata/j5shi/BDY/Private/Apps/bin/BTSLog.py"),
+            ("c:/apps/bin",
+             "d:/userdata/j5shi/BDY/Private/Apps/bin"),
+            ("c:/apps/cygwin/home/j5shi",
+             "d:/userdata/j5shi/BDY/Private/Apps/bash"),
         ]
 
         self.syncFiles(syncTable)
@@ -304,8 +312,10 @@ class RunCommands(Base):
              "d:/Baidu/Private/Tools/xshell/SECSH"),
             ("c:/Users/j5shi/Documents/NetSarang/Xshell/CustomKeyMap.ckm",
              "d:/Baidu/Private/Tools/xshell/CustomKeyMap.ckm"),
-            ("c:/apps/bin/alias.bat",
-             "d:/Baidu/Private/apps/bin/alias.bat")
+            ("c:/apps/bin",
+             "d:/Baidu/Private/apps/bin"),
+            ("c:/apps/cygwin/home/j5shi",
+             "d:/Baidu/Private/apps/bash"),
         ]
 
         self.syncFiles(syncTable)
