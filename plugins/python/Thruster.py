@@ -3,7 +3,7 @@
 @author: Jia Shi
 @email: j5shi@live.com
 @last update: 2015-05-09 20:13:58
-@version: 0.83
+@version: 0.84
 @license: GNU GPL v2
 """
 import launchy
@@ -12,6 +12,7 @@ import os
 import urllib
 import shutil
 import pprint
+import inspect
 from PyQt4 import QtGui, QtCore
 
 
@@ -37,10 +38,18 @@ class Base(object):
         return PLUGIN_NAME
 
     def getIconsPath(self, filename):
-        return os.path.join(launchy.getIconsPath(), filename)
+        return os.path.join(
+            launchy.getIconsPath(),
+            filename
+        )
 
     def getCatItem(self, fullPath, shortName, pluginId, icon):
-        return launchy.CatItem(fullPath, shortName, pluginId, icon)
+        return launchy.CatItem(
+            fullPath,
+            shortName,
+            pluginId,
+            icon
+        )
 
     def getResults(self, inputDataList, resultsList):
         pass
@@ -69,10 +78,16 @@ class DspAnalyzer(Base):
 
         for triggerTxt in self.triggerTxts.keys():
             if query.startswith(triggerTxt):
-                resultsList.push_front(self.getCatItem("%s: %s" % (self.getPluginName(), self.triggerTxts.get(triggerTxt)),
-                                                       self.triggerTxts.get(triggerTxt),
-                                                       self.id,
-                                                       self.icon))
+                resultsList.push_front(
+                    self.getCatItem(
+                        "%s: %s" % (
+                            self.getPluginName(),
+                            self.triggerTxts.get(triggerTxt)
+                        ),
+                        self.triggerTxts.get(triggerTxt),
+                        self.id,
+                        self.icon
+                    ))
 
     def getQueueInfo(self, s):
         if s.strip().startswith("queueNbr"):
@@ -105,7 +120,12 @@ class DspAnalyzer(Base):
                     if self.getDescInfo(queueDumps[idx + 1]):
                         queueDb.update({queueInfo: queueDb.get(queueInfo) + 1})
 
-            self.printToFile(os.path.join(os.path.dirname(queueDumpPath), "QueueDumpAnalyzer.log"), queueDb)
+            self.printToFile(
+                os.path.join(
+                    os.path.dirname(queueDumpPath),
+                    "QueueDumpAnalyzer.log"),
+                queueDb
+            )
 
     def launchItem(self, inputDataList, catItem):
         if catItem.icon == self.icon:
@@ -126,10 +146,13 @@ class Calculator(Base):
 
         if query.startswith(self.triggerTxt):
             if len(inputDataList) == 1:
-                resultsList.push_front(self.getCatItem("%s: Calculator" % (self.getPluginName()),
-                                                       "Cal",
-                                                       self.id,
-                                                       self.icon))
+                resultsList.push_front(
+                    self.getCatItem(
+                        "%s: Calculator" % (self.getPluginName()),
+                        "Cal",
+                        self.id,
+                        self.icon
+                    ))
 
             if len(inputDataList) > 1:
                 try:
@@ -149,41 +172,93 @@ class Calculator(Base):
                     pass
                 else:
                     if ret is not None:
-                        resultsList.push_front(self.getCatItem("",
-                                                               "Result: %s" % (ret),
-                                                               self.id,
-                                                               self.icon))
+                        resultsList.push_front(
+                            self.getCatItem(
+                                "",
+                                "Result: %s" % (ret),
+                                self.id,
+                                self.icon
+                            ))
 
                     if retInHex is not None:
-                        resultsList.push_front(self.getCatItem("",
-                                                               "Result: %s" % (retInHex),
-                                                               self.id,
-                                                               self.icon))
+                        resultsList.push_front(
+                            self.getCatItem(
+                                "",
+                                "Result: %s" % (retInHex),
+                                self.id,
+                                self.icon
+                            ))
+
                     if retInBin is not None:
-                        resultsList.push_front(self.getCatItem("",
-                                                               "Result: %s" % (retInBin),
-                                                               self.id,
-                                                               self.icon))
+                        resultsList.push_front(
+                            self.getCatItem(
+                                "",
+                                "Result: %s" % (retInBin),
+                                self.id,
+                                self.icon
+                            ))
 
 
 class WebSearch(Base):
 
-    searchEngine = {"gg": {"url": "https://www.google.com/search?q=%s", "name": "Google"},
-                    "ii": {"url": "http://www.bing.com/search?q=%s", "name": "Bing"},
-                    "map": {"url": "http://api.map.baidu.com/geocoder?address=%s&output=html&src=FuckYourAssBaidu", "name": "Baidu Maps"},
-                    "bb": {"url": "https://www.baidu.com/s?wd=%s", "name": "Baidu"},
-                    "tao": {"url": "http://s.taobao.com/search?q=%s", "name": "Taobao"},
-                    "xy": {"url": "https://s.2.taobao.com/list/list.htm?q=%s&search_type=item&app=launchy", "name": "Xianyu"},
-                    "jd": {"url": "http://search.jd.com/Search?keyword=%s", "name": "Jingdong"},
-                    "pr": {"url": "https://pronto.inside.nsn.com/pronto/problemReportSearch.html?freeTextdropDownID=prId&searchTopText=%s", "name": "Pronto"},
-                    "cpp": {"url": "http://www.cplusplus.com/search.do?q=%s", "name": "C++"},
-                    "ss": {"url": "https://www.google.com/search?q=%s&sitesearch=ss64.com&gws_rd=ssl", "name": "SS64"},
-                    "ieee": {"url": "http://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&queryText=%s", "name": "IEEE"},
-                    "man": {"url": "http://www.freebsd.org/cgi/man.cgi?query=%s", "name": "Linux Man Page"},
-                    "cygwin": {"url": "https://cygwin.com/cgi-bin2/package-grep.cgi?grep=%s&arch=x86", "name": "cygwin package search"},
-                    "all": {"url": "https://eslinw61.emea.nsn-net.net:8443/source/search?q=%s&defs=&refs=&path=&hist=&type=&project=BTS_D_CONFIG_PARAM-FZM-trunk&project=BTS_D_TRS_CI2015-trunk&project=BTS_I_COMMON_APPL-trunk&project=BTS_I_GLOBAL-trunk&project=BTS_I_ISAR_SRC-trunk&project=BTS_I_ISAR_XML-trunk&project=BTS_I_LN-trunk&project=BTS_I_PS-MAINBRANCH-trunk&project=BTS_SCM_LTE-ARCH-trunk&project=BTS_SC_BM_FZ-trunk&project=BTS_SC_BSTAT_LTE-trunk&project=BTS_SC_CCS-MAINBRANCH-trunk&project=BTS_SC_CELLP_LTE-trunk&project=BTS_SC_DSPHWAPI-MAINBRANCH-trunk&project=BTS_SC_FARECO_LTE-trunk&project=BTS_SC_L2-trunk&project=BTS_SC_LFS-trunk&project=BTS_SC_LOM-trunk&project=BTS_SC_MAC_PS_TDD-trunk&project=BTS_SC_MAC_PS_WMP-trunk&project=BTS_SC_MCUHWAPI-MAINBRANCH-trunk&project=BTS_SC_MOAM_LTE-trunk&project=BTS_SC_OAM_FZM-trunk&project=BTS_SC_PHY_TX-trunk&project=BTS_SC_PHY_TX_TDD-trunk&project=BTS_SC_SYSADAPT_LTE-trunk&project=BTS_SC_UL_PHY-fsm2-trunk&project=BTS_SC_UL_PHY-fsm3-trunk&project=BTS_SC_UL_PHY_TDD-trunk&project=BTS_T_LTETOOLS-Toolset-trunk&project=CPLANE_SC_CELLC-trunk&project=CPLANE_SC_ENBC-trunk&project=CPLANE_SC_MCEC-trunk&project=CPLANE_SC_RROM-trunk&project=CPLANE_SC_TUP-trunk&project=CPLANE_SC_UEC-trunk", "name": "OpenGrok All Projects"},
-                    "dsp": {"url": "http://pscigrok-dsp.emea.nsn-net.net/source/search?q=%s&defs=&refs=&path=&hist=&type=&project=1_MAINBRANCH", "name": "OpenGrok DSPHWAPI"},
-                    }
+    searchEngine = {
+        "gg": {
+            "url": "https://www.google.com/search?q=%s",
+            "name": "Google"
+        },
+        "ii": {
+            "url": "http://www.bing.com/search?q=%s",
+            "name": "Bing"
+        },
+        "map": {
+            "url": "http://api.map.baidu.com/geocoder?address=%s&output=html&src=Chrome",
+            "name": "Baidu Maps"
+        },
+        "bb": {
+            "url": "https://www.baidu.com/s?wd=%s",
+            "name": "Baidu"
+        },
+        "tao": {
+            "url": "http://s.taobao.com/search?q=%s",
+            "name": "Taobao"
+        },
+        "xy": {
+            "url": "https://s.2.taobao.com/list/list.htm?q=%s&search_type=item&app=launchy",
+            "name": "Xianyu"
+        },
+        "jd": {
+            "url": "http://search.jd.com/Search?keyword=%s",
+            "name": "Jingdong"
+        },
+        "pr": {
+            "url": "https://pronto.inside.nsn.com/pronto/problemReportSearch.html?freeTextdropDownID=prId&searchTopText=%s",
+            "name": "Pronto"
+        },
+        "cpp": {
+            "url": "http://www.cplusplus.com/search.do?q=%s",
+            "name": "C++"
+        },
+        "ss": {
+            "url": "https://www.google.com/search?q=%s&sitesearch=ss64.com&gws_rd=ssl",
+            "name": "SS64"
+        },
+        "ieee": {
+            "url": "http://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&queryText=%s",
+            "name": "IEEE"
+        },
+        "man": {
+            "url": "http://www.freebsd.org/cgi/man.cgi?query=%s",
+            "name": "Linux Man Page"
+        },
+        "cygwin": {
+            "url": "https://cygwin.com/cgi-bin2/package-grep.cgi?grep=%s&arch=x86",
+            "name": "cygwin package search"
+        },
+        "dsp": {
+            "url": "http://pscigrok-dsp.emea.nsn-net.net/source/search?q=%s&defs=&refs=&path=&hist=&type=&project=1_MAINBRANCH",
+            "name": "OpenGrok DSPHWAPI"
+        },
+    }
 
     def __init__(self):
         self.id = self.getPluginId()
@@ -192,10 +267,16 @@ class WebSearch(Base):
     def getResults(self, inputDataList, resultsList):
         key = inputDataList[0].getText().lower()
         if key in self.searchEngine.keys():
-            resultsList.push_front(self.getCatItem("%s: %s search" % (self.getPluginName(), self.searchEngine.get(key).get("name")),
-                                                   "%s" % key,
-                                                   self.id,
-                                                   self.icon))
+            resultsList.push_front(
+                self.getCatItem(
+                    "%s: %s search" % (
+                        self.getPluginName(),
+                        self.searchEngine.get(key).get("name")
+                    ),
+                    "%s" % key,
+                    self.id,
+                    self.icon
+                ))
 
     def launchItem(self, inputDataList, catItem):
         if catItem.icon == self.icon:
@@ -228,15 +309,18 @@ class RunCommands(Base):
             lineSplited = line.split()
             if len(lineSplited) >= 3:
                 sessionName = lineSplited[0].split(':')[1]
-                RunCommands.CmdAlias.update({sessionName: {"prog": RunCommands.PROG_OS,
-                                                           "cmd": 'putty -load "%s"' % sessionName}})
+                RunCommands.CmdAlias.update({
+                    sessionName: {
+                        "prog": RunCommands.PROG_OS,
+                        "cmd": 'putty -load "%s"' % sessionName
+                    }})
 
     def syncFiles(self, syncTable):
         '''
         @syncTable [(local, remote), ...]: file syncing table.
         '''
-
         for syncEntry in syncTable:
+
             src, dst = syncEntry
 
             if (not os.path.exists(src)) and (not os.path.exists(dst)):
@@ -252,45 +336,84 @@ class RunCommands(Base):
 
     def doCopy(self, src, dst):
         if os.path.isdir(src):
-            dst_backup = "%s.bak" % dst
 
-            shutil.copy2(dst, dst_backup)
+            dst_backup = ""
+            if os.path.exists(dst):
+                dst_backup = "%s_bak" % dst
+                if os.path.exists(dst_backup):
+                    shutil.rmtree(dst_backup)
+                shutil.copytree(dst, dst_backup)
 
             try:
                 if os.path.exists(dst):
                     shutil.rmtree(dst)
                 shutil.copytree(src, dst)
             except:
-                shutil.move(dst_backup, dst)
+                if os.path.exists(dst) and os.path.exists(dst_backup):
+                    shutil.rmtree(dst_backup)
+                if os.path.exists(dst_backup) and not os.path.exists(dst):
+                    shutil.move(dst_backup, dst)
             else:
-                shutil.rmtree(dst_backup)
+                if os.path.exists(dst_backup):
+                    shutil.rmtree(dst_backup)
 
         elif os.path.isfile(src):
+            dst_base = os.path.basename(dst)
+            if not os.path.exists(dst_base):
+                os.system("mkdir %s" % dst_base)
             shutil.copy2(src, dst)
 
     def syncCompany(self):
 
         syncTable = [
-            ("c:/Program Files (x86)/vim/_vimrc",
-             "d:/userdata/j5shi/BDY/Private/Vim/_vimrc"),
-            ("c:/Program Files (x86)/vim/vimfiles/bundle/snippets",
-             "d:/userdata/j5shi/BDY/Private/Vim/bundle/snippets"),
-            ("d:/userdata/j5shi/Application Data/GHISLER/wcx_ftp.ini",
-             "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/wcx_ftp.ini"),
-            ("d:/userdata/j5shi/Application Data/GHISLER/wincmd.ini",
-             "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/wincmd.ini"),
-            ("c:/totalcmd/plugins/wlx/AppLoader/AppLoader.ini",
-             "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/AppLoader.ini"),
-            ("d:/userdata/j5shi/Application Data/Launchy/launchy.ini",
-             "d:/userdata/j5shi/BDY/Private/Launchy/config/company/Launchy/launchy.ini"),
-            ("d:/userdata/j5shi/My Documents/NetSarang/SECSH",
-             "d:/userdata/j5shi/BDY/Private/Tools/xshell/SECSH"),
-            ("d:/userdata/j5shi/My Documents/NetSarang/Xshell/CustomKeyMap.ckm",
-             "d:/userdata/j5shi/BDY/Private/Tools/xshell/CustomKeyMap.ckm"),
-            ("c:/apps/bin",
-             "d:/userdata/j5shi/BDY/Private/Apps/bin"),
-            ("c:/apps/cygwin/home/j5shi",
-             "d:/userdata/j5shi/BDY/Private/Apps/bash"),
+            (
+                "c:/Program Files (x86)/vim/_vimrc",
+                "d:/userdata/j5shi/BDY/Private/Vim/_vimrc"
+            ),
+            (
+                "c:/Program Files (x86)/vim/vimfiles/bundle/snippets",
+                "d:/userdata/j5shi/BDY/Private/Vim/bundle/snippets"
+            ),
+            (
+                "d:/userdata/j5shi/Application Data/GHISLER/wcx_ftp.ini",
+                "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/wcx_ftp.ini"
+            ),
+            (
+                "d:/userdata/j5shi/Application Data/GHISLER/wincmd.ini",
+                "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/wincmd.ini"
+            ),
+            (
+                "c:/totalcmd/plugins/wlx/AppLoader/AppLoader.ini",
+                "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/AppLoader.ini"
+            ),
+            (
+                "d:/userdata/j5shi/Application Data/Launchy/launchy.ini",
+                "d:/userdata/j5shi/BDY/Private/Launchy/config/company/Launchy/launchy.ini"
+            ),
+            (
+                "d:/userdata/j5shi/My Documents/NetSarang/SECSH",
+                "d:/userdata/j5shi/BDY/Private/Tools/xshell/SECSH"
+            ),
+            (
+                "d:/userdata/j5shi/My Documents/NetSarang/Xshell/CustomKeyMap.ckm",
+                "d:/userdata/j5shi/BDY/Private/Tools/xshell/CustomKeyMap.ckm"
+            ),
+            (
+                "c:/apps/bin",
+                "d:/userdata/j5shi/BDY/Private/Apps/bin"
+            ),
+            (
+                "c:/apps/cygwin/home/j5shi/.bash_profile",
+                "d:/userdata/j5shi/BDY/Private/Apps/bash/.bash_profile"
+            ),
+            (
+                "c:/apps/cygwin/home/j5shi/.bashrc",
+                "d:/userdata/j5shi/BDY/Private/Apps/bash/.bashrc"
+            ),
+            (
+                "c:/apps/cygwin/home/j5shi/.inputrc",
+                "d:/userdata/j5shi/BDY/Private/Apps/bash/.inputrc"
+            ),
         ]
 
         self.syncFiles(syncTable)
@@ -298,24 +421,50 @@ class RunCommands(Base):
     def syncHome(self):
 
         syncTable = [
-            ("c:/Program Files (x86)/vim/_vimrc",
-             "d:/Baidu/Private/Vim/_vimrc"),
-            ("c:/Program Files (x86)/vim/vimfiles/bundle/snippets",
-             "d:/Baidu/Private/Vim/bundle/snippets"),
-            ("c:/totalcmd/wincmd.ini",
-             "d:/Baidu/Private/TotalCommander/config/home/wincmd.ini"),
-            ("c:/totalcmd/wcx_ftp.ini",
-             "d:/Baidu/Private/TotalCommander/config/home/wcx_ftp.ini"),
-            ("c:/Users/j5shi/AppData/Roaming/Launchy/launchy.ini",
-             "d:/Baidu/Private/Launchy/config/home/Launchy/launchy.ini"),
-            ("c:/Users/j5shi/Documents/NetSarang/SECSH",
-             "d:/Baidu/Private/Tools/xshell/SECSH"),
-            ("c:/Users/j5shi/Documents/NetSarang/Xshell/CustomKeyMap.ckm",
-             "d:/Baidu/Private/Tools/xshell/CustomKeyMap.ckm"),
-            ("c:/apps/bin",
-             "d:/Baidu/Private/apps/bin"),
-            ("c:/apps/cygwin/home/j5shi",
-             "d:/Baidu/Private/apps/bash"),
+            (
+                "c:/Program Files (x86)/vim/_vimrc",
+                "d:/Baidu/Private/Vim/_vimrc"
+            ),
+            (
+                "c:/Program Files (x86)/vim/vimfiles/bundle/snippets",
+                "d:/Baidu/Private/Vim/bundle/snippets"
+            ),
+            (
+                "c:/totalcmd/wincmd.ini",
+                "d:/Baidu/Private/TotalCommander/config/home/wincmd.ini"
+            ),
+            (
+                "c:/totalcmd/wcx_ftp.ini",
+                "d:/Baidu/Private/TotalCommander/config/home/wcx_ftp.ini"
+            ),
+            (
+                "c:/Users/j5shi/AppData/Roaming/Launchy/launchy.ini",
+                "d:/Baidu/Private/Launchy/config/home/Launchy/launchy.ini"
+            ),
+            (
+                "c:/Users/j5shi/Documents/NetSarang/SECSH",
+                "d:/Baidu/Private/Tools/xshell/SECSH"
+            ),
+            (
+                "c:/Users/j5shi/Documents/NetSarang/Xshell/CustomKeyMap.ckm",
+                "d:/Baidu/Private/Tools/xshell/CustomKeyMap.ckm"
+            ),
+            (
+                "c:/apps/bin",
+                "d:/Baidu/Private/apps/bin"
+            ),
+            (
+                "c:/apps/cygwin/home/j5shi/.bash_profile",
+                "d:/Baidu/Private/apps/bash/.bash_profile"
+            ),
+            (
+                "c:/apps/cygwin/home/j5shi/.inputrc",
+                "d:/Baidu/Private/apps/bash/.inputrc"
+            ),
+            (
+                "c:/apps/cygwin/home/j5shi/.bashrc",
+                "d:/Baidu/Private/apps/bash/.bashrc"
+            ),
         ]
 
         self.syncFiles(syncTable)
@@ -323,17 +472,23 @@ class RunCommands(Base):
     def getResults(self, inputDataList, resultsList):
         if inputDataList[0].getText().strip().lower() == self.triggerStr.lower():
             if len(inputDataList) == 1:
-                resultsList.push_front(self.getCatItem("%s: Run commands" % (self.getPluginName()),
-                                                       self.triggerStr,
-                                                       self.id,
-                                                       self.icon))
+                resultsList.push_front(
+                    self.getCatItem(
+                        "%s: Run commands" % (self.getPluginName()),
+                        self.triggerStr,
+                        self.id,
+                        self.icon
+                    ))
 
             if len(inputDataList) > 1:
                 for alias in self.CmdAlias.keys():
-                    resultsList.push_front(self.getCatItem("%s: Run commands" % (self.getPluginName()),
-                                                           alias,
-                                                           self.id,
-                                                           self.icon))
+                    resultsList.push_front(
+                        self.getCatItem(
+                            "%s: Run commands" % (self.getPluginName()),
+                            alias,
+                            self.id,
+                            self.icon
+                        ))
 
     def launchItem(self, inputDataList, catItem):
         if catItem.icon == self.icon:
@@ -609,10 +764,19 @@ class Thruster(launchy.Plugin):
         @param inputDataList <List>: List of InputData, user's search query.
         @param catItem <CatItem>: The user selected catalog item.
         """
-        for addon in self.addons:
-            if addon.launchItem(inputDataList, catItem):
-                logger(LOG_LEVEL_DBG, "Addon %s executed query: %s." % (type(addon).__name__, inputDataList[-1].getText()))
-                break
+        try:
+            for addon in self.addons:
+                if addon.launchItem(inputDataList, catItem):
+                    logger(LOG_LEVEL_DBG, "Addon %s executed query: %s." % (type(addon).__name__, inputDataList[-1].getText()))
+                    break
+        except:
+            os.system(
+                'start "" /B gvim.exe --remote-tab-silent "%s"' %
+                os.path.join(
+                    os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))),
+                    'stderr.txt'
+                ))
+            raise
 
     def hasDialog(self):
         """
