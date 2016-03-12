@@ -376,10 +376,6 @@ class RunCommands(Base):
                 "d:/userdata/j5shi/BDY/Private/Tools/xshell/CustomKeyMap.ckm"
             ),
             (
-                "c:/apps/bin",
-                "d:/userdata/j5shi/BDY/Private/Apps/bin"
-            ),
-            (
                 "c:/apps/cygwin/home/j5shi/.bash_profile",
                 "d:/userdata/j5shi/BDY/Private/Apps/bash/.bash_profile"
             ),
@@ -433,10 +429,6 @@ class RunCommands(Base):
             (
                 "c:/Users/j5shi/Documents/NetSarang/Xshell/CustomKeyMap.ckm",
                 "d:/Baidu/Private/Tools/xshell/CustomKeyMap.ckm"
-            ),
-            (
-                "c:/apps/bin",
-                "d:/Baidu/Private/apps/bin"
             ),
             (
                 "c:/apps/cygwin/home/j5shi/.bash_profile",
