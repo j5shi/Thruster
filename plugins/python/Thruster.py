@@ -375,18 +375,6 @@ class RunCommands(Base):
                 "d:/userdata/j5shi/My Documents/NetSarang/Xshell/CustomKeyMap.ckm",
                 "d:/userdata/j5shi/BDY/Private/Tools/xshell/CustomKeyMap.ckm"
             ),
-            (
-                "c:/apps/cygwin/home/j5shi/.bash_profile",
-                "d:/userdata/j5shi/BDY/Private/Apps/bash/.bash_profile"
-            ),
-            (
-                "c:/apps/cygwin/home/j5shi/.bashrc",
-                "d:/userdata/j5shi/BDY/Private/Apps/bash/.bashrc"
-            ),
-            (
-                "c:/apps/cygwin/home/j5shi/.inputrc",
-                "d:/userdata/j5shi/BDY/Private/Apps/bash/.inputrc"
-            ),
         ]
 
         self.syncFiles(syncTable)
@@ -429,18 +417,6 @@ class RunCommands(Base):
             (
                 "c:/Users/j5shi/Documents/NetSarang/Xshell/CustomKeyMap.ckm",
                 "d:/Baidu/Private/Tools/xshell/CustomKeyMap.ckm"
-            ),
-            (
-                "c:/apps/cygwin/home/j5shi/.bash_profile",
-                "d:/Baidu/Private/apps/bash/.bash_profile"
-            ),
-            (
-                "c:/apps/cygwin/home/j5shi/.inputrc",
-                "d:/Baidu/Private/apps/bash/.inputrc"
-            ),
-            (
-                "c:/apps/cygwin/home/j5shi/.bashrc",
-                "d:/Baidu/Private/apps/bash/.bashrc"
             ),
         ]
 
