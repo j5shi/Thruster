@@ -203,7 +203,7 @@ class WebSearch(Base):
 
     searchEngine = {
         "gg": {
-            "url": "https://www.google.com/search?q=%s",
+            "url": "https://www.google.fi/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=%s",
             "name": "Google"
         },
         "ii": {
