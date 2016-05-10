@@ -367,14 +367,6 @@ class RunCommands(Base):
                 "d:/userdata/j5shi/Application Data/Launchy/launchy.ini",
                 "d:/userdata/j5shi/BDY/Private/Launchy/config/company/Launchy/launchy.ini"
             ),
-            (
-                "d:/userdata/j5shi/My Documents/NetSarang/SECSH",
-                "d:/userdata/j5shi/BDY/Private/Tools/xshell/SECSH"
-            ),
-            (
-                "d:/userdata/j5shi/My Documents/NetSarang/Xshell/CustomKeyMap.ckm",
-                "d:/userdata/j5shi/BDY/Private/Tools/xshell/CustomKeyMap.ckm"
-            ),
         ]
 
         self.syncFiles(syncTable)
@@ -409,14 +401,6 @@ class RunCommands(Base):
             (
                 "c:/Users/j5shi/AppData/Roaming/Launchy/launchy.ini",
                 "d:/Baidu/Private/Launchy/config/home/Launchy/launchy.ini"
-            ),
-            (
-                "c:/Users/j5shi/Documents/NetSarang/SECSH",
-                "d:/Baidu/Private/Tools/xshell/SECSH"
-            ),
-            (
-                "c:/Users/j5shi/Documents/NetSarang/Xshell/CustomKeyMap.ckm",
-                "d:/Baidu/Private/Tools/xshell/CustomKeyMap.ckm"
             ),
         ]
 
