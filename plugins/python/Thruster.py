@@ -158,24 +158,59 @@ class Calculator(Base):
                 try:
                     ret = eval(inputDataList[1].getText().strip())
 
-                    if isinstance(ret, int):
-                        retInHex = "0x%x" % ret
+                    if isinstance(ret, int) or isinstance(ret, long):
+                        retInFloat = None
 
-                        retb = "{0:032b}".format(ret)
+                        # hex
+                        retInHex = '0x%x' % ret
+
+                        # dec
+                        retInDec = '%d' % ret
+                        
+                        # octal
+                        retInOct = '0%o' % ret
+
+                        # bin
+                        retb = format(ret, '032b')
                         retInBin = ""
                         for i in range(len(retb)):
                             retInBin += retb[i] if (i % 4 or i == 0) else ("," + retb[i])
+
+                        # size
+                        retInSize = ""
+
+                        size_giga_bytes = ret / (1024 ** 3) if ret / (1024 ** 3) else 0
+                        ret -= size_giga_bytes * (1024 ** 3)
+                        retInSize += "%s GB " % size_giga_bytes if size_giga_bytes else ""
+
+                        size_mega_bytes = ret / (1024 * 1024) if ret / (1024 * 1024) else 0
+                        ret -= size_mega_bytes * (1024 ** 2)
+                        retInSize += "%s MB " % size_mega_bytes if size_mega_bytes else ""
+
+                        size_kilo_bytes = ret / (1024) if ret / (1024) else 0
+                        ret -= size_mega_bytes * (1024 ** 1)
+                        retInSize += "%s KB " % size_kilo_bytes if size_kilo_bytes else ""
+
+                        size_bytes = ret % (1024) if ret % (1024) else 0
+                        retInSize += "%s B " % size_bytes if size_bytes else ""
+
+                        if not retInSize:
+                            retInSize = "0 B"
                     else:
+                        retInFloat = ret
                         retInHex = None
+                        retInDec = None
+                        retInOct = None
                         retInBin = None
+                        retInSize = None
                 except:
-                    pass
+                    raise
                 else:
-                    if ret is not None:
+                    if retInFloat is not None:
                         resultsList.push_front(
                             self.getCatItem(
                                 "",
-                                "Result: %s" % (ret),
+                                "Result: %s" % (retInFloat),
                                 self.id,
                                 self.icon
                             ))
@@ -189,11 +224,38 @@ class Calculator(Base):
                                 self.icon
                             ))
 
+                    if retInOct is not None:
+                        resultsList.push_front(
+                            self.getCatItem(
+                                "",
+                                "Result: %s" % (retInOct),
+                                self.id,
+                                self.icon
+                            ))
+
+                    if retInDec is not None:
+                        resultsList.push_front(
+                            self.getCatItem(
+                                "",
+                                "Result: %s" % (retInDec),
+                                self.id,
+                                self.icon
+                            ))
+
                     if retInBin is not None:
                         resultsList.push_front(
                             self.getCatItem(
                                 "",
                                 "Result: %s" % (retInBin),
+                                self.id,
+                                self.icon
+                            ))
+
+                    if retInSize is not None:
+                        resultsList.push_front(
+                            self.getCatItem(
+                                "",
+                                "Result: %s" % (retInSize),
                                 self.id,
                                 self.icon
                             ))
@@ -336,9 +398,9 @@ class RunCommands(Base):
 
     def doCopy(self, src, dst):
         if os.path.isdir(dst):
-            os.system('rm -rf "%s"'% (dst))
+            os.system('rm -rf "%s"' % (dst))
 
-        os.system('cp -rfuv --strip-trailing-slashes "%s" "%s"'% (src, dst))
+        os.system('cp -rfuv --strip-trailing-slashes "%s" "%s"' % (src, dst))
 
     def syncCompany(self):
 
