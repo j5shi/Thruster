@@ -289,8 +289,12 @@ class WebSearch(Base):
             "name": "Xianyu"
         },
         "jd": {
-            "url": "http://search.jd.com/Search?keyword=%s",
+            "url": "http://search.jd.com/Search?keyword=%s&enc=utf-8",
             "name": "Jingdong"
+        },
+        "ikea": {
+            "url": "http://www.ikea.com/cn/zh/search/?query=%s",
+            "name": "IKEA"
         },
         "pr": {
             "url": "https://pronto.inside.nsn.com/pronto/problemReportSearch.html?freeTextdropDownID=prId&searchTopText=%s",
