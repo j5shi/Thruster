@@ -414,6 +414,18 @@ class RunCommands(Base):
                 "d:/userdata/j5shi/BDY/Private/Vim/_vimrc"
             ),
             (
+                "c:/cygwin/home/j5shi/bin",
+                "d:/userdata/j5shi/BDY/Private/Bash/bin"
+            ),
+            (
+                "c:/cygwin/home/j5shi/.bash_profile",
+                "d:/userdata/j5shi/BDY/Private/Bash/.bash_profile"
+            ),
+            (
+                "c:/cygwin/home/j5shi/.inputrc",
+                "d:/userdata/j5shi/BDY/Private/Bash/.inputrc"
+            ),
+            (
                 "c:/Program Files (x86)/vim/vimfiles/bundle/snippets",
                 "d:/userdata/j5shi/BDY/Private/Vim/bundle/snippets"
             ),
@@ -443,6 +455,18 @@ class RunCommands(Base):
             (
                 "c:/Program Files (x86)/vim/_vimrc",
                 "d:/Baidu/Private/Vim/_vimrc"
+            ),
+            (
+                "c:/cygwin/home/j5shi/bin",
+                "d:/Baidu/Private/Bash/bin"
+            ),
+            (
+                "c:/cygwin/home/j5shi/.bash_profile",
+                "d:/Baidu/Private/Bash/.bash_profile"
+            ),
+            (
+                "c:/cygwin/home/j5shi/.inputrc",
+                "d:/Baidu/Private/Bash/.inputrc"
             ),
             (
                 "c:/Program Files (x86)/vim/vimfiles/bundle/snippets",
