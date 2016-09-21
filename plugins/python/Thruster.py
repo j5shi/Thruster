@@ -321,7 +321,7 @@ class WebSearch(Base):
             "name": "cygwin package search"
         },
         "dsp": {
-            "url": "http://pscigrok-dsp.emea.nsn-net.net/source/search?q=%s&defs=&refs=&path=&hist=&type=&project=1_MAINBRANCH",
+            "url": "http://pscigrok-dsp.emea.nsn-net.net/source/search?q=%s&defs=&refs=&path=&hist=&type=&project=MAINBRANCH_LRC",
             "name": "OpenGrok DSPHWAPI"
         },
     }
