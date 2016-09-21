@@ -630,7 +630,8 @@ class DefaultHandler(Base):
         if catItem.icon == self.icon:
             subprocess.Popen('start chrome "%s"' % inputDataList[0].getText().strip(), shell=True)
         else:
-            launchy.runProgram('"%s"' % catItem.fullPath, "")
+            subprocess.Popen('"%s"' % catItem.fullPath, shell=True)
+            #  launchy.runProgram('"%s"' % catItem.fullPath, "")
         return True
 
 
