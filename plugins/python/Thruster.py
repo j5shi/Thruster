@@ -324,6 +324,10 @@ class WebSearch(Base):
             "url": "http://pscigrok-dsp.emea.nsn-net.net/source/search?q=%s&defs=&refs=&path=&hist=&type=&project=MAINBRANCH_LRC",
             "name": "OpenGrok DSPHWAPI"
         },
+        "jira": {
+            "url": "https://jira3.int.net.nokia.com/secure/QuickSearch.jspa?searchString=%s",
+            "name": "Jira Search"
+        },
     }
 
     def __init__(self):
