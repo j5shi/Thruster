@@ -308,6 +308,10 @@ class WebSearch(Base):
             "url": "https://www.google.com/search?q=%s&sitesearch=ss64.com&gws_rd=ssl",
             "name": "SS64"
         },
+        "so": {
+            "url": "http://stackoverflow.com/search?q=%s",
+            "name": "StackOverflow"
+        },
         "ieee": {
             "url": "http://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&queryText=%s",
             "name": "IEEE"
