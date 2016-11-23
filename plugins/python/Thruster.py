@@ -434,10 +434,6 @@ class RunCommands(Base):
                 "d:/userdata/j5shi/BDY/Private/Bash/.inputrc"
             ),
             (
-                "c:/Program Files (x86)/vim/vimfiles/bundle/snippets",
-                "d:/userdata/j5shi/BDY/Private/Vim/bundle/snippets"
-            ),
-            (
                 "d:/userdata/j5shi/Application Data/GHISLER/wcx_ftp.ini",
                 "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/wcx_ftp.ini"
             ),
@@ -475,10 +471,6 @@ class RunCommands(Base):
             (
                 "c:/cygwin/home/j5shi/.inputrc",
                 "d:/Baidu/Private/Bash/.inputrc"
-            ),
-            (
-                "c:/Program Files (x86)/vim/vimfiles/bundle/snippets",
-                "d:/Baidu/Private/Vim/bundle/snippets"
             ),
             (
                 "c:/totalcmd/wincmd.ini",
