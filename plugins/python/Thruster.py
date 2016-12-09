@@ -339,6 +339,14 @@ class WebSearch(Base):
         self.id = self.getPluginId()
         self.icon = self.getIconsPath("WebSearch.png")
 
+    @classmethod
+    def encodeQuery(cls, query):
+        return urllib.quote(query.encode("utf8"))
+
+    @classmethod
+    def getUrl(cls, key, query):
+        return eval('"%s" %% "%s"' % (WebSearch.searchEngine.get(key).get('url'), WebSearch.encodeQuery(query)))
+        
     def getResults(self, inputDataList, resultsList):
         key = inputDataList[0].getText().lower()
         if key in self.searchEngine.keys():
@@ -356,9 +364,8 @@ class WebSearch(Base):
     def launchItem(self, inputDataList, catItem):
         if catItem.icon == self.icon:
             key = inputDataList[0].getText()
-            query = urllib.quote(inputDataList[-1].getText().encode("utf8"))
-            url = eval('"%s" %% "%s"' % (self.searchEngine.get(key).get('url'), query))
-            subprocess.Popen('start chrome "%s"' % url, shell=True)
+            query = self.encodeQuery(inputDataList[-1].getText())
+            subprocess.Popen('start chrome "%s"' % self.getUrl(key, query), shell=True)
             return True
 
 
@@ -637,13 +644,13 @@ class DefaultHandler(Base):
             query = inputDataList[0].getText().strip()
 
             if self.pattern_pronto.match(query):
-                url = eval('"%s" %% "%s"' % (WebSearch.searchEngine.get('pr').get('url'), query))
+                url = WebSearch.getUrl('pr', query)
             elif self.pattern_google.match(query):
-                url = eval('"%s" %% "%s"' % (WebSearch.searchEngine.get('gg').get('url'), query[1:]))
+                url = WebSearch.getUrl('gg', query[1:])
             elif self.pattern_baidu.match(query):
-                url = eval('"%s" %% "%s"' % (WebSearch.searchEngine.get('bb').get('url'), query[2:]))
+                url = WebSearch.getUrl('bb', query[2:])
             elif self.pattern_bing.match(query):
-                url = eval('"%s" %% "%s"' % (WebSearch.searchEngine.get('ii').get('url'), query[3:]))
+                url = WebSearch.getUrl('ii', query[3:])
             else:
                 url = query
 
