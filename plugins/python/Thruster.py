@@ -613,11 +613,10 @@ class Shortcuts(Base):
 
 class DefaultHandler(Base):
 
-    pattern_pronto1 = re.compile("^[pP][rR]\d+$")
-    pattern_pronto2 = re.compile("^[nN][aA]\d+$")
-    pattern_google = re.compile("^\?{1}[^?]*$")
-    pattern_baidu = re.compile("^\?{2}[^?]*$")
-    pattern_bing = re.compile("^\?{3}[^?]*$")
+    pattern_pronto = re.compile("(^[pP][rR]\d+$)|(^[nN][aA]\d+$)")
+    pattern_google = re.compile("^\?{1}([^?]*$)")
+    pattern_baidu = re.compile("^\?{2}([^?]*$)")
+    pattern_bing = re.compile("^\?{3}([^?]*$)")
 
     def __init__(self):
         self.id = self.getPluginId()
@@ -637,23 +636,18 @@ class DefaultHandler(Base):
         if catItem.icon == self.icon:
             query = inputDataList[0].getText().strip()
 
-            if self.pattern_pronto1.match(query) or self.pattern_pronto2.match(query):
-                subprocess.Popen('start chrome "https://pronto.inside.nsn.com/pronto/problemReportSearch.html?freeTextdropDownID=prId&searchTopText=%s"' % query, shell=True)
-
+            if self.pattern_pronto.match(query):
+                url = eval('"%s" %% "%s"' % (WebSearch.searchEngine.get('pr').get('url'), query))
             elif self.pattern_google.match(query):
-                url = eval('"%s" %% "%s"' % (WebSearch.searchEngine.get('gg').get('url'), query))
-                subprocess.Popen('start chrome "%s"' % url, shell=True)
-
+                url = eval('"%s" %% "%s"' % (WebSearch.searchEngine.get('gg').get('url'), query[1:]))
             elif self.pattern_baidu.match(query):
-                url = eval('"%s" %% "%s"' % (WebSearch.searchEngine.get('bb').get('url'), query))
-                subprocess.Popen('start chrome "%s"' % url, shell=True)
-
+                url = eval('"%s" %% "%s"' % (WebSearch.searchEngine.get('bb').get('url'), query[2:]))
             elif self.pattern_bing.match(query):
-                url = eval('"%s" %% "%s"' % (WebSearch.searchEngine.get('ii').get('url'), query))
-                subprocess.Popen('start chrome "%s"' % url, shell=True)
-
+                url = eval('"%s" %% "%s"' % (WebSearch.searchEngine.get('ii').get('url'), query[3:]))
             else:
-                subprocess.Popen('start chrome "%s"' % query, shell=True)
+                url = query
+
+            subprocess.Popen('start chrome "%s"' % url, shell=True)
         else:
             #  subprocess.Popen('"%s"' % catItem.fullPath, shell=True)
             launchy.runProgram('"%s"' % catItem.fullPath, "")
