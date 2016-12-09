@@ -9,6 +9,7 @@
 import launchy
 import subprocess
 import os
+import re
 import urllib
 import shutil
 import pprint
@@ -612,6 +613,12 @@ class Shortcuts(Base):
 
 class DefaultHandler(Base):
 
+    pattern_pronto1 = re.compile("^[pP][rR]\d+$")
+    pattern_pronto2 = re.compile("^[nN][aA]\d+$")
+    pattern_google = re.compile("^\?{1}[^?]*$")
+    pattern_baidu = re.compile("^\?{2}[^?]*$")
+    pattern_bing = re.compile("^\?{3}[^?]*$")
+
     def __init__(self):
         self.id = self.getPluginId()
         self.icon = self.getIconsPath("DefaultHandler.png")
@@ -628,7 +635,25 @@ class DefaultHandler(Base):
         logger(LOG_LEVEL_DBG, "Default handler query: %s" % inputDataList[0].getText().strip())
 
         if catItem.icon == self.icon:
-            subprocess.Popen('start chrome "https://pronto.inside.nsn.com/pronto/problemReportSearch.html?freeTextdropDownID=prId&searchTopText=%s"' % inputDataList[0].getText().strip(), shell=True)
+            query = inputDataList[0].getText().strip()
+
+            if self.pattern_pronto1.match(query) or self.pattern_pronto2.match(query):
+                subprocess.Popen('start chrome "https://pronto.inside.nsn.com/pronto/problemReportSearch.html?freeTextdropDownID=prId&searchTopText=%s"' % query, shell=True)
+
+            elif self.pattern_google.match(query):
+                url = eval('"%s" %% "%s"' % (WebSearch.searchEngine.get('gg').get('url'), query))
+                subprocess.Popen('start chrome "%s"' % url, shell=True)
+
+            elif self.pattern_baidu.match(query):
+                url = eval('"%s" %% "%s"' % (WebSearch.searchEngine.get('bb').get('url'), query))
+                subprocess.Popen('start chrome "%s"' % url, shell=True)
+
+            elif self.pattern_bing.match(query):
+                url = eval('"%s" %% "%s"' % (WebSearch.searchEngine.get('ii').get('url'), query))
+                subprocess.Popen('start chrome "%s"' % url, shell=True)
+
+            else:
+                subprocess.Popen('start chrome "%s"' % query, shell=True)
         else:
             #  subprocess.Popen('"%s"' % catItem.fullPath, shell=True)
             launchy.runProgram('"%s"' % catItem.fullPath, "")
