@@ -628,7 +628,7 @@ class DefaultHandler(Base):
         logger(LOG_LEVEL_DBG, "Default handler query: %s" % inputDataList[0].getText().strip())
 
         if catItem.icon == self.icon:
-            subprocess.Popen('start chrome "%s"' % inputDataList[0].getText().strip(), shell=True)
+            subprocess.Popen('start chrome "https://pronto.inside.nsn.com/pronto/problemReportSearch.html?freeTextdropDownID=prId&searchTopText=%s"' % inputDataList[0].getText().strip(), shell=True)
         else:
             #  subprocess.Popen('"%s"' % catItem.fullPath, shell=True)
             launchy.runProgram('"%s"' % catItem.fullPath, "")
