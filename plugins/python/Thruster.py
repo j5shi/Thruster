@@ -364,7 +364,7 @@ class WebSearch(Base):
     def launchItem(self, inputDataList, catItem):
         if catItem.icon == self.icon:
             key = inputDataList[0].getText()
-            query = self.encodeQuery(inputDataList[-1].getText())
+            query = inputDataList[-1].getText()
             subprocess.Popen('start chrome "%s"' % self.getUrl(key, query), shell=True)
             return True
 
