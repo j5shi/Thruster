@@ -621,9 +621,9 @@ class Shortcuts(Base):
 class DefaultHandler(Base):
 
     pattern_pronto = re.compile("(^[pP][rR]\d+$)|(^[nN][aA]\d+$)")
-    pattern_google = re.compile("(^\/{1}[^/]*$)|(^\s{1}\S*$)")
-    pattern_baidu = re.compile("^\/{2}([^/]*$)|(^\s{2}\S*$)")
-    pattern_bing = re.compile("^\/{3}([^/]*$)|(^\s{3}\S*$)")
+    pattern_google = re.compile("(^\/{1}[^/]*$)|(^\s{1}\S.*$)")
+    pattern_baidu = re.compile("^\/{2}([^/]*$)|(^\s{2}\S.*$)")
+    pattern_bing = re.compile("^\/{3}([^/]*$)|(^\s{3}\S.*$)")
 
     def __init__(self):
         self.id = self.getPluginId()
