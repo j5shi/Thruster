@@ -167,7 +167,7 @@ class Calculator(Base):
 
                         # dec
                         retInDec = '%d' % ret
-                        
+
                         # octal
                         retInOct = '0%o' % ret
 
@@ -346,7 +346,7 @@ class WebSearch(Base):
     @classmethod
     def getUrl(cls, key, query):
         return eval('"%s" %% "%s"' % (WebSearch.searchEngine.get(key).get('url'), WebSearch.encodeQuery(query)))
-        
+
     def getResults(self, inputDataList, resultsList):
         key = inputDataList[0].getText().lower()
         if key in self.searchEngine.keys():
@@ -621,27 +621,30 @@ class Shortcuts(Base):
 class DefaultHandler(Base):
 
     pattern_pronto = re.compile("(^[pP][rR]\d+$)|(^[nN][aA]\d+$)")
-    pattern_google = re.compile("^\/{1}([^/]*$)")
-    pattern_baidu = re.compile("^\/{2}([^/]*$)")
-    pattern_bing = re.compile("^\/{3}([^/]*$)")
+    pattern_google = re.compile("(^\/{1}[^/]*$)|(^\s{1}\S*$)")
+    pattern_baidu = re.compile("^\/{2}([^/]*$)|(^\s{2}\S*$)")
+    pattern_bing = re.compile("^\/{3}([^/]*$)|(^\s{3}\S*$)")
 
     def __init__(self):
         self.id = self.getPluginId()
         self.icon = self.getIconsPath("DefaultHandler.png")
 
     def getResults(self, inputDataList, resultsList):
+
         if len(inputDataList) == 1:
-            resultsList.push_front(self.getCatItem("%s: default handler" % self.getPluginName(),
-                                                   "",
-                                                   self.id,
-                                                   self.icon))
+            resultsList.push_front(
+                self.getCatItem("%s: default handler" %
+                                self.getPluginName(),
+                                "",
+                                self.id,
+                                self.icon))
 
     def launchItem(self, inputDataList, catItem):
 
         logger(LOG_LEVEL_DBG, "Default handler query: %s" % inputDataList[0].getText().strip())
 
         if catItem.icon == self.icon:
-            query = inputDataList[0].getText().strip()
+            query = inputDataList[0].getText()
 
             if self.pattern_pronto.match(query):
                 url = WebSearch.getUrl('pr', query)
