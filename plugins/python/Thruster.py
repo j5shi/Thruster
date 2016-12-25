@@ -1,11 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-@author: Jia Shi
-@email: j5shi@live.com
-@last update: 2015-05-09 20:13:58
-@version: 0.84
-@license: GNU GPL v2
-"""
 import launchy
 import subprocess
 import os
@@ -16,21 +9,29 @@ import pprint
 import inspect
 from PyQt4 import QtGui, QtCore
 
-
 PLUGIN_NAME = "Thruster"
 PLUGIN_ID = launchy.hash(PLUGIN_NAME)
 
-LOG_LEVEL_DBG, LOG_LEVEL_INF, LOG_LEVEL_WARN, LOG_LEVEL_ERR = range(4)
-LOG_LEVEL = LOG_LEVEL_INF
+
+class Logger(object):
+
+    LOG_LEVEL_DBG, LOG_LEVEL_INF, LOG_LEVEL_WARN, LOG_LEVEL_ERR = range(4)
+
+    # init log level
+    LOG_LEVEL = LOG_LEVEL_INF
+
+    def logger(self, level, log):
+        if level >= self.LOG_LEVEL:
+            print log
+
+    def setLogLevel(self, level):
+        self.LOG_LEVEL = level
+
+    def getLogLevel(self, level):
+        return self.LOG_LEVEL
 
 
-def logger(level, log):
-
-    if level >= LOG_LEVEL:
-        print log
-
-
-class Base(object):
+class AddonBase(Logger):
 
     def getPluginId(self):
         return PLUGIN_ID
@@ -39,18 +40,10 @@ class Base(object):
         return PLUGIN_NAME
 
     def getIconsPath(self, filename):
-        return os.path.join(
-            launchy.getIconsPath(),
-            filename
-        )
+        return os.path.join(launchy.getIconsPath(), filename)
 
     def getCatItem(self, fullPath, shortName, pluginId, icon):
-        return launchy.CatItem(
-            fullPath,
-            shortName,
-            pluginId,
-            icon
-        )
+        return launchy.CatItem(fullPath, shortName, pluginId, icon)
 
     def getResults(self, inputDataList, resultsList):
         pass
@@ -61,83 +54,17 @@ class Base(object):
     def getLabels(self, inputDataList):
         pass
 
+    def getDescription(self):
+        return "%s: %s" % (self.getPluginName(), self.addonName)
+
     def launchItem(self, inputDataList, catItem):
         return False
 
 
-class DspAnalyzer(Base):
+class Calculator(AddonBase):
 
     def __init__(self):
-
-        self.id = self.getPluginId()
-        self.icon = self.getIconsPath("DspAnalyzer.png")
-        self.triggerTxtQueueDumpAnalyzer = "que"
-        self.triggerTxts = {self.triggerTxtQueueDumpAnalyzer: "QueueDumpAnalyzer", }
-
-    def getResults(self, inputDataList, resultsList):
-        query = inputDataList[0].getText().lower()
-
-        for triggerTxt in self.triggerTxts.keys():
-            if query.startswith(triggerTxt):
-                resultsList.push_front(
-                    self.getCatItem(
-                        "%s: %s" % (
-                            self.getPluginName(),
-                            self.triggerTxts.get(triggerTxt)
-                        ),
-                        self.triggerTxts.get(triggerTxt),
-                        self.id,
-                        self.icon
-                    ))
-
-    def getQueueInfo(self, s):
-        if s.strip().startswith("queueNbr"):
-            return s.strip().split("=")[2]
-        return None
-
-    def getDescInfo(self, s):
-        if s.strip().startswith("descPtr"):
-            return s.strip().split("=")[2]
-        return None
-
-    def printToFile(self, filename, printObj):
-        with open(filename, 'w') as fh:
-            pprint.pprint(printObj, stream=fh)
-
-    def QueueDumpAnalyzer(self, inputDataList, catItem):
-        queueDb = {}
-        queueDumpPath = inputDataList[-1].getText()
-
-        with open(queueDumpPath) as queueDumpFh:
-            queueDumps = queueDumpFh.readlines()
-
-            for idx in range(len(queueDumps)):
-                line = queueDumps[idx]
-                queueInfo = self.getQueueInfo(line)
-
-                if queueInfo:
-                    queueDb.update({queueInfo: queueDb.get(queueInfo, 0)})
-
-                    if self.getDescInfo(queueDumps[idx + 1]):
-                        queueDb.update({queueInfo: queueDb.get(queueInfo) + 1})
-
-            self.printToFile(
-                os.path.join(
-                    os.path.dirname(queueDumpPath),
-                    "QueueDumpAnalyzer.log"),
-                queueDb
-            )
-
-    def launchItem(self, inputDataList, catItem):
-        if catItem.icon == self.icon:
-            if inputDataList[0].getText() == self.triggerTxts.get(self.triggerTxtQueueDumpAnalyzer):
-                self.QueueDumpAnalyzer(inputDataList, catItem)
-            return True
-
-
-class Calculator(Base):
-
-    def __init__(self):
+        self.addonName = "Calculator"
         self.id = self.getPluginId()
         self.icon = self.getIconsPath("Calculator.png")
         self.triggerTxt = "cal"
@@ -148,12 +75,10 @@ class Calculator(Base):
         if query.startswith(self.triggerTxt):
             if len(inputDataList) == 1:
                 resultsList.push_front(
-                    self.getCatItem(
-                        "%s: Calculator" % (self.getPluginName()),
-                        "Cal",
-                        self.id,
-                        self.icon
-                    ))
+                    self.getCatItem(self.getDescription(),
+                                    self.addonName,
+                                    self.id,
+                                    self.icon))
 
             if len(inputDataList) > 1:
                 try:
@@ -209,60 +134,48 @@ class Calculator(Base):
                 else:
                     if retInFloat is not None:
                         resultsList.push_front(
-                            self.getCatItem(
-                                "",
-                                "Result: %s" % (retInFloat),
-                                self.id,
-                                self.icon
-                            ))
+                            self.getCatItem("",
+                                            "Result: %s" % (retInFloat),
+                                            self.id,
+                                            self.icon))
 
                     if retInHex is not None:
                         resultsList.push_front(
-                            self.getCatItem(
-                                "",
-                                "Result: %s" % (retInHex),
-                                self.id,
-                                self.icon
-                            ))
+                            self.getCatItem("",
+                                            "Result: %s" % (retInHex),
+                                            self.id,
+                                            self.icon))
 
                     if retInOct is not None:
                         resultsList.push_front(
-                            self.getCatItem(
-                                "",
-                                "Result: %s" % (retInOct),
-                                self.id,
-                                self.icon
-                            ))
+                            self.getCatItem("",
+                                            "Result: %s" % (retInOct),
+                                            self.id,
+                                            self.icon))
 
                     if retInDec is not None:
                         resultsList.push_front(
-                            self.getCatItem(
-                                "",
-                                "Result: %s" % (retInDec),
-                                self.id,
-                                self.icon
-                            ))
+                            self.getCatItem("",
+                                            "Result: %s" % (retInDec),
+                                            self.id,
+                                            self.icon))
 
                     if retInBin is not None:
                         resultsList.push_front(
-                            self.getCatItem(
-                                "",
-                                "Result: %s" % (retInBin),
-                                self.id,
-                                self.icon
-                            ))
+                            self.getCatItem("",
+                                            "Result: %s" % (retInBin),
+                                            self.id,
+                                            self.icon))
 
                     if retInSize is not None:
                         resultsList.push_front(
-                            self.getCatItem(
-                                "",
-                                "Result: %s" % (retInSize),
-                                self.id,
-                                self.icon
-                            ))
+                            self.getCatItem("",
+                                            "Result: %s" % (retInSize),
+                                            self.id,
+                                            self.icon))
 
 
-class WebSearch(Base):
+class WebSearch(AddonBase):
 
     searchEngine = {
         "gg": {
@@ -336,6 +249,7 @@ class WebSearch(Base):
     }
 
     def __init__(self):
+        self.addonName = "WebSearch"
         self.id = self.getPluginId()
         self.icon = self.getIconsPath("WebSearch.png")
 
@@ -349,17 +263,13 @@ class WebSearch(Base):
 
     def getResults(self, inputDataList, resultsList):
         key = inputDataList[0].getText().lower()
+
         if key in self.searchEngine.keys():
             resultsList.push_front(
-                self.getCatItem(
-                    "%s: %s search" % (
-                        self.getPluginName(),
-                        self.searchEngine.get(key).get("name")
-                    ),
-                    "%s" % key,
-                    self.id,
-                    self.icon
-                ))
+                self.getCatItem("%s: %s search" % (self.getPluginName(), self.searchEngine.get(key).get("name")),
+                                key,
+                                self.id,
+                                self.icon))
 
     def launchItem(self, inputDataList, catItem):
         if catItem.icon == self.icon:
@@ -369,7 +279,7 @@ class WebSearch(Base):
             return True
 
 
-class RunCommands(Base):
+class RunCommands(AddonBase):
 
     PROG_OS = 1        # call by OS, usually call an external program
     PROG_THRUSTER = 2  # call by Thruster, usually call a method
@@ -379,6 +289,7 @@ class RunCommands(Base):
                 "sync@Home": {"prog": PROG_THRUSTER, "cmd": "self.syncHome()"}}
 
     def __init__(self):
+        self.addonName = "RunCommands"
         self.id = self.getPluginId()
         self.icon = self.getIconsPath("RunCommands.png")
         self.triggerStr = "Run"
@@ -389,13 +300,11 @@ class RunCommands(Base):
 
         for line in proc.stdout.readlines():
             lineSplited = line.split()
+
             if len(lineSplited) >= 3:
                 sessionName = lineSplited[0].split(':')[1]
-                RunCommands.CmdAlias.update({
-                    sessionName: {
-                        "prog": RunCommands.PROG_OS,
-                        "cmd": 'putty -load "%s"' % sessionName
-                    }})
+                RunCommands.CmdAlias.update({sessionName: {"prog": RunCommands.PROG_OS,
+                                                           "cmd": 'putty -load "%s"' % sessionName}})
 
     def syncFiles(self, syncTable):
         '''
@@ -406,7 +315,7 @@ class RunCommands(Base):
             src, dst = syncEntry
 
             if (not os.path.exists(src)) and (not os.path.exists(dst)):
-                logger(LOG_LEVEL_ERR, "both src and dst files not exist:\n  %s  %s." % (src, dst))
+                self.logger(self.LOG_LEVEL_ERR, "both src and dst files not exist:\n  %s  %s." % (src, dst))
             elif os.path.exists(src) and not os.path.exists(dst):
                 self.doCopy(src, dst)
             elif os.path.exists(dst) and not os.path.exists(src):
@@ -540,9 +449,10 @@ class RunCommands(Base):
             return True
 
 
-class Browser(Base):
+class Browser(AddonBase):
 
     def __init__(self):
+        self.addonName = "Browser"
         self.id = self.getPluginId()
         self.icon = self.getIconsPath("Chrome.png")
 
@@ -553,7 +463,7 @@ class Browser(Base):
 
     def getBookMarks(self, bookmarks, bookmarkBarObj):
         for obj in bookmarkBarObj:
-            logger(LOG_LEVEL_DBG, "%s" % (obj.get('name')))
+            self.logger(self.LOG_LEVEL_DBG, "%s" % (obj.get('name')))
 
             if obj.get("type", '') is "folder":
                 bookmarks = self.getBookMarks(bookmarks, obj.get("children", []))
@@ -583,7 +493,7 @@ class Browser(Base):
             resultsList.append(self.getCatItem(bookmarks.get(key), key, self.id, self.icon))
 
 
-class Shortcuts(Base):
+class Shortcuts(AddonBase):
 
     def __init__(self):
         self.id = self.getPluginId()
@@ -618,7 +528,7 @@ class Shortcuts(Base):
             return True
 
 
-class DefaultHandler(Base):
+class DefaultHandler(AddonBase):
 
     pattern_pronto = re.compile("(^[pP][rR]\d+$)|(^[nN][aA]\d+$)")
     pattern_google = re.compile("(^\/{1}[^/]*$)|(^\s{1}\S.*$)")
@@ -641,7 +551,7 @@ class DefaultHandler(Base):
 
     def launchItem(self, inputDataList, catItem):
 
-        logger(LOG_LEVEL_DBG, "Default handler query: %s" % inputDataList[0].getText().strip())
+        self.logger(self.LOG_LEVEL_DBG, "Default handler query: %s" % inputDataList[0].getText().strip())
 
         if catItem.icon == self.icon:
             query = inputDataList[0].getText()
@@ -664,7 +574,7 @@ class DefaultHandler(Base):
         return True
 
 
-class Thruster(launchy.Plugin):
+class Thruster(launchy.Plugin, Logger):
 
     """
     http://pylaunchy.sourceforge.net/docs/launchy.html#launchy.Plugin.launchyShow
@@ -696,22 +606,21 @@ class Thruster(launchy.Plugin):
 
         This is a good time to do any initialization work.
         """
-        logger(LOG_LEVEL_INF, "==============================")
-        logger(LOG_LEVEL_INF, "instance created: %s" % self)
-        logger(LOG_LEVEL_INF, "hash: %s" % self.getID())
-        logger(LOG_LEVEL_INF, "name: %s" % self.getName())
-        logger(LOG_LEVEL_INF, "icon: %s" % self.getIcon())
-        logger(LOG_LEVEL_INF, "loading addons:")
+        self.logger(self.LOG_LEVEL_INF, "==============================")
+        self.logger(self.LOG_LEVEL_INF, "instance created: %s" % self)
+        self.logger(self.LOG_LEVEL_INF, "hash: %s" % self.getID())
+        self.logger(self.LOG_LEVEL_INF, "name: %s" % self.getName())
+        self.logger(self.LOG_LEVEL_INF, "icon: %s" % self.getIcon())
+        self.logger(self.LOG_LEVEL_INF, "loading addons:")
         self.addons = []
         self.registerAddon(Browser)
         self.registerAddon(WebSearch)
         self.registerAddon(RunCommands)
         self.registerAddon(Calculator)
         self.registerAddon(Shortcuts)
-        self.registerAddon(DspAnalyzer)
         self.registerAddon(DefaultHandler)
-        logger(LOG_LEVEL_INF, "finished loading addons.")
-        logger(LOG_LEVEL_INF, "==============================")
+        self.logger(self.LOG_LEVEL_INF, "finished loading addons.")
+        self.logger(self.LOG_LEVEL_INF, "==============================")
 
     def registerAddon(self, addon):
         a = addon()
@@ -723,7 +632,7 @@ class Thruster(launchy.Plugin):
             # last addon to process queries
             self.addons.append(a)
 
-        logger(LOG_LEVEL_INF, "  - %s loaded" % type(a).__name__)
+        self.logger(self.LOG_LEVEL_INF, "  - %s loaded" % type(a).__name__)
 
     def getID(self):
         """
@@ -824,7 +733,7 @@ class Thruster(launchy.Plugin):
         try:
             for addon in self.addons:
                 if addon.launchItem(inputDataList, catItem):
-                    logger(LOG_LEVEL_DBG, "Addon %s executed query: %s." % (type(addon).__name__, inputDataList[-1].getText()))
+                    self.logger(self.LOG_LEVEL_DBG, "Addon %s executed query: %s." % (type(addon).__name__, inputDataList[-1].getText()))
                     break
         except:
             os.system(
