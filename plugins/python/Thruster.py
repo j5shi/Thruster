@@ -530,7 +530,7 @@ class RunCommands(AddonBase):
         if query in self.getAddonTrigStrs():
             if len(inputDataList) == 1:
                 resultsList.push_front(self.getCatItem("%s: Run commands" % self.getAddonName(),
-                                                       self.triggerStr))
+                                                       'Run'))
 
             if len(inputDataList) > 1:
                 for alias in self.CmdAlias.keys():
