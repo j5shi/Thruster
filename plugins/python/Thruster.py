@@ -8,9 +8,8 @@ import shutil
 import pprint
 import inspect
 from PyQt4 import QtGui, QtCore
-
-PLUGIN_NAME = "Thruster"
-PLUGIN_ID = launchy.hash(PLUGIN_NAME)
+import win32gui
+from win32con import SW_RESTORE
 
 
 class Logger(object):
@@ -33,17 +32,60 @@ class Logger(object):
 
 class AddonBase(Logger):
 
-    def getPluginId(self):
-        return PLUGIN_ID
+    def __init__(self):
+        self.resetAddonId()
+        self.resetAddonTrigStrs()
 
-    def getPluginName(self):
-        return PLUGIN_NAME
+        #  the following attributes needs to be updated in child class.
+        self.icon = None
 
-    def getIconsPath(self, filename):
-        return os.path.join(launchy.getIconsPath(), filename)
+    def resetAddonId(self):
+        self.id = launchy.hash(self.getAddonName())
 
-    def getCatItem(self, fullPath, shortName, pluginId, icon):
-        return launchy.CatItem(fullPath, shortName, pluginId, icon)
+    def setAddonId(self, id):
+        self.id = id
+
+    def getAddonId(self):
+        return self.id
+
+    def setAddonName(self):
+        pass
+
+    def getAddonName(self):
+        return self.__class__.__name__
+
+    def setAddonIcon(self, filename):
+        retVal = True
+
+        if os.path.exists(filename):
+            self.icon = filename
+        else:
+            self.icon = os.path.join(launchy.getIconsPath(), filename)
+
+            if not os.path.exists(self.icon):
+                retVal = False
+                seif.icon = None
+                self.logger(LOG_LEVEL_ERR, "Icon not exist: '%s'." % self.icon)
+
+        return retVal
+
+    def getAddonIcon(self):
+        return self.icon
+
+    def resetAddonTrigStrs(self):
+        self.triggerStrs = [self.getAddonName(), self.getAddonName().lower()]
+
+    def addAddonTrigStrs(self, string):
+        self.triggerStrs.append(string)
+
+    def getAddonTrigStrs(self):
+        return self.triggerStrs
+
+    def getCatItem(self, fullPath, shortName):
+        return launchy.CatItem(fullPath,
+                               shortName,
+                               self.getAddonId(),
+                               self.getAddonIcon())
 
     def getResults(self, inputDataList, resultsList):
         pass
@@ -54,35 +96,129 @@ class AddonBase(Logger):
     def getLabels(self, inputDataList):
         pass
 
-    def getDescription(self):
-        return "%s: %s" % (self.getPluginName(), self.addonName)
+    def getAddonDescription(self):
+        """
+        TBD
+        """
+        return "%s" % (self.getAddonName())
 
     def launchItem(self, inputDataList, catItem):
         return False
+
+    def getFirstInputData(self, inputDataList):
+        if len(inputDataList) > 0:
+            return inputDataList[0].getText().lower()
+        else:
+            return None
+
+    def getSecondInputData(self, inputDataList):
+        if len(inputDataList) > 1:
+            return inputDataList[1].getText().lower()
+        else:
+            return None
+
+    def getThirdInputData(self, inputDataList):
+        if len(inputDataList) > 2:
+            return inputDataList[2].getText().lower()
+        else:
+            return None
+
+    def getLastInputData(self, inputDataList):
+        return inputDataList[-1].getText().lower()
+
+
+class Tasky(AddonBase):
+
+    """http://docs.activestate.com/activepython/2.4/pywin32/win32gui.html"""
+
+    def __init__(self):
+        AddonBase.__init__(self)
+        self.setAddonIcon("Processor.png")
+        self.addAddonTrigStrs('s')
+        self.addAddonTrigStrs('?')
+
+    def getResults(self, inputDataList, resultsList):
+        query = self.getFirstInputData(inputDataList)
+
+        if query in self.getAddonTrigStrs():
+
+           if len(inputDataList) == 1:
+                resultsList.push_front(self.getCatItem(self.getAddonDescription(), self.getAddonName()))
+           else:
+                windowNameToMatch = self.getSecondInputData(inputDataList)
+
+                self.topLevelWindows = self.getTopLevelWindows()
+
+                for window in self.topLevelWindows:
+                    resultsList.append(self.getCatItem(window[1], window[1]))
+
+    def launchItem(self, inputDataList, catItem):
+        if catItem.icon == self.getAddonIcon():
+            catItem = inputDataList[-1].getTopResult()
+
+            for window in self.topLevelWindows:
+                if catItem.shortName == window[1]:
+                    self.goToWindow(window[0])
+                    return True
+
+    def getTopLevelWindows(self):
+        """
+        Returns the top level windows in a list of tuples defined (HWND, title)
+        """
+        windows = []
+        win32gui.EnumWindows(self.windowEnumTopLevelCb, windows)
+        return windows
+
+    def windowEnumTopLevelCb(self, hwnd, windowsList):
+        """
+        Window Enum function for getTopLevelWindows
+        """
+        title = win32gui.GetWindowText(hwnd)
+        title = title.decode('gbk').encode('utf-8')
+        className = win32gui.GetClassName(hwnd)  
+        className = title.decode('gbk').encode('utf-8')
+
+        if win32gui.GetParent(hwnd) == 0 and title != '':
+            windowsList.append((hwnd, unicode(title, errors='ignore')))
+
+    def goToWindow(self, hwnd):
+        windowPlacement = win32gui.GetWindowPlacement(hwnd)
+        showCmd = windowPlacement[1]
+
+        if showCmd == SW_RESTORE:
+            win32gui.ShowWindow(hwnd, SW_RESTORE)
+        else:
+            win32gui.BringWindowToTop(hwnd)
+
+        win32gui.SetForegroundWindow(hwnd)
+        win32gui.SetActiveWindow(hwnd)
 
 
 class Calculator(AddonBase):
 
     def __init__(self):
-        self.addonName = "Calculator"
-        self.id = self.getPluginId()
-        self.icon = self.getIconsPath("Calculator.png")
-        self.triggerTxt = "cal"
+        AddonBase.__init__(self)
+        self.setAddonIcon("Calculator.png")
+        self.addAddonTrigStrs('cal')
 
     def getResults(self, inputDataList, resultsList):
-        query = inputDataList[0].getText().lower()
+        query = self.getFirstInputData(inputDataList)
 
-        if query.startswith(self.triggerTxt):
+        if query in self.getAddonTrigStrs():
+
             if len(inputDataList) == 1:
-                resultsList.push_front(
-                    self.getCatItem(self.getDescription(),
-                                    self.addonName,
-                                    self.id,
-                                    self.icon))
+                resultsList.push_front(self.getCatItem(self.getAddonDescription(),
+                                                       self.getAddonName()))
 
             if len(inputDataList) > 1:
                 try:
-                    ret = eval(inputDataList[1].getText().strip())
+                    # Intercept exceptions from invalid math expressions, this
+                    # kind of exceptions should not be treated as plugin level
+                    # exceptions.
+                    try:
+                        ret = eval(self.getLastInputData(inputDataList))
+                    except:
+                        ret = None
 
                     if isinstance(ret, int) or isinstance(ret, long):
                         retInFloat = None
@@ -91,7 +227,7 @@ class Calculator(AddonBase):
                         retInHex = '0x%x' % ret
 
                         # dec
-                        retInDec = '%d' % ret
+                        retInDec = ret
 
                         # octal
                         retInOct = '0%o' % ret
@@ -133,46 +269,22 @@ class Calculator(AddonBase):
                     raise
                 else:
                     if retInFloat is not None:
-                        resultsList.push_front(
-                            self.getCatItem("",
-                                            "Result: %s" % (retInFloat),
-                                            self.id,
-                                            self.icon))
+                        resultsList.push_front(self.getCatItem("", "Result: %s" % (retInFloat)))
 
                     if retInHex is not None:
-                        resultsList.push_front(
-                            self.getCatItem("",
-                                            "Result: %s" % (retInHex),
-                                            self.id,
-                                            self.icon))
+                        resultsList.push_front(self.getCatItem("", "Result: %s" % (retInHex)))
 
                     if retInOct is not None:
-                        resultsList.push_front(
-                            self.getCatItem("",
-                                            "Result: %s" % (retInOct),
-                                            self.id,
-                                            self.icon))
+                        resultsList.push_front(self.getCatItem("", "Result: %s" % (retInOct)))
 
                     if retInDec is not None:
-                        resultsList.push_front(
-                            self.getCatItem("",
-                                            "Result: %s" % (retInDec),
-                                            self.id,
-                                            self.icon))
+                        resultsList.push_front(self.getCatItem("", "Result: %s" % (retInDec)))
 
                     if retInBin is not None:
-                        resultsList.push_front(
-                            self.getCatItem("",
-                                            "Result: %s" % (retInBin),
-                                            self.id,
-                                            self.icon))
+                        resultsList.push_front(self.getCatItem("", "Result: %s" % (retInBin)))
 
                     if retInSize is not None:
-                        resultsList.push_front(
-                            self.getCatItem("",
-                                            "Result: %s" % (retInSize),
-                                            self.id,
-                                            self.icon))
+                        resultsList.push_front(self.getCatItem("", "Result: %s" % (retInSize)))
 
 
 class WebSearch(AddonBase):
@@ -249,9 +361,8 @@ class WebSearch(AddonBase):
     }
 
     def __init__(self):
-        self.addonName = "WebSearch"
-        self.id = self.getPluginId()
-        self.icon = self.getIconsPath("WebSearch.png")
+        AddonBase.__init__(self)
+        self.setAddonIcon("WebSearch.png")
 
     @classmethod
     def encodeQuery(cls, query):
@@ -262,19 +373,17 @@ class WebSearch(AddonBase):
         return eval('"%s" %% "%s"' % (WebSearch.searchEngine.get(key).get('url'), WebSearch.encodeQuery(query)))
 
     def getResults(self, inputDataList, resultsList):
-        key = inputDataList[0].getText().lower()
+        query = self.getFirstInputData(inputDataList)
 
-        if key in self.searchEngine.keys():
-            resultsList.push_front(
-                self.getCatItem("%s: %s search" % (self.getPluginName(), self.searchEngine.get(key).get("name")),
-                                key,
-                                self.id,
-                                self.icon))
+        if query in self.searchEngine.keys():
+            resultsList.push_front(self.getCatItem("%s: %s search" % (self.getAddonName(), self.searchEngine.get(query).get("name")),
+                                                   query))
 
     def launchItem(self, inputDataList, catItem):
-        if catItem.icon == self.icon:
-            key = inputDataList[0].getText()
-            query = inputDataList[-1].getText()
+        if catItem.icon == self.getAddonIcon():
+            key = self.getFirstInputData(inputDataList)
+            query = self.getLastInputData(inputDataList)
+
             subprocess.Popen('start chrome "%s"' % self.getUrl(key, query), shell=True)
             return True
 
@@ -289,10 +398,9 @@ class RunCommands(AddonBase):
                 "sync@Home": {"prog": PROG_THRUSTER, "cmd": "self.syncHome()"}}
 
     def __init__(self):
-        self.addonName = "RunCommands"
-        self.id = self.getPluginId()
-        self.icon = self.getIconsPath("RunCommands.png")
-        self.triggerStr = "Run"
+        AddonBase.__init__(self)
+        self.setAddonIcon("RunCommands.png")
+        self.addAddonTrigStrs('run')
 
         # Get putty session from register, the session entry looks like this:
         # rsa2@22:hzling42.china.nsn-net.net    REG_SZ    0x23,0xc1ca944dc...
@@ -317,15 +425,18 @@ class RunCommands(AddonBase):
             if (not os.path.exists(src)) and (not os.path.exists(dst)):
                 self.logger(self.LOG_LEVEL_ERR, "both src and dst files not exist:\n  %s  %s." % (src, dst))
             elif os.path.exists(src) and not os.path.exists(dst):
-                self.doCopy(src, dst)
+                self.copyFile(src, dst)
             elif os.path.exists(dst) and not os.path.exists(src):
-                self.doCopy(dst, src)
+                self.copyFile(dst, src)
             elif os.path.getmtime(dst) > os.path.getmtime(src):
-                self.doCopy(dst, src)
+                self.copyFile(dst, src)
             elif os.path.getmtime(dst) < os.path.getmtime(src):
-                self.doCopy(src, dst)
+                self.copyFile(src, dst)
 
-    def doCopy(self, src, dst):
+    def copyFile(self, src, dst):
+        """
+        copy file and dir (dir is a kind of file).
+        """
         if os.path.isdir(dst):
             os.system('rm -rf "%s"' % (dst))
 
@@ -414,28 +525,20 @@ class RunCommands(AddonBase):
         self.syncFiles(syncTable)
 
     def getResults(self, inputDataList, resultsList):
-        if inputDataList[0].getText().strip().lower() == self.triggerStr.lower():
+        query = self.getFirstInputData(inputDataList)
+
+        if query in self.getAddonTrigStrs():
             if len(inputDataList) == 1:
-                resultsList.push_front(
-                    self.getCatItem(
-                        "%s: Run commands" % (self.getPluginName()),
-                        self.triggerStr,
-                        self.id,
-                        self.icon
-                    ))
+                resultsList.push_front(self.getCatItem("%s: Run commands" % self.getAddonName(),
+                                                       self.triggerStr))
 
             if len(inputDataList) > 1:
                 for alias in self.CmdAlias.keys():
-                    resultsList.push_front(
-                        self.getCatItem(
-                            "%s: Run commands" % (self.getPluginName()),
-                            alias,
-                            self.id,
-                            self.icon
-                        ))
+                    resultsList.push_front(self.getCatItem("%s: Run commands" % (self.getAddonName()),
+                                                           alias))
 
     def launchItem(self, inputDataList, catItem):
-        if catItem.icon == self.icon:
+        if catItem.icon == self.getAddonIcon():
             alias = self.CmdAlias.get(inputDataList[-1].getTopResult().shortName, {})
 
             if alias.get("prog", None) == self.PROG_OS:
@@ -452,12 +555,11 @@ class RunCommands(AddonBase):
 class Browser(AddonBase):
 
     def __init__(self):
-        self.addonName = "Browser"
-        self.id = self.getPluginId()
-        self.icon = self.getIconsPath("Chrome.png")
+        AddonBase.__init__(self)
+        self.setAddonIcon("Chrome.png")
 
     def launchItem(self, inputDataList, catItem):
-        if catItem.icon == self.icon:
+        if catItem.icon == self.getAddonIcon():
             subprocess.Popen('start chrome "%s"' % catItem.fullPath, shell=True)
             return True
 
@@ -467,8 +569,10 @@ class Browser(AddonBase):
 
             if obj.get("type", '') is "folder":
                 bookmarks = self.getBookMarks(bookmarks, obj.get("children", []))
+
             elif obj.get("type", '') is "url":
                 bookmarks.update({obj.get("name", ''): obj.get("url", '')})
+
         return bookmarks
 
     def getCatalog(self, resultsList):
@@ -490,25 +594,37 @@ class Browser(AddonBase):
         bookmarks = self.getBookMarks(bookmarks, bookmarkBar)
 
         for key in bookmarks.keys():
-            resultsList.append(self.getCatItem(bookmarks.get(key), key, self.id, self.icon))
+            resultsList.append(self.getCatItem(bookmarks.get(key), key))
 
 
 class Shortcuts(AddonBase):
 
     def __init__(self):
-        self.id = self.getPluginId()
-        self.icon = self.getIconsPath("DefaultHandler.png")
+        AddonBase.__init__(self)
+        self.setAddonIcon("DefaultHandler.png")
 
     def cb_S_CR(self, inputDataList, catItem):
+        """
+        open in totalcmd right panel.
+        """
         subprocess.Popen('start TOTALCMD64.exe /O /A /T /R="%s"' % catItem.fullPath, shell=True)
 
     def cb_C_CR(self, inputDataList, catItem):
+        """
+        open in totalcmd left panel.
+        """
         subprocess.Popen('start TOTALCMD64.exe /O /A /T /L="%s"' % catItem.fullPath, shell=True)
 
     def cb_M_CR(self, inputDataList, catItem):
+        """
+        edit in gvim.exe
+        """
         subprocess.Popen('start gvim.exe --remote-tab-silent "%s"' % catItem.fullPath, shell=True)
 
     def cb_C_S_CR(self, inputDataList, catItem):
+        """
+        copy selected item's full path to clipboard
+        """
         subprocess.Popen('echo %s | clip' % catItem.fullPath.replace('\\', '/'), shell=True)
 
     def launchItem(self, inputDataList, catItem):
@@ -517,14 +633,19 @@ class Shortcuts(AddonBase):
 
             if modifier == QtCore.Qt.ShiftModifier:
                 self.cb_S_CR(inputDataList, catItem)
+
             elif modifier == QtCore.Qt.ControlModifier:
                 self.cb_C_CR(inputDataList, catItem)
+
             elif modifier == QtCore.Qt.AltModifier:
                 self.cb_M_CR(inputDataList, catItem)
+
             elif modifier == (QtCore.Qt.ControlModifier | QtCore.Qt.ShiftModifier):
                 self.cb_C_S_CR(inputDataList, catItem)
+
             else:
                 return False
+
             return True
 
 
@@ -536,40 +657,38 @@ class DefaultHandler(AddonBase):
     pattern_bing = re.compile("^\/{3}([^/]*$)|(^\s{3}\S.*$)")
 
     def __init__(self):
-        self.id = self.getPluginId()
-        self.icon = self.getIconsPath("DefaultHandler.png")
+        AddonBase.__init__(self)
+        self.setAddonIcon("DefaultHandler.png")
 
     def getResults(self, inputDataList, resultsList):
 
         if len(inputDataList) == 1:
-            resultsList.push_front(
-                self.getCatItem("%s: default handler" %
-                                self.getPluginName(),
-                                "",
-                                self.id,
-                                self.icon))
+            resultsList.push_front(self.getCatItem("%s: at your service, sir!" % self.getAddonName(), ""))
 
     def launchItem(self, inputDataList, catItem):
 
-        self.logger(self.LOG_LEVEL_DBG, "Default handler query: %s" % inputDataList[0].getText().strip())
+        self.logger(self.LOG_LEVEL_DBG, "Default handler query: %s" % self.getFirstInputData(inputDataList))
 
-        if catItem.icon == self.icon:
-            query = inputDataList[0].getText()
+        if catItem.icon == self.getAddonIcon():
+            query = self.getFirstInputData(inputDataList)
 
             if self.pattern_pronto.match(query):
                 url = WebSearch.getUrl('pr', query)
+
             elif self.pattern_google.match(query):
                 url = WebSearch.getUrl('gg', query[1:])
+
             elif self.pattern_baidu.match(query):
                 url = WebSearch.getUrl('bb', query[2:])
+
             elif self.pattern_bing.match(query):
                 url = WebSearch.getUrl('ii', query[3:])
+
             else:
                 url = query
 
             subprocess.Popen('start chrome "%s"' % url, shell=True)
         else:
-            #  subprocess.Popen('"%s"' % catItem.fullPath, shell=True)
             launchy.runProgram('"%s"' % catItem.fullPath, "")
         return True
 
@@ -596,8 +715,8 @@ class Thruster(launchy.Plugin, Logger):
         launchy.Plugin.__init__(self)
 
         self.addons = []
-        self.name = PLUGIN_NAME
-        self.id = PLUGIN_ID
+        self.name = "Thruster"
+        self.id = launchy.hash(self.name)
         self.icon = os.path.join(launchy.getIconsPath(), "%s.png" % self.name)
 
     def init(self):
@@ -613,6 +732,7 @@ class Thruster(launchy.Plugin, Logger):
         self.logger(self.LOG_LEVEL_INF, "icon: %s" % self.getIcon())
         self.logger(self.LOG_LEVEL_INF, "loading addons:")
         self.addons = []
+        self.registerAddon(Tasky)
         self.registerAddon(Browser)
         self.registerAddon(WebSearch)
         self.registerAddon(RunCommands)
@@ -621,6 +741,7 @@ class Thruster(launchy.Plugin, Logger):
         self.registerAddon(DefaultHandler)
         self.logger(self.LOG_LEVEL_INF, "finished loading addons.")
         self.logger(self.LOG_LEVEL_INF, "==============================")
+        self.initAddons()
 
     def registerAddon(self, addon):
         a = addon()
@@ -633,6 +754,14 @@ class Thruster(launchy.Plugin, Logger):
             self.addons.append(a)
 
         self.logger(self.LOG_LEVEL_INF, "  - %s loaded" % type(a).__name__)
+
+    def initAddons(self):
+        """
+        Every catItem belongs to a plugin, this is indicated by the id. By
+        setting the right id, the catItem can be handled by the correct plugin.
+        """
+        for addon in self.addons:
+            addon.setAddonId(self.id)
 
     def getID(self):
         """
@@ -733,15 +862,12 @@ class Thruster(launchy.Plugin, Logger):
         try:
             for addon in self.addons:
                 if addon.launchItem(inputDataList, catItem):
-                    self.logger(self.LOG_LEVEL_DBG, "Addon %s executed query: %s." % (type(addon).__name__, inputDataList[-1].getText()))
+                    self.logger(self.LOG_LEVEL_DBG,
+                                "Addon %s executed query: %s." % (addon.getAddonName(), addon.getLastInputData(inputDataList)))
                     break
         except:
-            os.system(
-                'start "" /B gvim.exe --remote-tab-silent "%s"' %
-                os.path.join(
-                    os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))),
-                    'stderr.txt'
-                ))
+            os.system('start "" /B gvim.exe --remote-tab-silent "%s"' %
+                      os.path.join(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))), 'stderr.txt'))
             raise
 
     def hasDialog(self):
