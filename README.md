@@ -2,7 +2,7 @@
 
 [Launchy](http://www.launchy.net/) is a free utility designed to help you forget about your start menu, your desktop icons, and your file manager. Launchy indexes and launches your applications, documents, project files, folders, and bookmarks with just a few keystrokes!
 
-Thruster is an all in one plugin for Launchy, you don't need any other launchy plugins anymore, I say this because it is true: Thruster is written in Python and Python is simple and flexible, when some ideas come to your mind but not available in Launchy, just extend Thruster by yourself or send me an request.
+**Thruster** is an _all in one_ plugin for Launchy, you don't need any other launchy plugins anymore, I say this because it is true: Thruster is written in Python and Python is simple and flexible, when ideas come to your mind but not available in Launchy, just extend Thruster by yourself or send me an request.
 
 ## Installation
 
