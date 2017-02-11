@@ -134,8 +134,7 @@ class Tasky(AddonBase):
     def __init__(self):
         AddonBase.__init__(self)
         self.setAddonIcon("Processor.png")
-        self.addAddonTrigStrs('s')
-        self.addAddonTrigStrs('?')
+        self.addAddonTrigStrs('tasky')
 
     def getResults(self, inputDataList, resultsList):
         query = self.getFirstInputData(inputDataList)
@@ -655,6 +654,7 @@ class DefaultHandler(AddonBase):
     pattern_google = re.compile("(^\/{1}[^/]*$)|(^\s{1}\S.*$)")
     pattern_baidu = re.compile("^\/{2}([^/]*$)|(^\s{2}\S.*$)")
     pattern_bing = re.compile("^\/{3}([^/]*$)|(^\s{3}\S.*$)")
+    pattern_taobao = re.compile("^\?([^?]*$)")
 
     def __init__(self):
         AddonBase.__init__(self)
@@ -683,6 +683,9 @@ class DefaultHandler(AddonBase):
 
             elif self.pattern_bing.match(query):
                 url = WebSearch.getUrl('ii', query[3:])
+
+            elif self.pattern_taobao.match(query):
+                url = WebSearch.getUrl('tao', query[1:])
 
             else:
                 url = query
