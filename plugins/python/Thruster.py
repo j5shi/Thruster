@@ -738,7 +738,7 @@ class Thruster(launchy.Plugin, Logger):
         self.registerAddon(Tasky)
         self.registerAddon(Browser)
         self.registerAddon(WebSearch)
-        self.registerAddon(RunCommands)
+        #  self.registerAddon(RunCommands)
         self.registerAddon(Calculator)
         self.registerAddon(Shortcuts)
         self.registerAddon(DefaultHandler)
