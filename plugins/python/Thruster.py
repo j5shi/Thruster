@@ -462,39 +462,11 @@ class RunCommands(AddonBase):
         syncTable = [
             (
                 "c:/Program Files (x86)/vim/_vimrc",
-                "d:/Baidu/Private/Vim/_vimrc"
+                "d:/cloud/Private/Vim/_vimrc"
             ),
             (
                 "c:/cygwin/home/j5shi/bin",
-                "d:/Baidu/Private/Bash/bin"
-            ),
-            (
-                "c:/cygwin/home/j5shi/.bash_profile",
-                "d:/Baidu/Private/Bash/.bash_profile"
-            ),
-            (
-                "c:/cygwin/home/j5shi/.inputrc",
-                "d:/Baidu/Private/Bash/.inputrc"
-            ),
-            (
-                "c:/totalcmd/wincmd.ini",
-                "d:/Baidu/Private/TotalCommander/config/home/wincmd.ini"
-            ),
-            (
-                "c:/totalcmd/wcx_ftp.ini",
-                "d:/Baidu/Private/TotalCommander/config/home/wcx_ftp.ini"
-            ),
-            (
-                "c:/Users/j5shi/AppData/Roaming/Launchy/history.db",
-                "d:/Baidu/Private/Launchy/config/home/Launchy/history.db"
-            ),
-            (
-                "c:/Users/j5shi/AppData/Roaming/Launchy/launchy.db",
-                "d:/Baidu/Private/Launchy/config/home/Launchy/launchy.db"
-            ),
-            (
-                "c:/Users/j5shi/AppData/Roaming/Launchy/launchy.ini",
-                "d:/Baidu/Private/Launchy/config/home/Launchy/launchy.ini"
+                "d:/cloud/Private/fs/C/cygwin/home/j5shi/.bash_profile"
             ),
         ]
 
