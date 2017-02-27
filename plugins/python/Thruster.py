@@ -7,6 +7,7 @@ import urllib
 import shutil
 import pprint
 import inspect
+import sys
 from PyQt4 import QtGui, QtCore
 import win32gui
 from win32con import SW_RESTORE
@@ -393,8 +394,8 @@ class RunCommands(AddonBase):
     PROG_THRUSTER = 2  # call by Thruster, usually call a method
 
     CmdAlias = {"putty": {"prog": PROG_OS, "cmd": "putty.exe"},
-                "sync@Company": {"prog": PROG_THRUSTER, "cmd": "self.syncCompany()"},
-                "sync@Home": {"prog": PROG_THRUSTER, "cmd": "self.syncHome()"}}
+                "sync@Company": {"prog": PROG_THRUSTER, "cmd": "self.syncAtCompany()"},
+                "sync@Home": {"prog": PROG_THRUSTER, "cmd": "self.syncAtHome()"}}
 
     def __init__(self):
         AddonBase.__init__(self)
@@ -441,46 +442,22 @@ class RunCommands(AddonBase):
 
         os.system('cp -rfuv --strip-trailing-slashes "%s" "%s"' % (src, dst))
 
-    def syncCompany(self):
+    def syncAtCompany(self):
 
         syncTable = [
             (
                 "c:/Program Files (x86)/vim/_vimrc",
-                "d:/userdata/j5shi/BDY/Private/Vim/_vimrc"
-            ),
-            (
-                "c:/cygwin/home/j5shi/bin",
-                "d:/userdata/j5shi/BDY/Private/Bash/bin"
+                "d:/userdata/j5shi/cloud/Private/Vim/_vimrc"
             ),
             (
                 "c:/cygwin/home/j5shi/.bash_profile",
-                "d:/userdata/j5shi/BDY/Private/Bash/.bash_profile"
-            ),
-            (
-                "c:/cygwin/home/j5shi/.inputrc",
-                "d:/userdata/j5shi/BDY/Private/Bash/.inputrc"
-            ),
-            (
-                "d:/userdata/j5shi/Application Data/GHISLER/wcx_ftp.ini",
-                "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/wcx_ftp.ini"
-            ),
-            (
-                "d:/userdata/j5shi/Application Data/GHISLER/wincmd.ini",
-                "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/wincmd.ini"
-            ),
-            (
-                "c:/totalcmd/plugins/wlx/AppLoader/AppLoader.ini",
-                "d:/userdata/j5shi/BDY/Private/TotalCommander/config/work/AppLoader.ini"
-            ),
-            (
-                "d:/userdata/j5shi/Application Data/Launchy/launchy.ini",
-                "d:/userdata/j5shi/BDY/Private/Launchy/config/company/Launchy/launchy.ini"
+                "d:/userdata/j5shi/cloud/Private/fs/C/cygwin/home/j5shi/.bash_profile"
             ),
         ]
 
         self.syncFiles(syncTable)
 
-    def syncHome(self):
+    def syncAtHome(self):
 
         syncTable = [
             (
@@ -626,6 +603,15 @@ class Shortcuts(AddonBase):
         """
         subprocess.Popen('echo %s | clip' % catItem.fullPath.replace('\\', '/'), shell=True)
 
+    def cb_M_S_CR(self, inputDataList, catItem):
+        """
+        copy selected item's full path to clipboard
+        """
+        subprocess.Popen('start gvim.exe --remote-tab-silent "%s"' % 
+                os.path.join(launchy.getScriptsPath(), "Thruster.py"),
+                shell=True)
+
+
     def launchItem(self, inputDataList, catItem):
         if len(inputDataList) == 1:
             modifier = QtGui.QApplication.keyboardModifiers()
@@ -641,6 +627,9 @@ class Shortcuts(AddonBase):
 
             elif modifier == (QtCore.Qt.ControlModifier | QtCore.Qt.ShiftModifier):
                 self.cb_C_S_CR(inputDataList, catItem)
+
+            elif modifier == (QtCore.Qt.AltModifier | QtCore.Qt.ShiftModifier):
+                self.cb_M_S_CR(inputDataList, catItem)
 
             else:
                 return False
@@ -738,7 +727,7 @@ class Thruster(launchy.Plugin, Logger):
         self.registerAddon(Tasky)
         self.registerAddon(Browser)
         self.registerAddon(WebSearch)
-        #  self.registerAddon(RunCommands)
+        self.registerAddon(RunCommands)
         self.registerAddon(Calculator)
         self.registerAddon(Shortcuts)
         self.registerAddon(DefaultHandler)
