@@ -291,7 +291,7 @@ class WebSearch(AddonBase):
 
     searchEngine = {
         "gg": {
-            "url": "https://www.google.fi/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=%s",
+            "url": "https://www.google.fi/search?q=%s&oq=hello&sourceid=chrome&ie=UTF-8",
             "name": "Google"
         },
         "ii": {
