@@ -465,7 +465,7 @@ class RunCommands(AddonBase):
                 "d:/cloud/Private/Vim/_vimrc"
             ),
             (
-                "c:/cygwin/home/j5shi/bin",
+                "c:/cygwin/home/j5shi/.bash_profile",
                 "d:/cloud/Private/fs/C/cygwin/home/j5shi/.bash_profile"
             ),
         ]
