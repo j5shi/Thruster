@@ -23,7 +23,7 @@ on your system.**
 
 ## Features
 
-### Index Chrome Bookmarks
+### Search Bookmarks
 
 <p align="center"> 
 <img src="demo/BookmarkMgr_Demo.png">
@@ -39,14 +39,24 @@ to other browsers.**
 
 ### Web Search
 
-There are some search engines already integrated with Thruster, to start searching, type the search
-engine keywords to find the one you want and then type the words to search.
+<p align="center"> 
+<img src="demo/WebSearch_Demo.png">
+</p>
 
-Search Enging Keywords | Search Enging
+There are some search engines already integrated with Thruster, to start searching, type the search
+engine keywords to select the search engine and then type the words to search.
+
+Search Engine Keywords | Search Engine
 ---                    | ---
 gg                     | Google
-bb                     | Bing
-
+ii                     | Bing
+bb                     | Baidu
+so                     | Stackoverflow
+ieee                   | ieeexplore
+gmap                   | Google Map
+bmap                   | Baidu Map
+tao                    | Taobao
+jd                     | Jingdong
 
 ### Open in Customized Program
 
