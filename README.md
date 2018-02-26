@@ -58,6 +58,18 @@ bmap                   | Baidu Map
 tao                    | Taobao
 jd                     | Jingdong
 
+### Calculator
+
+<p align="center"> 
+<img src="demo/Calculator_Demo.png">
+</p>
+
+Type "Calculator" to select the calculator and then press "Tab" to start to type the expression, the
+result will be displayed in drop down list in format of decimal, binary, hexadecimal, octal, and
+human readable disk size.
+
+Any legal python math expressions are supported.
+
 ### Shortcuts Support
 
 <p align="center"> 
