@@ -58,7 +58,11 @@ bmap                   | Baidu Map
 tao                    | Taobao
 jd                     | Jingdong
 
+<<<<<<< HEAD
 ### Shortcuts Support
+=======
+### Shortcut Support
+>>>>>>> 95d116448fb8436f97006548d9cc0249aaf2a252
 
 <p align="center"> 
 <img src="demo/Shortcuts_Demo.png">
@@ -68,9 +72,15 @@ Some shortcuts are pre-defined.
 
 Shortcuts | Description
 ---       | ---
+<<<<<<< HEAD
 "S-Enter" | Open the select file/directory in TotalCommander right panel
 "C-Enter" | Open the select file/directory in TotalCommander left panel
 "M-Enter" | Open the select file in gvim.exe
+=======
+<S-Enter> | Open the select file/directory in TotalCommander right panel
+<C-Enter> | Open the select file/directory in TotalCommander left panel
+<M-Enter> | Open the select file in gvim.exe
+>>>>>>> 95d116448fb8436f97006548d9cc0249aaf2a252
 
 > TotalCommander and gvim should be in OS searching path.
 
