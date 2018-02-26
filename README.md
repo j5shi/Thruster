@@ -58,17 +58,19 @@ bmap                   | Baidu Map
 tao                    | Taobao
 jd                     | Jingdong
 
-### Open in Customized Program
+### Shortcut Support
 
-![demo](demo/PyVerby_Demo.png)
+<p align="center"> 
+<img src="demo/Shortcuts_Demo.png">
+</p>
 
-Thruster allows you to customize operations for a certain type of file, for example, you can define
-operations for a text file like: "open in Total Commander", "open in Vim", "open in ... whatever".
+Some shortcuts are pre-defined.
 
-And shortcut is supported, for instance: `<C-Enter>` and `<S-Enter>` for open files in Total
-Commander left and right panel.
+Shortcuts | Description
+---       | ---
+<S-Enter> | Open the select file/directory in TotalCommander right panel
+<C-Enter> | Open the select file/directory in TotalCommander left panel
+<M-Enter> | Open the select file in gvim.exe
 
+> TotalCommander and gvim should be in OS searching path.
 
-### Customized Commands
-
-Define aliases for commands (DOS, BASH, ...) or define a command for a python function, very useful.
