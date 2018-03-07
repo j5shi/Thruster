@@ -354,6 +354,10 @@ class WebSearch(AddonBase):
             "url": "https://jira3.int.net.nokia.com/secure/QuickSearch.jspa?searchString=%s",
             "name": "Jira Search"
         },
+        "ww": {
+            "url": "https://wft.int.net.nokia.com/ext/build_content/%s",
+            "name": "WFT Build Content Search"
+        },
     }
 
     def __init__(self):
