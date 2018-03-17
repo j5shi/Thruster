@@ -6,7 +6,6 @@ import re
 import urllib
 import shutil
 import pprint
-import inspect
 import sys
 from PyQt4 import QtGui, QtCore
 import win32gui
@@ -689,6 +688,7 @@ class Thruster(launchy.Plugin, Logger):
 
         This is a good time to do any initialization work.
         """
+        self.logger(self.LOG_LEVEL_INF, "Python: %s" % sys.version)
         self.logger(self.LOG_LEVEL_INF, "==============================")
         self.logger(self.LOG_LEVEL_INF, "instance created: %s" % self)
         self.logger(self.LOG_LEVEL_INF, "hash: %s" % self.getID())
@@ -831,7 +831,7 @@ class Thruster(launchy.Plugin, Logger):
                     break
         except:
             os.system('start "" /B gvim.exe --remote-tab-silent "%s"' %
-                      os.path.join(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))), 'stderr.txt'))
+                      os.path.dirname(os.path.realpath(__file__)), 'stderr.txt')
             raise
 
     def hasDialog(self):
