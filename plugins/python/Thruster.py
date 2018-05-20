@@ -317,6 +317,10 @@ class WebSearch(AddonBase):
             "url": "http://search.jd.com/Search?keyword=%s&enc=utf-8",
             "name": "Jingdong"
         },
+        "sn": {
+            "url": "https://search.suning.com/%s/",
+            "name": "Suning"
+        },
         "pr": {
             "url": "https://pronto.inside.nsn.com/pronto/problemReportSearch.html?freeTextdropDownID=prId&searchTopText=%s",
             "name": "Pronto"
