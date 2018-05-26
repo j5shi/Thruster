@@ -289,6 +289,10 @@ class Calculator(AddonBase):
 class WebSearch(AddonBase):
 
     searchEngine = {
+        "fan": {
+            "url": "http://fanyi.baidu.com/?aldtype=85#en/zh/%s",
+            "name": "Baidu Translation"
+        },
         "gg": {
             "url": "https://www.google.fi/search?q=%s&oq=hello&sourceid=chrome&ie=UTF-8",
             "name": "Google"
