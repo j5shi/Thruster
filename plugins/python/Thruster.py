@@ -365,6 +365,10 @@ class WebSearch(AddonBase):
             "url": "https://wft.int.net.nokia.com/ext/build_content/%s",
             "name": "WFT Build Content Search"
         },
+        "sp": {
+            "url": "https://nokia.sharepoint.com/_layouts/15/sharepoint.aspx?q=%s&v=search",
+            "name": "SharePoint Search"
+        },
     }
 
     def __init__(self):
