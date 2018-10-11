@@ -353,13 +353,13 @@ class WebSearch(AddonBase):
             "url": "https://cygwin.com/cgi-bin2/package-grep.cgi?grep=%s&arch=x86",
             "name": "cygwin package search"
         },
-        "dsp": {
-            "url": "http://pscigrok-dsp.emea.nsn-net.net/source/search?q=%s&defs=&refs=&path=&hist=&type=&project=MAINBRANCH_LRC",
-            "name": "OpenGrok DSPHWAPI"
-        },
-        "jira": {
+        "jj": {
             "url": "https://jira3.int.net.nokia.com/secure/QuickSearch.jspa?searchString=%s",
             "name": "Jira Search"
+        },
+        "con": {
+            "url": "https://confluence.int.net.nokia.com/dosearchsite.action?cql=siteSearch+~+%s",
+            "name": "Confluence"
         },
         "ww": {
             "url": "https://wft.int.net.nokia.com/ext/build_content/%s",
@@ -842,8 +842,8 @@ class Thruster(launchy.Plugin, Logger):
                                 "Addon %s executed query: %s." % (addon.getAddonName(), addon.getLastInputData(inputDataList)))
                     break
         except:
-            os.system('start "" /B gvim.exe --remote-tab-silent "%s"' %
-                      os.path.dirname(os.path.realpath(__file__)), 'stderr.txt')
+            #  os.system('start "" /B gvim.exe --remote-tab-silent "%s"' %
+                      #  os.path.dirname(os.path.realpath(sys.argv[0])), 'stderr.txt')
             raise
 
     def hasDialog(self):
