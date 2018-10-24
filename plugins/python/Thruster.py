@@ -358,7 +358,7 @@ class WebSearch(AddonBase):
             "name": "Jira Search"
         },
         "con": {
-            "url": "https://confluence.int.net.nokia.com/dosearchsite.action?cql=siteSearch+~+%s",
+            "url": "https://confluence.int.net.nokia.com/dosearchsite.action?cql=siteSearch+~+'%s'",
             "name": "Confluence"
         },
         "ww": {
