@@ -623,6 +623,7 @@ class Shortcuts(AddonBase):
 class DefaultHandler(AddonBase):
 
     pattern_pronto = re.compile("(^[pP][rR]\d+$)|(^[nN][aA]\d+$)")
+    pattern_jira = re.compile("(^[pP][sS][fF][eE][aA][tT][uU][rR][eE]-\d+$)")
     pattern_google = re.compile("(^\/{1}[^/]*$)|(^\s{1}\S.*$)")
     pattern_baidu = re.compile("^\/{2}([^/]*$)|(^\s{2}\S.*$)")
     pattern_bing = re.compile("^\/{3}([^/]*$)|(^\s{3}\S.*$)")
@@ -646,6 +647,9 @@ class DefaultHandler(AddonBase):
 
             if self.pattern_pronto.match(query):
                 url = WebSearch.getUrl('pr', query)
+
+            elif self.pattern_jira.match(query):
+                url = WebSearch.getUrl('jj', query)
 
             elif self.pattern_google.match(query):
                 url = WebSearch.getUrl('gg', query[1:])
