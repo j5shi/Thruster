@@ -11,7 +11,6 @@ from PyQt4 import QtGui, QtCore
 import win32gui
 from win32con import SW_RESTORE
 
-
 class Logger(object):
 
     LOG_LEVEL_DBG, LOG_LEVEL_INF, LOG_LEVEL_WARN, LOG_LEVEL_ERR = range(4)
@@ -588,7 +587,7 @@ class Shortcuts(AddonBase):
 
     def cb_M_S_CR(self, inputDataList, catItem):
         """
-        copy selected item's full path to clipboard
+        open the selected item with gvim.exe
         """
         subprocess.Popen('start gvim.exe --remote-tab-silent "%s"' % 
                 os.path.join(launchy.getScriptsPath(), "Thruster.py"),
@@ -644,6 +643,12 @@ class DefaultHandler(AddonBase):
 
         if catItem.icon == self.getAddonIcon():
             query = self.getFirstInputData(inputDataList)
+
+            # if nothing in query, use what get from clipboard as query
+            if not query.strip():
+                myClipBoard = QtGui.QApplication.clipboard()
+                query = str(myClipBoard.text("plain", QtGui.QClipboard.Clipboard))
+                #  self.logger(self.LOG_LEVEL_INF, "query: %s" % query)
 
             if self.pattern_pronto.match(query):
                 url = WebSearch.getUrl('pr', query)
@@ -705,6 +710,7 @@ class Thruster(launchy.Plugin, Logger):
         This is a good time to do any initialization work.
         """
         self.logger(self.LOG_LEVEL_INF, "Python: %s" % sys.version)
+        self.logger(self.LOG_LEVEL_INF, "Python interpreter: %s" % sys.executable)
         self.logger(self.LOG_LEVEL_INF, "==============================")
         self.logger(self.LOG_LEVEL_INF, "instance created: %s" % self)
         self.logger(self.LOG_LEVEL_INF, "hash: %s" % self.getID())
