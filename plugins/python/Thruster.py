@@ -173,7 +173,7 @@ class Tasky(AddonBase):
         """
         title = win32gui.GetWindowText(hwnd)
         title = title.decode('gbk').encode('utf-8')
-        className = win32gui.GetClassName(hwnd)  
+        className = win32gui.GetClassName(hwnd)
         className = title.decode('gbk').encode('utf-8')
 
         if win32gui.GetParent(hwnd) == 0 and title != '':
