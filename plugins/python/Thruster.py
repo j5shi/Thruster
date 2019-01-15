@@ -647,8 +647,10 @@ class DefaultHandler(AddonBase):
             # if nothing in query, use what get from clipboard as query
             if not query.strip():
                 myClipBoard = QtGui.QApplication.clipboard()
-                query = str(myClipBoard.text("plain", QtGui.QClipboard.Clipboard))
+                query = str(myClipBoard.text("plain", QtGui.QClipboard.Clipboard)).strip()
                 #  self.logger(self.LOG_LEVEL_INF, "query: %s" % query)
+            else:
+                query = query.strip()
 
             if self.pattern_pronto.match(query):
                 url = WebSearch.getUrl('pr', query)
