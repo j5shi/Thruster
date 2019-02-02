@@ -173,7 +173,7 @@ class Tasky(AddonBase):
         """
         title = win32gui.GetWindowText(hwnd)
         title = title.decode('gbk').encode('utf-8')
-        className = win32gui.GetClassName(hwnd)
+        className = win32gui.GetClassName(hwnd)  
         className = title.decode('gbk').encode('utf-8')
 
         if win32gui.GetParent(hwnd) == 0 and title != '':
@@ -457,11 +457,11 @@ class RunCommands(AddonBase):
         syncTable = [
             (
                 "c:/Program Files (x86)/vim/_vimrc",
-                "d:/userdata/j5shi/cloud/Private/Vim/_vimrc"
+                "c:/Home/j5shi/cloud/Private/Vim/_vimrc"
             ),
             (
                 "c:/cygwin/home/j5shi/.bash_profile",
-                "d:/userdata/j5shi/cloud/Private/fs/C/cygwin/home/j5shi/.bash_profile"
+                "c:/Home/j5shi/cloud/Private/fs/C/cygwin/home/j5shi/.bash_profile"
             ),
         ]
 
