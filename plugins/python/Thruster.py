@@ -324,6 +324,10 @@ class WebSearch(AddonBase):
             "url": "https://search.suning.com/%s/",
             "name": "Suning"
         },
+        "mm": {
+            "url": "http://www.boohee.com/food/search?keyword=%s",
+            "name": "A Food Database"
+        },
         "pr": {
             "url": "https://pronto.inside.nsn.com/pronto/problemReportSearch.html?freeTextdropDownID=prId&searchTopText=%s",
             "name": "Pronto"
