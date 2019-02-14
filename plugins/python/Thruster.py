@@ -236,33 +236,38 @@ class Calculator(AddonBase):
                         for i in range(len(retb)):
                             retInBin += retb[i] if (i % 4 or i == 0) else ("," + retb[i])
 
-                        # size
-                        retInSize = ""
+                        # size in bits
+                        retInSizeBit = "%s bit" % ret
+
+                        # size in bytes, keep this at last because it will change the value of 'ret'
+                        retInSizeByte = ""
 
                         size_giga_bytes = ret / (1024 ** 3) if ret / (1024 ** 3) else 0
                         ret -= size_giga_bytes * (1024 ** 3)
-                        retInSize += "%s GB " % size_giga_bytes if size_giga_bytes else ""
+                        retInSizeByte += "%s GB " % size_giga_bytes if size_giga_bytes else ""
 
                         size_mega_bytes = ret / (1024 * 1024) if ret / (1024 * 1024) else 0
                         ret -= size_mega_bytes * (1024 ** 2)
-                        retInSize += "%s MB " % size_mega_bytes if size_mega_bytes else ""
+                        retInSizeByte += "%s MB " % size_mega_bytes if size_mega_bytes else ""
 
                         size_kilo_bytes = ret / (1024) if ret / (1024) else 0
                         ret -= size_mega_bytes * (1024 ** 1)
-                        retInSize += "%s KB " % size_kilo_bytes if size_kilo_bytes else ""
+                        retInSizeByte += "%s KB " % size_kilo_bytes if size_kilo_bytes else ""
 
                         size_bytes = ret % (1024) if ret % (1024) else 0
-                        retInSize += "%s B " % size_bytes if size_bytes else ""
+                        retInSizeByte += "%s B " % size_bytes if size_bytes else ""
 
-                        if not retInSize:
-                            retInSize = "0 B"
+                        if not retInSizeByte:
+                            retInSizeByte = "0 B"
+
                     else:
                         retInFloat = ret
                         retInHex = None
                         retInDec = None
                         retInOct = None
                         retInBin = None
-                        retInSize = None
+                        retInSizeByte = None
+                        retInSizeBit = None
                 except:
                     raise
                 else:
@@ -281,8 +286,11 @@ class Calculator(AddonBase):
                     if retInBin is not None:
                         resultsList.push_front(self.getCatItem("", "Result: %s" % (retInBin)))
 
-                    if retInSize is not None:
-                        resultsList.push_front(self.getCatItem("", "Result: %s" % (retInSize)))
+                    if retInSizeByte is not None:
+                        resultsList.push_front(self.getCatItem("", "Result: %s" % (retInSizeByte)))
+
+                    if retInSizeBit is not None:
+                        resultsList.push_front(self.getCatItem("", "Result: %s" % (retInSizeBit)))
 
 
 class WebSearch(AddonBase):
