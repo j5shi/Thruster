@@ -304,6 +304,10 @@ class WebSearch(AddonBase):
             "url": "https://www.google.fi/search?q=%s&oq=hello&sourceid=chrome&ie=UTF-8",
             "name": "Google"
         },
+        "cj": {
+            "url": "https://translate.google.fi/?um=1&ie=UTF-8&hl=en&client=tw-ob#zh-CN/ja/%s",
+            "name": "Google Translation - Chinese to Japanese"
+        },
         "ii": {
             "url": "http://www.bing.com/search?q=%s",
             "name": "Bing"
