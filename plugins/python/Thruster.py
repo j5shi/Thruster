@@ -308,6 +308,10 @@ class WebSearch(AddonBase):
             "url": "https://translate.google.fi/?um=1&ie=UTF-8&hl=en&client=tw-ob#zh-CN/ja/%s",
             "name": "Google Translation - Chinese to Japanese"
         },
+        "jc": {
+            "url": "https://translate.google.fi/?um=1&ie=UTF-8&hl=en&client=tw-ob#view=home&op=translate&sl=ja&tl=zh-CN&text=%s",
+            "name": "Google Translation - Chinese to Japanese"
+        },
         "ii": {
             "url": "http://www.bing.com/search?q=%s",
             "name": "Bing"
