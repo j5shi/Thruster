@@ -641,7 +641,7 @@ class Shortcuts(AddonBase):
 
 class DefaultHandler(AddonBase):
 
-    pattern_pronto = re.compile("(^[pP][rR]\d+\s*$)|(^[nN][aA]\d+\s*$)")
+    pattern_pronto = re.compile("(^[pP][rR]\d+\s*$)|(^[nN][aA]\d+\s*$)|(^[cC][aA][sS]-\d+.*$)")
     pattern_jira = re.compile("(^[pP][sS][fF][eE][aA][tT][uU][rR][eE]-\d+\s*$)")
     pattern_google = re.compile("(^\/{1}[^/]*$)|(^\s{1}\S.*$)")
     pattern_baidu = re.compile("^\/{2}([^/]*$)|(^\s{2}\S.*$)")
