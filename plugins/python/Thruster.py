@@ -374,7 +374,11 @@ class WebSearch(AddonBase):
         },
         "jj": {
             "url": "https://jira3.int.net.nokia.com/secure/QuickSearch.jspa?searchString=%s",
-            "name": "Jira Search"
+            "name": "Jira3 Search"
+        },
+        "jiradc": {
+            "url": "https://jiradc.int.net.nokia.com/browse/%s",
+            "name": "JiraDC Search"
         },
         "con": {
             "url": "https://confluence.int.net.nokia.com/dosearchsite.action?cql=siteSearch+~+'%s'",
@@ -642,7 +646,8 @@ class Shortcuts(AddonBase):
 class DefaultHandler(AddonBase):
 
     pattern_pronto = re.compile("(^[pP][rR]\d+\s*$)|(^[nN][aA]\d+\s*$)|(^[cC][aA][sS]-\d+.*$)")
-    pattern_jira = re.compile("(^[pP][sS][fF][eE][aA][tT][uU][rR][eE]-\d+\s*$)")
+    pattern_jira3 = re.compile("(^[pP][sS][fF][eE][aA][tT][uU][rR][eE]-\d+\s*$)")
+    pattern_jiradc_tag0 = re.compile("(^[fF][cC][aA]_[pP][sS]_[uU][pP]-\d+\s*$)")
     pattern_google = re.compile("(^\/{1}[^/]*$)|(^\s{1}\S.*$)")
     pattern_baidu = re.compile("^\/{2}([^/]*$)|(^\s{2}\S.*$)")
     pattern_bing = re.compile("^\/{3}([^/]*$)|(^\s{3}\S.*$)")
@@ -673,8 +678,11 @@ class DefaultHandler(AddonBase):
             if self.pattern_pronto.match(query):
                 url = WebSearch.getUrl('pr', query.strip())
 
-            elif self.pattern_jira.match(query):
+            elif self.pattern_jira3.match(query):
                 url = WebSearch.getUrl('jj', query.strip())
+
+            elif self.pattern_jiradc_tag0.match(query):
+                url = WebSearch.getUrl('jiradc', query.strip())
 
             elif self.pattern_google.match(query):
                 url = WebSearch.getUrl('gg', query[1:].strip())
