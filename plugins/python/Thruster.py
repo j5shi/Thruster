@@ -645,9 +645,11 @@ class Shortcuts(AddonBase):
 
 class DefaultHandler(AddonBase):
 
-    pattern_pronto = re.compile("(^[pP][rR]\d+\s*$)|(^[nN][aA]\d+\s*$)|(^[cC][aA][sS]-\d+.*$)")
+    pattern_pronto_pattern0 = re.compile("^[pP][rR]\d+\s*$")
+    pattern_pronto_pattern1 = re.compile("^[nN][aA]\d+\s*$")
+    pattern_pronto_pattern2 = re.compile("^[cC][aA][sS]-\d+.*$")
     pattern_jira3 = re.compile("(^[pP][sS][fF][eE][aA][tT][uU][rR][eE]-\d+\s*$)")
-    pattern_jiradc_tag0 = re.compile("(^[fF][cC][aA]_[pP][sS]_[uU][pP]-\d+\s*$)")
+    pattern_jiradc_pattern0 = re.compile("(^[fF][cC][aA]_[pP][sS]_[uU][pP]-\d+\s*$)")
     pattern_google = re.compile("(^\/{1}[^/]*$)|(^\s{1}\S.*$)")
     pattern_baidu = re.compile("^\/{2}([^/]*$)|(^\s{2}\S.*$)")
     pattern_bing = re.compile("^\/{3}([^/]*$)|(^\s{3}\S.*$)")
@@ -675,13 +677,15 @@ class DefaultHandler(AddonBase):
                 query = str(myClipBoard.text("plain", QtGui.QClipboard.Clipboard)).strip()
                 #  self.logger(self.LOG_LEVEL_INF, "query: %s" % query)
 
-            if self.pattern_pronto.match(query):
+            if self.pattern_pronto_pattern0.match(query) or \
+               self.pattern_pronto_pattern1.match(query) or \
+               self.pattern_pronto_pattern2.match(query):
                 url = WebSearch.getUrl('pr', query.strip())
 
             elif self.pattern_jira3.match(query):
                 url = WebSearch.getUrl('jj', query.strip())
 
-            elif self.pattern_jiradc_tag0.match(query):
+            elif self.pattern_jiradc_pattern0.match(query):
                 url = WebSearch.getUrl('jiradc', query.strip())
 
             elif self.pattern_google.match(query):
