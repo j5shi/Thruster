@@ -701,7 +701,8 @@ class DefaultHandler(AddonBase):
                 url = WebSearch.getUrl('tao', query[1:])
 
             else:
-                url = query
+                #  url = query
+                url = WebSearch.getUrl('gg', query.strip())   # use google as a fallback option
 
             subprocess.Popen('start chrome "%s"' % url, shell=True)
         else:
