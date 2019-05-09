@@ -372,12 +372,12 @@ class WebSearch(AddonBase):
             "url": "https://cygwin.com/cgi-bin2/package-grep.cgi?grep=%s&arch=x86",
             "name": "cygwin package search"
         },
-        "jj": {
+        "j3": {
             "url": "https://jira3.int.net.nokia.com/secure/QuickSearch.jspa?searchString=%s",
             "name": "Jira3 Search"
         },
-        "jiradc": {
-            "url": "https://jiradc.int.net.nokia.com/browse/%s",
+        "jj": {
+            "url": "https://jiradc.int.net.nokia.com/secure/QuickSearch.jspa?searchString=%s",
             "name": "JiraDC Search"
         },
         "con": {
