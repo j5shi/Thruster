@@ -658,6 +658,7 @@ class DefaultHandler(AddonBase):
     pattern_baidu = re.compile("^\/{2}([^/]*$)|(^\s{2}\S.*$)")
     pattern_bing = re.compile("^\/{3}([^/]*$)|(^\s{3}\S.*$)")
     pattern_taobao = re.compile("^\?([^?]*$)")
+    pattern_url = re.compile("(^http.*$)|(^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}.*$)|(^www.*$)|(.*\.com.*$)|(.*\.cn.*$)")
 
     def __init__(self):
         AddonBase.__init__(self)
@@ -703,6 +704,9 @@ class DefaultHandler(AddonBase):
 
             elif self.pattern_taobao.match(query):
                 url = WebSearch.getUrl('tao', query[1:])
+
+            elif self.pattern_url.match(query):
+                url = query.strip()
 
             else:
                 #  url = query
