@@ -392,6 +392,10 @@ class WebSearch(AddonBase):
             "url": "https://nokia.sharepoint.com/_layouts/15/sharepoint.aspx?q=%s&v=search",
             "name": "SharePoint Search"
         },
+        "bh": {
+            "url": "https://www.zhihu.com/search?type=content&q=%s",
+            "name": "Bihu Search"
+        },
     }
 
     def __init__(self):
