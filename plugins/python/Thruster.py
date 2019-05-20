@@ -688,10 +688,10 @@ class DefaultHandler(AddonBase):
                 url = WebSearch.getUrl('pr', query.strip())
 
             elif self.pattern_jira3.match(query):
-                url = WebSearch.getUrl('jj', query.strip())
+                url = WebSearch.getUrl('j3', query.strip())
 
             elif self.pattern_jiradc_pattern0.match(query):
-                url = WebSearch.getUrl('jiradc', query.strip())
+                url = WebSearch.getUrl('jj', query.strip())
 
             elif self.pattern_google.match(query):
                 url = WebSearch.getUrl('gg', query[1:].strip())
