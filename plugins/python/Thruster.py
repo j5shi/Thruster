@@ -396,6 +396,10 @@ class WebSearch(AddonBase):
             "url": "https://www.zhihu.com/search?type=content&q=%s",
             "name": "Bihu Search"
         },
+        "xx": {
+            "url": "https://xueqiu.com/k?q=%s",
+            "name": "XueQiu Financial Search"
+        },
     }
 
     def __init__(self):
@@ -659,6 +663,7 @@ class DefaultHandler(AddonBase):
     pattern_bing = re.compile("^\/{3}([^/]*$)|(^\s{3}\S.*$)")
     pattern_taobao = re.compile("^\?([^?]*$)")
     pattern_url = re.compile("(^http.*$)|(^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}.*$)|(^www.*$)|(.*\.com.*$)|(.*\.cn.*$)")
+    pattern_stocks = re.compile("^[sS]?[HhZz]?[\d]{6}\s*$")
 
     def __init__(self):
         AddonBase.__init__(self)
@@ -704,6 +709,9 @@ class DefaultHandler(AddonBase):
 
             elif self.pattern_taobao.match(query):
                 url = WebSearch.getUrl('tao', query[1:])
+
+            elif self.pattern_stocks.match(query):
+                url = WebSearch.getUrl('xx', query)
 
             elif self.pattern_url.match(query):
                 url = query.strip()
