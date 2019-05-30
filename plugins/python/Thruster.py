@@ -658,12 +658,12 @@ class DefaultHandler(AddonBase):
     pattern_pronto_pattern2 = re.compile("^[cC][aA][sS]-\d+.*$")
     pattern_jira3 = re.compile("(^[pP][sS][fF][eE][aA][tT][uU][rR][eE]-\d+\s*$)")
     pattern_jiradc_pattern0 = re.compile("(^[fF][cC][aA]_[pP][sS]_[uU][pP]-\d+\s*$)")
-    pattern_google = re.compile("(^\/{1}[^/]*$)|(^\s{1}\S.*$)")
+    pattern_google = re.compile("(^\/{1}[^/]*$)")
     pattern_baidu = re.compile("^\/{2}([^/]*$)|(^\s{2}\S.*$)")
     pattern_bing = re.compile("^\/{3}([^/]*$)|(^\s{3}\S.*$)")
     pattern_taobao = re.compile("^\?([^?]*$)")
     pattern_url = re.compile("(^http.*$)|(^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}.*$)|(^www.*$)|(.*\.com.*$)|(.*\.cn.*$)")
-    pattern_stocks = re.compile("^[sS]?[HhZz]?[\d]{6}\s*$")
+    pattern_stocks = re.compile("(^[sS]?[HhZz]?[\d]{6}\s*$)|(^\s{1}\S.*$)")
 
     def __init__(self):
         AddonBase.__init__(self)
