@@ -225,7 +225,16 @@ class Calculator(AddonBase):
                         retInHex = '0x%x' % ret
 
                         # dec
-                        retInDec = ret
+                        retInDecTmp = str(ret)[::-1]
+                        retInDec = ''
+                        i = 0
+                        for figure in retInDecTmp:
+                            i += 1
+                            retInDec += figure
+                            if i == 3:
+                                retInDec += ','
+                                i = 0
+                        retInDec = retInDec.strip(',')[::-1]
 
                         # octal
                         retInOct = '0%o' % ret
@@ -723,6 +732,7 @@ class DefaultHandler(AddonBase):
             subprocess.Popen('start chrome "%s"' % url, shell=True)
         else:
             launchy.runProgram('"%s"' % catItem.fullPath, "")
+
         return True
 
 
