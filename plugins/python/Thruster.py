@@ -680,6 +680,7 @@ class DefaultHandler(AddonBase):
     fullpath_google = "Search in Google"
     fullpath_baidu = "Search in Baidu"
     fullpath_bing = "Search in Bing"
+    fullpath_baidumap = "Search in Baidu Map"
     fullpath_taobao = "Search in Taobao"
     fullpath_xueqiu = "Search in XueQiu Finance"
 
@@ -695,6 +696,7 @@ class DefaultHandler(AddonBase):
             resultsList.push_front(self.getCatItem(self.fullpath_pronto, ""))
             resultsList.push_front(self.getCatItem(self.fullpath_google, ""))
             resultsList.push_front(self.getCatItem(self.fullpath_baidu, ""))
+            resultsList.push_front(self.getCatItem(self.fullpath_baidumap, ""))
             resultsList.push_front(self.getCatItem(self.fullpath_bing, ""))
             resultsList.push_front(self.getCatItem(self.fullpath_taobao, ""))
             resultsList.push_front(self.getCatItem(self.fullpath_xueqiu, ""))
@@ -722,6 +724,10 @@ class DefaultHandler(AddonBase):
 
         elif catItem.fullPath == self.fullpath_baidu:
             url = WebSearch.getUrl('bb', query.strip())
+            subprocess.Popen('start chrome "%s"' % url, shell=True)
+
+        elif catItem.fullPath == self.fullpath_baidu:
+            url = WebSearch.getUrl('bmap', query.strip())
             subprocess.Popen('start chrome "%s"' % url, shell=True)
 
         elif catItem.fullPath == self.fullpath_bing:
