@@ -672,8 +672,9 @@ class DefaultHandler(AddonBase):
     pattern_bing = re.compile("^\/{3}([^/]*$)|(^\s{3}\S.*$)")
     pattern_taobao = re.compile("^\?([^?]*$)")
     pattern_url = re.compile("(^http.*$)|(^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}.*$)|(^www.*$)|(.*\.com.*$)|(.*\.cn.*$)")
-    pattern_stocks = re.compile("(^[sS]?[HhZz]?[\d]{6}\s*$)|(^\s{1}\S.*$)")
+    pattern_xueqiu = re.compile("(^[sS]?[HhZz]?[\d]{6}\s*$)|(^\s{1}\S.*$)")
 
+    fullpath_defaulthandler = "DefaultHandler"
     fullpath_jiradc = "Search in JiraDC"
     fullpath_jira3 = "Search in Jira3"
     fullpath_pronto = "Search in Pronto" 
@@ -690,7 +691,7 @@ class DefaultHandler(AddonBase):
 
     def getResults(self, inputDataList, resultsList):
         if len(inputDataList) == 1:
-            resultsList.push_front(self.getCatItem("%s: at your service, sir!" % self.getAddonName(), ""))
+            resultsList.push_front(self.getCatItem(self.fullpath_defaulthandler, ""))
             resultsList.push_front(self.getCatItem(self.fullpath_jiradc, ""))
             resultsList.push_front(self.getCatItem(self.fullpath_jira3, ""))
             resultsList.push_front(self.getCatItem(self.fullpath_pronto, ""))
@@ -742,7 +743,7 @@ class DefaultHandler(AddonBase):
             url = WebSearch.getUrl('xq', query.strip())
             subprocess.Popen('start chrome "%s"' % url, shell=True)
 
-        elif catItem.icon == self.getAddonIcon():
+        elif catItem.fullPath == self.fullpath_defaulthandler:
             # if nothing in query, use what get from clipboard as query
             if not query.strip():
                 myClipBoard = QtGui.QApplication.clipboard()
@@ -772,7 +773,7 @@ class DefaultHandler(AddonBase):
             elif self.pattern_taobao.match(query):
                 url = WebSearch.getUrl('tao', query[1:])
 
-            elif self.pattern_stocks.match(query):
+            elif self.pattern_xueqiu.match(query):
                 url = WebSearch.getUrl('xq', query)
 
             elif self.pattern_url.match(query):
