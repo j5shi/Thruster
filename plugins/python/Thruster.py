@@ -405,7 +405,7 @@ class WebSearch(AddonBase):
             "url": "https://www.zhihu.com/search?type=content&q=%s",
             "name": "Bihu Search"
         },
-        "xx": {
+        "xq": {
             "url": "https://xueqiu.com/k?q=%s",
             "name": "XueQiu Financial Search"
         },
@@ -675,13 +675,13 @@ class DefaultHandler(AddonBase):
     pattern_stocks = re.compile("(^[sS]?[HhZz]?[\d]{6}\s*$)|(^\s{1}\S.*$)")
 
     fullpath_jiradc = "Search in JiraDC"
-    fullpath_pronto = "Search in Pronto" 
     fullpath_jira3 = "Search in Jira3"
+    fullpath_pronto = "Search in Pronto" 
     fullpath_google = "Search in Google"
     fullpath_baidu = "Search in Baidu"
     fullpath_bing = "Search in Bing"
     fullpath_taobao = "Search in Taobao"
-    fullpath_stocks = "Search in XueQiu Finance"
+    fullpath_xueqiu = "Search in XueQiu Finance"
 
     def __init__(self):
         AddonBase.__init__(self)
@@ -691,6 +691,13 @@ class DefaultHandler(AddonBase):
         if len(inputDataList) == 1:
             resultsList.push_front(self.getCatItem("%s: at your service, sir!" % self.getAddonName(), ""))
             resultsList.push_front(self.getCatItem(self.fullpath_jiradc, ""))
+            resultsList.push_front(self.getCatItem(self.fullpath_jira3, ""))
+            resultsList.push_front(self.getCatItem(self.fullpath_pronto, ""))
+            resultsList.push_front(self.getCatItem(self.fullpath_google, ""))
+            resultsList.push_front(self.getCatItem(self.fullpath_baidu, ""))
+            resultsList.push_front(self.getCatItem(self.fullpath_bing, ""))
+            resultsList.push_front(self.getCatItem(self.fullpath_taobao, ""))
+            resultsList.push_front(self.getCatItem(self.fullpath_xueqiu, ""))
 
     def launchItem(self, inputDataList, catItem):
         self.logger(self.LOG_LEVEL_DBG, "Default handler query: %s" % self.getFirstInputData(inputDataList))
@@ -699,6 +706,34 @@ class DefaultHandler(AddonBase):
 
         if catItem.fullPath == self.fullpath_jiradc:
             url = WebSearch.getUrl('jj', query.strip())
+            subprocess.Popen('start chrome "%s"' % url, shell=True)
+
+        elif catItem.fullPath == self.fullpath_jira3:
+            url = WebSearch.getUrl('j3', query.strip())
+            subprocess.Popen('start chrome "%s"' % url, shell=True)
+
+        elif catItem.fullPath == self.fullpath_pronto:
+            url = WebSearch.getUrl('pr', query.strip())
+            subprocess.Popen('start chrome "%s"' % url, shell=True)
+
+        elif catItem.fullPath == self.fullpath_google:
+            url = WebSearch.getUrl('gg', query.strip())
+            subprocess.Popen('start chrome "%s"' % url, shell=True)
+
+        elif catItem.fullPath == self.fullpath_baidu:
+            url = WebSearch.getUrl('bb', query.strip())
+            subprocess.Popen('start chrome "%s"' % url, shell=True)
+
+        elif catItem.fullPath == self.fullpath_bing:
+            url = WebSearch.getUrl('ii', query.strip())
+            subprocess.Popen('start chrome "%s"' % url, shell=True)
+
+        elif catItem.fullPath == self.fullpath_taobao:
+            url = WebSearch.getUrl('tao', query.strip())
+            subprocess.Popen('start chrome "%s"' % url, shell=True)
+
+        elif catItem.fullPath == self.fullpath_xueqiu:
+            url = WebSearch.getUrl('xq', query.strip())
             subprocess.Popen('start chrome "%s"' % url, shell=True)
 
         elif catItem.icon == self.getAddonIcon():
@@ -732,7 +767,7 @@ class DefaultHandler(AddonBase):
                 url = WebSearch.getUrl('tao', query[1:])
 
             elif self.pattern_stocks.match(query):
-                url = WebSearch.getUrl('xx', query)
+                url = WebSearch.getUrl('xq', query)
 
             elif self.pattern_url.match(query):
                 url = query.strip()
