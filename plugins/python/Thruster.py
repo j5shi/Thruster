@@ -726,7 +726,7 @@ class DefaultHandler(AddonBase):
             url = WebSearch.getUrl('bb', query.strip())
             subprocess.Popen('start chrome "%s"' % url, shell=True)
 
-        elif catItem.fullPath == self.fullpath_baidu:
+        elif catItem.fullPath == self.fullpath_baidumap:
             url = WebSearch.getUrl('bmap', query.strip())
             subprocess.Popen('start chrome "%s"' % url, shell=True)
 
