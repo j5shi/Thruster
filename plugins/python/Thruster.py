@@ -551,7 +551,7 @@ class RunCommands(AddonBase):
             return True
 
 
-class Browser(AddonBase):
+class BrowserBookmarks(AddonBase):
 
     def __init__(self):
         AddonBase.__init__(self)
@@ -674,22 +674,34 @@ class DefaultHandler(AddonBase):
     pattern_url = re.compile("(^http.*$)|(^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}.*$)|(^www.*$)|(.*\.com.*$)|(.*\.cn.*$)")
     pattern_stocks = re.compile("(^[sS]?[HhZz]?[\d]{6}\s*$)|(^\s{1}\S.*$)")
 
+    fullpath_jiradc = "Search in JiraDC"
+    fullpath_pronto = "Search in Pronto" 
+    fullpath_jira3 = "Search in Jira3"
+    fullpath_google = "Search in Google"
+    fullpath_baidu = "Search in Baidu"
+    fullpath_bing = "Search in Bing"
+    fullpath_taobao = "Search in Taobao"
+    fullpath_stocks = "Search in XueQiu Finance"
+
     def __init__(self):
         AddonBase.__init__(self)
         self.setAddonIcon("DefaultHandler.png")
 
     def getResults(self, inputDataList, resultsList):
-
         if len(inputDataList) == 1:
             resultsList.push_front(self.getCatItem("%s: at your service, sir!" % self.getAddonName(), ""))
+            resultsList.push_front(self.getCatItem(self.fullpath_jiradc, ""))
 
     def launchItem(self, inputDataList, catItem):
-
         self.logger(self.LOG_LEVEL_DBG, "Default handler query: %s" % self.getFirstInputData(inputDataList))
 
-        if catItem.icon == self.getAddonIcon():
-            query = self.getFirstInputData(inputDataList)
+        query = self.getFirstInputData(inputDataList)
 
+        if catItem.fullPath == self.fullpath_jiradc:
+            url = WebSearch.getUrl('jj', query.strip())
+            subprocess.Popen('start chrome "%s"' % url, shell=True)
+
+        elif catItem.icon == self.getAddonIcon():
             # if nothing in query, use what get from clipboard as query
             if not query.strip():
                 myClipBoard = QtGui.QApplication.clipboard()
@@ -778,7 +790,7 @@ class Thruster(launchy.Plugin, Logger):
         self.logger(self.LOG_LEVEL_INF, "loading addons:")
         self.addons = []
         self.registerAddon(Tasky)
-        self.registerAddon(Browser)
+        self.registerAddon(BrowserBookmarks)
         self.registerAddon(WebSearch)
         self.registerAddon(RunCommands)
         self.registerAddon(Calculator)
