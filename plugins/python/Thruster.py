@@ -677,6 +677,7 @@ class DefaultHandler(AddonBase):
     fullpath_defaulthandler = "DefaultHandler"
     fullpath_jiradc = "Search in JiraDC"
     fullpath_jira3 = "Search in Jira3"
+    fullpath_confluence = "Search in Confluence"
     fullpath_pronto = "Search in Pronto" 
     fullpath_google = "Search in Google"
     fullpath_baidu = "Search in Baidu"
@@ -694,6 +695,7 @@ class DefaultHandler(AddonBase):
             resultsList.push_front(self.getCatItem(self.fullpath_defaulthandler, ""))
             resultsList.push_front(self.getCatItem(self.fullpath_jiradc, ""))
             resultsList.push_front(self.getCatItem(self.fullpath_jira3, ""))
+            resultsList.push_front(self.getCatItem(self.fullpath_confluence, ""))
             resultsList.push_front(self.getCatItem(self.fullpath_pronto, ""))
             resultsList.push_front(self.getCatItem(self.fullpath_google, ""))
             resultsList.push_front(self.getCatItem(self.fullpath_baidu, ""))
@@ -713,6 +715,10 @@ class DefaultHandler(AddonBase):
 
         elif catItem.fullPath == self.fullpath_jira3:
             url = WebSearch.getUrl('j3', query.strip())
+            subprocess.Popen('start chrome "%s"' % url, shell=True)
+
+        elif catItem.fullPath == self.fullpath_confluence:
+            url = WebSearch.getUrl('con', query.strip())
             subprocess.Popen('start chrome "%s"' % url, shell=True)
 
         elif catItem.fullPath == self.fullpath_pronto:
