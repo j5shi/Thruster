@@ -413,6 +413,10 @@ class WebSearch(AddonBase):
             "url": "https://s.weibo.com/weibo/%s?topnav=1&wvr=6&b=1",
             "name": "Weibo"
         },
+        "sb": {
+            "url": "https://xueqiu.com/k?q=%s",
+            "name": "Snowball Finance"
+        },
     }
 
     def __init__(self):
@@ -690,6 +694,7 @@ class DefaultHandler(AddonBase):
     fullpath_taobao = "Search in Taobao"
     fullpath_sina_finance = "Search in Sina Finance"
     fullpath_sina_weibo = "Search in Sina Weibo"
+    fullpath_snowball_finance = "Search in Snowball Finance"
 
     def __init__(self):
         AddonBase.__init__(self)
@@ -709,6 +714,7 @@ class DefaultHandler(AddonBase):
             resultsList.push_front(self.getCatItem(self.fullpath_taobao, ""))
             resultsList.push_front(self.getCatItem(self.fullpath_sina_finance, ""))
             resultsList.push_front(self.getCatItem(self.fullpath_sina_weibo, ""))
+            resultsList.push_front(self.getCatItem(self.fullpath_snowball_finance, ""))
 
     def launchItem(self, inputDataList, catItem):
         self.logger(self.LOG_LEVEL_DBG, "Default handler query: %s" % self.getFirstInputData(inputDataList))
@@ -757,6 +763,10 @@ class DefaultHandler(AddonBase):
 
         elif catItem.fullPath == self.fullpath_sina_weibo:
             url = WebSearch.getUrl('wb', query.strip())
+            subprocess.Popen('start chrome "%s"' % url, shell=True)
+
+        elif catItem.fullPath == self.fullpath_snowball_finance:
+            url = WebSearch.getUrl('sb', query.strip())
             subprocess.Popen('start chrome "%s"' % url, shell=True)
 
         elif catItem.fullPath == self.fullpath_defaulthandler:
