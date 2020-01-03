@@ -675,6 +675,7 @@ class DefaultHandler(AddonBase):
     pattern_pronto_pattern2 = re.compile("^[cC][aA][sS]-\d+.*$")
     pattern_jira3 = re.compile("(^[pP][sS][fF][eE][aA][tT][uU][rR][eE]-\d+\s*$)")
     pattern_jiradc_pattern0 = re.compile("(^[fF][cC][aA]_[pP][sS]_[uU][pP]-\d+\s*$)")
+    pattern_snowball = re.compile("(^\s\S*$)")
     pattern_google = re.compile("(^\/{1}[^/]*$)")
     pattern_baidu = re.compile("^\/{2}([^/]*$)|(^\s{2}\S.*$)")
     pattern_bing = re.compile("^\/{3}([^/]*$)|(^\s{3}\S.*$)")
@@ -786,6 +787,9 @@ class DefaultHandler(AddonBase):
 
             elif self.pattern_jiradc_pattern0.match(query):
                 url = WebSearch.getUrl('jj', query.strip())
+
+            elif self.pattern_snowball.match(query):
+                url = WebSearch.getUrl('sb', query[1:].strip())
 
             elif self.pattern_google.match(query):
                 url = WebSearch.getUrl('gg', query[1:].strip())
