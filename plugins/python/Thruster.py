@@ -676,9 +676,8 @@ class DefaultHandler(AddonBase):
     pattern_jira3 = re.compile("(^[pP][sS][fF][eE][aA][tT][uU][rR][eE]-\d+\s*$)")
     pattern_jiradc_pattern0 = re.compile("(^[fF][cC][aA]_[pP][sS]_[uU][pP]-\d+\s*$)")
     pattern_snowball = re.compile("(^\s\S*$)")
-    pattern_google = re.compile("(^\/{1}[^/]*$)")
-    pattern_baidu = re.compile("^\/{2}([^/]*$)|(^\s{2}\S.*$)")
-    pattern_bing = re.compile("^\/{3}([^/]*$)|(^\s{3}\S.*$)")
+    pattern_baidu = re.compile("^\/{1}([^/]*$)|(^\s{1}\S.*$)")
+    pattern_bing = re.compile("^\/{2}([^/]*$)|(^\s{2}\S.*$)")
     pattern_taobao = re.compile("^\?([^?]*$)")
     pattern_url = re.compile("(^http.*$)|(^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}.*$)|(^www.*$)|(.*\.com.*$)|(.*\.cn.*$)")
     pattern_sina_finance = re.compile("(^[sS]?[HhZz]?[\d]{6}\s*$)|(^\s{1}\S.*$)")
@@ -790,9 +789,6 @@ class DefaultHandler(AddonBase):
 
             elif self.pattern_snowball.match(query):
                 url = WebSearch.getUrl('sb', query[1:].strip())
-
-            elif self.pattern_google.match(query):
-                url = WebSearch.getUrl('gg', query[1:].strip())
 
             elif self.pattern_baidu.match(query):
                 url = WebSearch.getUrl('bb', query[2:])
