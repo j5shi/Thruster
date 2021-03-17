@@ -18,8 +18,11 @@ Thruster is available on Windows only.
 ~> installer.bat
 ```
 
-**Note: You may need to quit Launchy before installation if a Launchy instance is currently running
+**Note 1: You may need to quit Launchy before installation if a Launchy instance is currently running
 on your system.**
+
+**Note 2: It's strongly recommended to disable (by unchecking) all other plugins from the config
+panel to avoid potential conflicts with this plugin.**
 
 ## Features
 
